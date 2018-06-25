@@ -16,7 +16,8 @@ describe('LibraryBlockFile', function () {
 
     // ########### 区块链文件操作 ###########
     // 2.1.6、点击工具栏的区块链文件(library-remote-file)，左列表显示区块链数据文件
-      .click('#library-remote-file')
+      .click('#library-dropdown')
+      .click('#library-file-区块链')
       .click('#navbar-system')
       .click('#navbar-system-server')
       .click('#server-user-setup')
@@ -24,8 +25,8 @@ describe('LibraryBlockFile', function () {
       .setValue('#server-password', '123456')
       .click('#server-login')
       .click('#navbar-library')
-      .click('#library-local-file')
-      .click('#library-block-file')
+      .click('#library-dropdown')
+      .click('#library-file-区块链')
       .getText('.library-leftlist')
       .then(function (leftlist) {
         expect(leftlist).to.be.an('array');
@@ -59,33 +60,33 @@ describe('LibraryBlockFile', function () {
     // .waitUntilTextExists('#notice-bar', '选择的不是CSV文件，不能导入！')
     // 2.1.8、点击维度选择(library-dropdown)，显示维度下拉选项
     // 2.1.8.1、工具栏的维度选择-机构(library-org)，左侧列表显示当前数据内所有机构，提示：机构维度选择成功，若机构列无内容，提示：无机构维度！
-    // .click('#library-dropdown')
-    // .click('#library-dropdown-org')
-    // .waitUntilTextExists('#notice-bar', '维度选择')
-    // .getText('#library-dropdown-org')
-    // .then(function (org) {
-    //   expect(org).to.equal('');
-    // })
+      .click('#library-dropdown1')
+      .click('#library-dropdown-全部')
+      // .waitUntilTextExists('#notice-bar', '维度选择')
+      .getText('#notice-bar')
+      .then(function (org) {
+        expect(org).to.be.an('string');
+      })
     // 2.1.8.1.1、点击左侧列表(library-leftlist)，右侧表中显示所选机构的对应数据，若右侧表中无数据显示，提示：未找到对应数据！
-    // .click('.library-leftlist')
-    // .getText('.library-rightpanel')
-    // .then(function (leftlist) {
-    //   expect(leftlist).to.be.an('array');
-    // })
+      .click('.library-leftlist')
+      .getText('.library-rightpanel')
+      .then(function (leftlist) {
+        expect(leftlist).to.be.an('array');
+      })
     // 2.1.8.2、工具栏的维度选择-时间(library-time)，左侧列表显示当前数据内所有时间，提示：时间维度选择成功，若时间列无内容，提示：无时间维度！
-      .click('#library-dropdown')
-      .click('#library-dropdown-time')
-      .getText('#library-dropdown-time')
+      .click('#library-dropdown1')
+      .click('#library-dropdown-年份')
+      .getText('#notice-bar')
       .then(function (time) {
-        expect(time).to.equal('');
+        expect(time).to.be.an('string');
       })
     // 2.1.8.2.1、点击左侧列表(library-leftlist)，右侧表中显示所选时间的对应数据，若右侧表中无数据显示，提示：未找到对应数据！
     // 2.1.8.3、工具栏的维度选择-版本(library-version)，左侧列表显示当前数据内所有版本，提示：版本维度选择成功，若版本列无内容，提示：无版本维度！
-      .click('#library-dropdown')
-      .click('#library-dropdown-version')
-      .getText('#library-dropdown-version')
+      .click('#library-dropdown1')
+      .click('#library-dropdown-版本')
+      .getText('#notice-bar')
       .then(function (version) {
-        expect(version).to.be.an('array');
+        expect(version).to.be.an('string');
       })
     // 2.1.8.3.1、点击左侧列表(library-leftlist)，右侧表中显示所选版本的对应数据，若右侧表中无数据显示，提示：未找到对应数据！
     // 2.1.8.4、点击表中任意一列
