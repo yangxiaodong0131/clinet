@@ -10,7 +10,7 @@
       <tr class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index, 'table-danger': isSave.includes(index)}">
         <td> {{index + 1}} </td>
         <td v-if="lastNav !== '/edit' && index < 10" v-for="(field, index) in data" v-bind:key='index' v-on:click="onClickTd(data, index)" v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}">{{data[index]}}</td>
-        <td v-if="lastNav === '/edit'">{{data.substr(0, 100)}}</td>
+        <td v-if="lastNav === '/edit'">{{data[1]}}</td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-del'+index"><a href="#" v-on:click="delDoc(data, index)">删除</a></td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-edit'+index"><a href="#" v-on:click="loadDoc(data, index, 'edit')">编辑</a></td>
         <td v-if="lastNav !== '/library' && rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-ref'+index"><a href="#" v-on:click="loadDoc(data, index, 'show')">参考</a></td>
@@ -54,13 +54,11 @@
       },
       lastNav: {
         get() {
-          console.log(this.$store.state.Edit.lastNav)
           return this.$store.state.Edit.lastNav
         }
       },
       rightPanel: {
         get() {
-          console.log(this.$store.state.Edit.rightPanel)
           return this.$store.state.Edit.rightPanel
         }
       },
@@ -79,26 +77,27 @@
       },
       file: {
         get() {
-          let f = []
-          const file = this.$store.state.Edit.file
-          let start = 0
-          let fileLen = this.$store.state.Edit.file.length;
-          if (fileLen > 100) {
-            if (this.$store.state.Edit.filePage > 0) {
-              start = 100 * this.$store.state.Edit.filePage
-              fileLen = start + 100
-            } else {
-              fileLen = 100
-            }
-          }
-          for (let i = start; i < fileLen; i += 1) {
-            f.push(file[i])
-          }
-          const type = typeof file[0]
-          if (this.$store.state.Edit.lastNav !== '/edit' && type !== 'object') {
-            f = f.map(n => n.split(','))
-          }
-          return f
+          // let f = []
+          // const file = this.$store.state.Edit.file
+          // let start = 0
+          // let fileLen = this.$store.state.Edit.file.length;
+          // if (fileLen > 100) {
+          //   if (this.$store.state.Edit.filePage > 0) {
+          //     start = 100 * this.$store.state.Edit.filePage
+          //     fileLen = start + 100
+          //   } else {
+          //     fileLen = 100
+          //   }
+          // }
+          // for (let i = start; i < fileLen; i += 1) {
+          //   f.push(file[i])
+          // }
+          // const type = typeof file[0]
+          // if (this.$store.state.Edit.lastNav !== '/edit' && type !== 'object') {
+          //   f = f.map(n => n.split(','))
+          // }
+          // console.log(this.$store.state.Edit.docSummary)
+          return this.$store.state.Edit.docSummary
         }
       },
       flag: {
@@ -132,8 +131,9 @@
         }
         this.$store.commit('EDIT_SET_BAR_VALUE', data[index]);
       },
-      delDoc: function (data, index) {
+      delDoc: function (index) {
         this.$store.commit('EDIT_DELETE_DOC', index);
+        this.$store.commit('EDIT_DELETE_DOC_SUMMARY', index);
         this.$store.commit('SET_NOTICE', '删除成功');
       },
       uploadDoc: function (data, index) {
@@ -181,29 +181,29 @@
         if (type === 'edit') {
           this.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案');
           this.$store.commit('EDIT_SET_FILE_INDEX', index)
-          let r = []
-          if (this.$store.state.Edit.fileType === 'csv') {
-            const file = this.$store.state.Edit.file
-            const type = typeof this.$store.state.Edit.file[0]
-            let h = []
-            h = file[0]
-            // if (file.length === 20) {
-            //   h = file[index]
-            // } else {
-            //   h = file[0].split(',')
-            // }
-            if (type === 'string') {
-              h.split(',').forEach((key, i) => {
-                r.push(`${key} ${data[i]}`)
-              });
-            } else {
-              h.forEach((key, i) => {
-                r.push(`${key} ${data[i]}`)
-              });
-            }
+          const r = []
+          // if (this.$store.state.Edit.fileType === 'csv') {
+          const file = this.$store.state.Edit.file
+          const type = typeof this.$store.state.Edit.file[0]
+          let h = []
+          h = file[0]
+          // if (file.length === 20) {
+          //   h = file[index]
+          // } else {
+          //   h = file[0].split(',')
+          // }
+          if (type === 'string') {
+            h.split(',').forEach((key, i) => {
+              r.push(`${key} ${data[i]}`)
+            });
           } else {
-            r = data.split(',')
+            h.forEach((key, i) => {
+              r.push(`${key} ${data[i]}`)
+            });
           }
+          // } else {
+          //   r = data.split(',')
+          // }
           this.$store.commit('EDIT_LOAD_DOC', r)
           if (this.$store.state.Edit.helpType === '在线交流') {
             this.$store.commit('EDIT_SET_CHAT_TYPE', true)

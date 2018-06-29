@@ -141,7 +141,6 @@
             break;
           case '数据采集-数据采集':
             this.$router.push('/edit');
-            console.log(global.hitbDoc)
             if (global.hitbDoc.length > 0) {
               this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
               this.$store.commit('EDIT_LOAD_FILE', global.hitbDoc)

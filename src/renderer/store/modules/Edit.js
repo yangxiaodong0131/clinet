@@ -44,7 +44,8 @@ const state = {
   serverCdh: [],
   isSaveLocal: [],
   isSaveServer: [],
-  docHis: []
+  docHis: [],
+  docSummary: []
 };
 
 const mutations = {
@@ -352,10 +353,23 @@ const mutations = {
   EDIT_SET_DOC_HIS(state, value) {
     state.docHis = value
   },
+  EDIT_SET_DOC_SUMMARY(state, value) {
+    state.docSummary = value
+  },
+  EDIT_ADD_DOC_SUMMARY(state, value) {
+    state.docSummary.splice(value[0][0], 1, value[0])
+  },
+  EDIT_DELETE_DOC_SUMMARY(state, value) {
+    state.docSummary.splice(value, 1);
+    state.doc = [];
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_DELETE_DOC_SUMMARY');
+    commit('EDIT_ADD_DOC_SUMMARY');
+    commit('EDIT_SET_DOC_SUMMARY');
     commit('EDIT_SET_DOC_HIS');
     commit('EDIT_SET_IS_SAVE_LOCAL');
     commit('EDIT_SET_DELETE_LOCAL');

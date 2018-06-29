@@ -1,6 +1,6 @@
 import saveFile from './SaveFile'
 import { saveEdit } from './EditServerFile'
-export default function saveDoc(obj, data) {
+export default function saveEditDoc(obj, data) {
   const date = new Date();
   let month = date.getMonth() + 1;
   let strDate = date.getDate();

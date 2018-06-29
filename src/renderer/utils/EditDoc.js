@@ -38,7 +38,7 @@ function editDoc(x, sectionList) {
   let n = 0
   obj[key] = []
   let x1 = []
-  if (x[0][0].includes('创建时间')) {
+  if (x[0] && x[0][0].includes('创建时间')) {
     x1 = x.slice(1, -1)
   } else {
     x1 = x

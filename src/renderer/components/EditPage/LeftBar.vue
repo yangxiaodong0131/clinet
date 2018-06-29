@@ -57,7 +57,7 @@
 </template>
 
 <script>
-  import saveDoc from '../../utils/EditSave'
+  import saveEditDoc from '../../utils/EditSave'
   import { getDocContent } from '../../utils/EditServerFile'
   import { getStat } from '../../utils/StatServerFile'
   import { getLibrary } from '../../utils/LibraryServerFile';
@@ -213,12 +213,26 @@
           doc.splice(0, 0, string);
           this.$store.commit('EDIT_SET_IS_SAVE_LOCAL', fileIndex);
           this.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc.toString()]);
+          const summary = []
+          doc.forEach((x) => {
+            const b = x.split(';')
+            let creatTime = ''
+            b.forEach((x) => {
+              if (x.includes('创建时间')) {
+                creatTime = x
+              }
+            })
+            if (x.includes('创建时间')) {
+              summary.push([fileIndex, creatTime])
+            }
+          })
+          this.$store.commit('EDIT_ADD_DOC_SUMMARY', summary);
         } else {
           this.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
         }
       },
       save: function (data) {
-        saveDoc(this, data)
+        saveEditDoc(this, data)
       },
       leftEnter(e) {
         const doc = this.$store.state.Edit.doc
