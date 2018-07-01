@@ -41,7 +41,11 @@ const state = {
   docHeader: { 创建时间: null, 修改时间: null, 缓存时间: null, 保存时间: null, 上传时间: null, 发布时间: null, 下载时间: null, 标题: null, 病人: null },
   serverId: null,
   docState: null,
-  serverCdh: []
+  serverCdh: [],
+  isSaveLocal: [],
+  isSaveServer: [],
+  docHis: [],
+  docSummary: []
 };
 
 const mutations = {
@@ -289,11 +293,9 @@ const mutations = {
   },
   EDIT_UPDATE_DOC_HEADER(state, value) {
     state.docHeader[value[0]] = value[1]
-    console.log(state.docHeader)
   },
   EDIT_SET_DOC_HEADER(state, value) {
     state.docHeader = value
-    console.log(state.docHeader)
   },
   EDIT_SET_DOC_STATE(state) {
     const obj1 = state.docHeader
@@ -319,11 +321,60 @@ const mutations = {
     } else {
       state.docState = '正在编辑...'
     }
-  }
+  },
+  EDIT_SET_IS_SAVE_LOCAL(state, value) {
+    if (state.docState !== '') {
+      if (!state.isSaveLocal.includes(value)) {
+        state.isSaveLocal.push(value)
+      }
+    }
+  },
+  EDIT_SET_DELETE_LOCAL(state, value) {
+    if (state.docState !== '') {
+      if (state.isSaveLocal.includes(value)) {
+        state.isSaveLocal.splice(value, 1)
+      }
+    }
+  },
+  EDIT_SET_IS_SAVE_SERVER(state, value) {
+    if (state.docState !== '') {
+      if (!state.isSaveServer.includes(value)) {
+        state.isSaveServer.push(value)
+      }
+    }
+  },
+  EDIT_SET_DELETE_SERVER(state, value) {
+    if (state.docState !== '') {
+      if (state.isSaveServer.includes(value)) {
+        state.isSaveServer.splice(value, 1)
+      }
+    }
+  },
+  EDIT_SET_DOC_HIS(state, value) {
+    state.docHis = value
+  },
+  EDIT_SET_DOC_SUMMARY(state, value) {
+    state.docSummary = value
+  },
+  EDIT_ADD_DOC_SUMMARY(state, value) {
+    state.docSummary.splice(value[0][0], 1, value[0])
+  },
+  EDIT_DELETE_DOC_SUMMARY(state, value) {
+    state.docSummary.splice(value, 1);
+    state.doc = [];
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_DELETE_DOC_SUMMARY');
+    commit('EDIT_ADD_DOC_SUMMARY');
+    commit('EDIT_SET_DOC_SUMMARY');
+    commit('EDIT_SET_DOC_HIS');
+    commit('EDIT_SET_IS_SAVE_LOCAL');
+    commit('EDIT_SET_DELETE_LOCAL');
+    commit('EDIT_SET_IS_SAVE_SERVER');
+    commit('EDIT_SET_DELETE_SERVER');
     commit('EDIT_UPDATE_DOC_HEADER');
     commit('EDIT_SET_DOC_STATE');
     commit('EDIT_SET_DOC_HEADER');

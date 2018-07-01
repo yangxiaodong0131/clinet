@@ -7,13 +7,13 @@
           <a href="#" v-on:click="fold('编辑病案')" style="float: right; marginRight: 3px">↗</a>
         </th>
       </tr>
-      <tr class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index}">
+      <tr class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index, 'table-danger': isSave.includes(index)}">
         <td> {{index + 1}} </td>
         <td v-if="lastNav !== '/edit' && index < 10" v-for="(field, index) in data" v-bind:key='index' v-on:click="onClickTd(data, index)" v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}">{{data[index]}}</td>
-        <td v-if="lastNav === '/edit'">{{data.substr(0, 100)}}</td>
+        <td v-if="lastNav === '/edit'">{{data[1]}}</td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-del'+index"><a href="#" v-on:click="delDoc(data, index)">删除</a></td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-edit'+index"><a href="#" v-on:click="loadDoc(data, index, 'edit')">编辑</a></td>
-        <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-ref'+index"><a href="#" v-on:click="loadDoc(data, index, 'show')">参考</a></td>
+        <td v-if="lastNav !== '/library' && rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-ref'+index"><a href="#" v-on:click="loadDoc(data, index, 'show')">参考</a></td>
         <td v-if="!fileName.includes('@') || rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-upl'+index"><a href="#" v-on:click="uploadDoc(data)">上传</a></td>
         <td v-if="fileName.includes('@')" v-bind:id="'edit-leftpaneltable-dow'+index"><a href="#" v-on:click="downloadDoc(data, index)">下载</a></td>
       </tr>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import { saveEdit, editDocState } from '../../utils/EditServerFile'
+  import { saveEdit, editDocState, editDocShow } from '../../utils/EditServerFile'
   import saveFile from '../../utils/SaveFile';
   import { join } from '../../utils/Socket'
   export default {
@@ -41,6 +41,17 @@
       };
     },
     computed: {
+      isSave: {
+        get() {
+          let type = this.$store.state.Edit.isSaveLocal
+          if (this.$store.state.Edit.rightPanel === 'local') {
+            type = this.$store.state.Edit.isSaveLocal
+          } else if (this.$store.state.Edit.rightPanel === 'server') {
+            type = this.$store.state.Edit.isSaveServer
+          }
+          return type
+        }
+      },
       lastNav: {
         get() {
           return this.$store.state.Edit.lastNav
@@ -66,26 +77,27 @@
       },
       file: {
         get() {
-          let f = []
-          const file = this.$store.state.Edit.file
-          let start = 0
-          let fileLen = this.$store.state.Edit.file.length;
-          if (fileLen > 100) {
-            if (this.$store.state.Edit.filePage > 0) {
-              start = 100 * this.$store.state.Edit.filePage
-              fileLen = start + 100
-            } else {
-              fileLen = 100
-            }
-          }
-          for (let i = start; i < fileLen; i += 1) {
-            f.push(file[i])
-          }
-          const type = typeof file[0]
-          if (this.$store.state.Edit.lastNav !== '/edit' && type !== 'object') {
-            f = f.map(n => n.split(','))
-          }
-          return f
+          // let f = []
+          // const file = this.$store.state.Edit.file
+          // let start = 0
+          // let fileLen = this.$store.state.Edit.file.length;
+          // if (fileLen > 100) {
+          //   if (this.$store.state.Edit.filePage > 0) {
+          //     start = 100 * this.$store.state.Edit.filePage
+          //     fileLen = start + 100
+          //   } else {
+          //     fileLen = 100
+          //   }
+          // }
+          // for (let i = start; i < fileLen; i += 1) {
+          //   f.push(file[i])
+          // }
+          // const type = typeof file[0]
+          // if (this.$store.state.Edit.lastNav !== '/edit' && type !== 'object') {
+          //   f = f.map(n => n.split(','))
+          // }
+          // console.log(this.$store.state.Edit.docSummary)
+          return this.$store.state.Edit.docSummary
         }
       },
       flag: {
@@ -119,8 +131,9 @@
         }
         this.$store.commit('EDIT_SET_BAR_VALUE', data[index]);
       },
-      delDoc: function (data, index) {
+      delDoc: function (index) {
         this.$store.commit('EDIT_DELETE_DOC', index);
+        this.$store.commit('EDIT_DELETE_DOC_SUMMARY', index);
         this.$store.commit('SET_NOTICE', '删除成功');
       },
       uploadDoc: function (data, index) {
@@ -128,8 +141,8 @@
           this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
         } else {
           this.$store.commit('EDIT_SET_FILE_INDEX', index)
-          // obj, data, fileName, content, id, username, doctype, mouldtype
-          saveEdit(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.files[this.$store.state.Edit.filesIndex], [data], '', this.$store.state.System.user.username, 1, this.$store.state.Edit.docType, '病案')
+          // obj, data, fileName, content, id, saveType, username, doctype, mouldtype
+          saveEdit(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.files[this.$store.state.Edit.filesIndex], [data], '', '上传', this.$store.state.System.user.username, 1, this.$store.state.Edit.docType, '病案')
         }
         const date = new Date();
         let month = date.getMonth() + 1;
@@ -164,32 +177,33 @@
         this.$store.commit('EDIT_SET_DOC_STATE');
       },
       loadDoc: function (data, index, type) {
+        let doc = []
         if (type === 'edit') {
           this.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案');
           this.$store.commit('EDIT_SET_FILE_INDEX', index)
-          let r = []
-          if (this.$store.state.Edit.fileType === 'csv') {
-            const file = this.$store.state.Edit.file
-            const type = typeof this.$store.state.Edit.file[0]
-            let h = []
-            h = file[0]
-            // if (file.length === 20) {
-            //   h = file[index]
-            // } else {
-            //   h = file[0].split(',')
-            // }
-            if (type === 'string') {
-              h.split(',').forEach((key, i) => {
-                r.push(`${key} ${data[i]}`)
-              });
-            } else {
-              h.forEach((key, i) => {
-                r.push(`${key} ${data[i]}`)
-              });
-            }
+          const r = []
+          // if (this.$store.state.Edit.fileType === 'csv') {
+          const file = this.$store.state.Edit.file
+          const type = typeof this.$store.state.Edit.file[0]
+          let h = []
+          h = file[0]
+          // if (file.length === 20) {
+          //   h = file[index]
+          // } else {
+          //   h = file[0].split(',')
+          // }
+          if (type === 'string') {
+            h.split(',').forEach((key, i) => {
+              r.push(`${key} ${data[i]}`)
+            });
           } else {
-            r = data.split(',')
+            h.forEach((key, i) => {
+              r.push(`${key} ${data[i]}`)
+            });
           }
+          // } else {
+          //   r = data.split(',')
+          // }
           this.$store.commit('EDIT_LOAD_DOC', r)
           if (this.$store.state.Edit.helpType === '在线交流') {
             this.$store.commit('EDIT_SET_CHAT_TYPE', true)
@@ -203,14 +217,16 @@
           this.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
           this.$store.commit('EDIT_SET_DOC_INDEX', [0, true]);
           document.getElementById('edit-editbar-input').focus()
+          doc = this.$store.state.Edit.doc
         } else {
           this.$store.commit('EDIT_SET_RIGHT_PANELS', '病案参考');
           this.$store.commit('EDIT_SET_FILE_INDEX', index)
           this.$store.commit('EDIT_LOAD_DOC_SHOW', data.split(','))
           this.$store.commit('EDIT_SET_RIGHT_PANEL', 'help');
           this.$store.commit('EDIT_SET_HELP_TYPE', '病案参考');
+          doc = this.$store.state.Edit.docShow
+          editDocShow(this, [this.$store.state.System.server, this.$store.state.System.port], data)
         }
-        const doc = this.$store.state.Edit.doc
         editDocState(this, doc)
         this.$store.commit('EDIT_SET_DOC_STATE')
       },

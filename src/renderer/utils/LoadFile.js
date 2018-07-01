@@ -127,12 +127,36 @@ export default function loadFile(obj, x, p, e = null) {
           f[0].split(',')[0].split(';').forEach((v) => {
             fileInfo[v.split(':')[0]] = v.split(':')[1]
           })
-          console.log(fileInfo);
           obj.$store.commit('EDIT_LOAD_FILE', f);
           obj.$store.commit('EDIT_LOAD_FILE_DOWN', f);
           obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
           obj.$store.commit('EDIT_SET_FILE_TYPE', 'cda')
           obj.$store.commit('SET_NOTICE', 'CDA文件读取成功！');
+          const summary = []
+          f.forEach((x, index) => {
+            const a = x.split(',')
+            let isDiag = false
+            const arr = a.map((x) => {
+              const bool = x.includes('诊断')
+              return bool
+            })
+            if (arr.includes(true)) {
+              isDiag = true
+            }
+            if (a[0].includes('创建时间') || isDiag) {
+              const b = a[0].split(';')
+              b.forEach((x) => {
+                if (x.includes('创建时间') || x.includes('诊断')) {
+                  if (x[1] && !x[1].includes(null)) {
+                    summary.push([index, x])
+                  }
+                }
+              })
+            } else {
+              summary.push([index])
+            }
+          })
+          obj.$store.commit('EDIT_SET_DOC_SUMMARY', summary);
         });
         fReadline.on('line', (line) => {
           f.push(line)

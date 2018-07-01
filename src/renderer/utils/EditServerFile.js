@@ -43,7 +43,6 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
-    console.log(res);
     if (res.status === 200) {
       // obj.$store.commit('EDIT_LOAD_FILE', res.data)
       obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
@@ -59,19 +58,20 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
   })
 }
 
-export function saveEdit(obj, data, fileName, content, id, username, doctype, mouldtype) {
+export function saveEdit(obj, data, fileName, content, id, saveType, username, doctype, mouldtype) {
   content = content[0]
   const url = `http://${data[0]}:${data[1]}/edit/cda`
   const header = obj.$store.state.Edit.docHeader
   axios({
     method: 'post',
     url: url,
-    data: qs.stringify({ id: id, file_name: fileName, content: content, username: username, doctype: doctype, mouldtype: mouldtype, header: header }),
+    data: qs.stringify({ id: id, file_name: fileName, content: content, username: username, doctype: doctype, mouldtype: mouldtype, header: header, save_type: saveType }),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
       if (res.data.success) {
+        console.log(res.data);
         obj.$store.commit('SET_NOTICE', res.data.info)
       } else {
         obj.$store.commit('SET_NOTICE', res.data.info)
@@ -114,7 +114,6 @@ export function getDocContent(obj, data, username, filename) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
-    console.log(res);
     if (res.status === 200) {
       obj.$store.commit('SET_NOTICE', '模板内容查询成功')
       const con = res.data.result.split(',')
@@ -182,11 +181,10 @@ export function getCaseHistory(obj, data, name, username) {
   const objs = {}
   name.forEach((n) => {
     if (['姓名', '年龄', '性别', '婚姻', '民族', '出生地', '职业'].includes(n[0])) {
-      console.log(n[1])
-      if (n[1]) {
+      if (n.length === 2) {
         objs[n[0]] = n[1]
       } else {
-        objs[n[0]] = '--'
+        objs[n[0]] = '-'
       }
     }
   })
@@ -194,13 +192,13 @@ export function getCaseHistory(obj, data, name, username) {
     method: 'post',
     url: `http://${data[0]}:${data[1]}/edit/patientlist`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    data: qs.stringify({ name: objs, username: username }),
+    data: qs.stringify({ info: objs, username: username }),
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
       console.log(res)
-    } else {
       obj.$store.commit('SET_NOTICE', '病案历史查询成功')
+      obj.$store.commit('EDIT_SET_DOC_HIS', res.data.result)
     }
   }).catch((err) => {
     console.log(err);
@@ -209,33 +207,52 @@ export function getCaseHistory(obj, data, name, username) {
 }
 
 export function editDocState(obj, doc) {
-  const value = doc[0][0].split(';')
-  const header = value.map((x) => {
-    const a = x.split(':')
-    if (a[0].includes('时间')) {
-      const b = `${a[1]}:${a[2]}:${a[3]}`
-      a[1] = b
-      a.splice(2, 2)
-    }
-    return a
-  })
-  // 未缓存 修改时间》缓存时间
-  // 未保存 缓存时间》保存时间
-  // 已保存 保存时间》缓存时间
-  const keys = []
-  const values = []
-  header.forEach((x) => {
-    keys.push(x[0])
-    values.push(x[1])
-  })
-  const obj1 = {}
-  keys.forEach((x, key) => {
-    if (values[key] && values.includes('　')) {
-      obj1[x] = values[key].replace(/　/g, ' ')
-    } else {
-      obj1[x] = ''
-    }
-  })
+  if (doc[0][0]) {
+    const value = doc[0][0].split(';')
+    const header = value.map((x) => {
+      const a = x.split(':')
+      if (a[0] && a[0].includes('时间')) {
+        const b = `${a[1]}:${a[2]}:${a[3]}`
+        a[1] = b
+        a.splice(2, 2)
+      }
+      return a
+    })
+    // 未缓存 修改时间》缓存时间
+    // 未保存 缓存时间》保存时间
+    // 已保存 保存时间》缓存时间
+    const keys = []
+    const values = []
+    header.forEach((x) => {
+      keys.push(x[0])
+      values.push(x[1])
+    })
+    const obj1 = {}
+    keys.forEach((x, key) => {
+      if (values[key] && values.includes('　')) {
+        obj1[x] = values[key].replace(/　/g, ' ')
+      } else {
+        obj1[x] = ''
+      }
+    })
+  }
   // obj.$store.commit('EDIT_SET_DOC_HEADER', obj1)
-  console.log(obj1)
+  // console.log(obj1)
+}
+
+export function editDocShow(obj, data, value) {
+  const value2 = value.split(',').map(x => x.split(' ')[1])
+  axios({
+    method: 'post',
+    url: `http://${data[0]}:${data[1]}/edit/cda_consule`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    data: qs.stringify({ diag: `["${value2.join('","')}"]` }),
+    responseType: 'json'
+  }).then((res) => {
+    console.log(res);
+  }).catch((err) => {
+    console.log(err);
+    obj.$store.commit('SET_NOTICE', '病案历史查询失败')
+  })
+  // console.log(diag)
 }

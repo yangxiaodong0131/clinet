@@ -10,6 +10,7 @@
         <li class="nav-item dropdown" v-on:click="onClick('数据采集-数据采集')" id="navbar-edit" >
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             数据采集
+            <span style="color: red"><b>{{docLength}}</b></span>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#" v-on:click="onClick('数据采集-数据采集')">数据采集</a>
@@ -68,12 +69,14 @@
         </li>
       </ul>
     </div>
-    <a class="navbar-brand" href="#" v-on:click="onClick(userName)">&nbsp;&nbsp;&nbsp;&nbsp;{{userName}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+    <a class="navbar-brand" href="#" id="navbar-username" v-on:click="onClick(userName)">&nbsp;&nbsp;&nbsp;&nbsp;{{userName}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+    <a v-on:click="test()">测试按钮</a>
   </nav>
 </template>
 
 <script>
   import loadFile from '../../utils/LoadFile';
+  import saveFile from '../../utils/SaveFile'
   export default {
     data() {
       return {
@@ -81,6 +84,15 @@
       };
     },
     computed: {
+      docLength: {
+        get() {
+          let length = null
+          if (this.$store.state.Edit.isSaveLocal.length > 0 || this.$store.state.Edit.isSaveServer.length > 0) {
+            length = this.$store.state.Edit.isSaveLocal.length + this.$store.state.Edit.isSaveServer.length
+          }
+          return length
+        }
+      },
       userName: {
         get() {
           let user = ''
@@ -95,6 +107,17 @@
       }
     },
     methods: {
+      test: function () {
+        let x = ''
+        let p = ''
+        if (this.$store.state.Edit.lastNav === '/stat') {
+          x = this.$store.state.Stat.fileName
+        } else {
+          x = '未保存病案.cda'
+        }
+        p = this.$store.state.Edit.lastNav
+        saveFile(this, x, p)
+      },
       created: function () {
         this.$nextTick(function () {
           this.timer()
@@ -118,6 +141,10 @@
             break;
           case '数据采集-数据采集':
             this.$router.push('/edit');
+            if (global.hitbDoc.length > 0) {
+              this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
+              this.$store.commit('EDIT_LOAD_FILE', global.hitbDoc)
+            }
             if (this.$store.state.System.user.login) {
               // getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port, this.$store.state.System.user.username])
               // getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
@@ -196,7 +223,6 @@
             this.$router.push('/');
         }
       },
-
     },
   };
 </script>

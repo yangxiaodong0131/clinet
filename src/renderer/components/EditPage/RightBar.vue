@@ -29,10 +29,14 @@
           <a class="nav-link text-light" href="#"> 辅助 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click='localData()' id="edit-rightbar-local">
-          <a class="nav-link text-light" href="#"> 本地 <span class="sr-only">(current)</span></a>
+          <a class="nav-link text-light" href="#"> 本地 <span class="sr-only">(current)</span>
+            <span style="color: red"><b>{{isSaveLocal}}</b></span>
+          </a>
         </li>
         <li class="nav-item active" v-on:click='serverData()' id="edit-rightbar-server">
-          <a class="nav-link text-light" href="#"> 远程 <span class="sr-only">(current)</span></a>
+          <a class="nav-link text-light" href="#"> 远程 {{isSaveServer}}<span class="sr-only">(current)</span>
+            <span style="color: red"><b>{{isSaveServer}}</b></span>
+          </a>
         </li>
         <li class="nav-item active" v-on:click='blockData()' id="edit-rightbar-block">
           <a class="nav-link text-light" href="#"> 区块链 <span class="sr-only">(current)</span></a>
@@ -61,10 +65,33 @@
       return {
         name: this.$route.name,
         rightItem: '',
-        helpType: '编辑器使用帮助'
+        // helpType: '编辑器使用帮助'
       };
     },
     computed: {
+      isSaveLocal: {
+        get() {
+          let length = null
+          if (this.$store.state.Edit.isSaveLocal.length > 0) {
+            length = this.$store.state.Edit.isSaveLocal.length
+          }
+          return length
+        }
+      },
+      isSaveServer: {
+        get() {
+          let length = null
+          if (this.$store.state.Edit.isSaveServer.length > 0) {
+            length = this.$store.state.Edit.isSaveServer.length
+          }
+          return length
+        }
+      },
+      helpType: {
+        get() {
+          return this.$store.state.Edit.helpType
+        }
+      },
       helpTypes: {
         get() {
           return this.$store.state.Edit.helpTypes
@@ -76,6 +103,10 @@
         if (n) {
           this.$store.commit('EDIT_SET_RIGHT_PANELS', n);
           this.$store.commit('SET_NOTICE', n);
+          this.$store.commit('EDIT_SET_HELP_TYPE', n);
+          if (this.$store.state.Edit.rightPanel === 'server') {
+            clinetHelp(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
+          }
           if (n === 'DRG分析') {
             if (this.$store.state.System.wt4Tables.length > 1) {
               sCompDrg(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.wt4Tables, 'BJ', 'getLocalData')
@@ -85,10 +116,7 @@
           } else if (n === '编辑器使用帮助' || n === '在线交流') {
             this.$store.commit('SET_NOTICE', n);
             this.helpType = n
-            this.$store.commit('EDIT_SET_HELP_TYPE', n);
             this.$store.commit('EDIT_SET_RIGHT_PANEL', 'help');
-          } else if (this.$store.state.Edit.rightPanel === 'server') {
-            clinetHelp(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
           } else if (this.$store.state.Edit.rightPanel === '输入框提示') {
             if (this.$store.state.Edit.rightPanel === 'server') {
               if (!this.$store.state.Edit.rightCdh) {
