@@ -82,7 +82,7 @@ describe('EditRemoteFile', function () {
         expect(editText).to.be.an('string');
       })
       .pause(1000)
-      .click('#edit-rightpanellocal-tr2')
+      .click('#edit-rightpanellocal-tr0')
       .getText('#edit-leftpaneltable-table')
       .then(function (editText) {
         // console.log(editText);

@@ -33,6 +33,7 @@ describe('Launch', function () {
       .setValue('#server-username', 'test@test.com.cn')
       .setValue('#server-password', '123456')
       .click('#server-login')
+      .pause(1000)
       // .waitForExist(50)
       .getText('#navbar-username')
       .then(function (value) {
