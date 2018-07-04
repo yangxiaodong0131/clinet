@@ -44,7 +44,14 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
+      const docSummary = []
+      res.data.cda.header.split(';').forEach((x, index) => {
+        if (x.includes('创建时间')) {
+          docSummary.push([index, x])
+        }
+      })
       // obj.$store.commit('EDIT_LOAD_FILE', res.data)
+      obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
       obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
       obj.$store.commit('EDIT_LOAD_FILE', [res.data.cda.content])
       obj.$store.commit('SET_NOTICE', res.data.info);
@@ -71,7 +78,6 @@ export function saveEdit(obj, data, fileName, content, id, saveType, username, d
   }).then((res) => {
     if (res.status === 200) {
       if (res.data.success) {
-        console.log(res.data);
         obj.$store.commit('SET_NOTICE', res.data.info)
       } else {
         obj.$store.commit('SET_NOTICE', res.data.info)

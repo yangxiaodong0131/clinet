@@ -214,7 +214,7 @@
               string = `${string};${x}:${a}`
             }
           })
-          if (doc[0].includes('创建时间')) {
+          if (doc[0] && doc[0].includes('创建时间')) {
             doc.splice(0, 1, string);
           } else {
             doc.splice(0, 0, string);
