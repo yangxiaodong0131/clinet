@@ -96,7 +96,6 @@
           // if (this.$store.state.Edit.lastNav !== '/edit' && type !== 'object') {
           //   f = f.map(n => n.split(','))
           // }
-          // console.log(this.$store.state.Edit.docSummary)
           return this.$store.state.Edit.docSummary
         }
       },
@@ -135,6 +134,7 @@
         this.$store.commit('EDIT_DELETE_DOC', index);
         this.$store.commit('EDIT_DELETE_DOC_SUMMARY', index);
         this.$store.commit('SET_NOTICE', '删除成功');
+        this.$store.commit('EDIT_SET_DELETE_LOCAL', index[0])
       },
       uploadDoc: function (data, index) {
         if (!this.$store.state.System.user.login) {
