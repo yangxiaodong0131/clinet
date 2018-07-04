@@ -328,10 +328,9 @@ const mutations = {
     }
   },
   EDIT_SET_DELETE_LOCAL(state, value) {
-    if (state.docState !== '') {
-      if (state.isSaveLocal.includes(value)) {
-        state.isSaveLocal.splice(value, 1)
-      }
+    const index = state.isSaveLocal.indexOf(value)
+    if (state.isSaveLocal.includes(value)) {
+      state.isSaveLocal.splice(index, 1)
     }
   },
   EDIT_SET_IS_SAVE_SERVER(state, value) {

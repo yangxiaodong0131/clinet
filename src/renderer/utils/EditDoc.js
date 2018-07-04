@@ -65,7 +65,6 @@ function editDoc(x, sectionList) {
       obj[key].push(x)
     }
   })
-  console.log(obj)
   return obj
 }
 
