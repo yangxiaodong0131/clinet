@@ -58,18 +58,6 @@
             <a class="nav-link" href="#"  v-for="chart in charts" v-bind:key='chart' v-on:click='showChart("chartRight", chart)' v-bind:id="'stat-right-chart-'+chart"> {{chart}} <span class="sr-only">(current)</span></a>
           </div>
         </li>
-        <li v-if="this.$store.state.Stat.tableType !== 'compare'" class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            维度选择
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <!-- <a id="stat-right-dimension-org" class="nav-link" href="#" v-on:click='selX("机构")'> 机构 <span class="sr-only">(current)</span></a>
-            <a id="stat-right-dimension-time" class="nav-link" href="#" v-on:click='selX("时间")'> 时间 <span class="sr-only">(current)</span></a>
-            <a id="stat-right-dimension-disease" class="nav-link" href="#" v-on:click='selX("病种")' v-if="tableType === 'local'"> 病种 <span class="sr-only">(current)</span></a>
-            <a id="stat-right-dimension-disease" class="nav-link" href="#" v-on:click='selX("全部")'> 全部 <span class="sr-only">(current)</span></a> -->
-            <a v-for="(data, index) in dimensionSel" v-bind:key='index' class="nav-link" href="#" v-on:click='selX(index)' v-bind:id="'stat-td-tr'+index" > {{data}} <span class="sr-only">(current)</span></a>
-          </div>
-        </li>
         <!-- 加入对比 -->
         <li class="nav-item active" id="stat-left-page" v-on:click='compare()' v-if="this.$store.state.Stat.selectedRow.length > 0 || this.$store.state.Stat.selectedCol > 0"  title="当前选中记录加入到对比中">
           <a class="nav-link  text-light" href="#"> 加入对比 <span class="sr-only"></span></a>
@@ -90,6 +78,27 @@
         </li>
         <li class="nav-item active" id="stat-right-page" v-on:click='title(10)' v-if="this.$store.state.Stat.haveRight">
           <a class="nav-link" href="#"> 右页 <span class="sr-only"></span></a>
+        </li>
+        <li v-if="this.$store.state.Stat.tableType !== 'compare'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            维度选择
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <!-- <a id="stat-right-dimension-org" class="nav-link" href="#" v-on:click='selX("机构")'> 机构 <span class="sr-only">(current)</span></a>
+            <a id="stat-right-dimension-time" class="nav-link" href="#" v-on:click='selX("时间")'> 时间 <span class="sr-only">(current)</span></a>
+            <a id="stat-right-dimension-disease" class="nav-link" href="#" v-on:click='selX("病种")' v-if="tableType === 'local'"> 病种 <span class="sr-only">(current)</span></a>
+            <a id="stat-right-dimension-disease" class="nav-link" href="#" v-on:click='selX("全部")'> 全部 <span class="sr-only">(current)</span></a> -->
+            <a v-for="(data, index) in dimensionSel" v-bind:key='index' class="nav-link" href="#" v-on:click='selX(index)' v-bind:id="'stat-td-tr'+index" > {{data}} <span class="sr-only">(current)</span></a>
+          </div>
+        </li>
+        <li v-if="this.$store.state.Stat.tableType !== 'compare' && dimension !== ''" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension-value" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{dimension}}
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <!-- v-on:click='selX(index)' -->
+              <a v-for="(data, index) in this.$store.state.Stat.statList" v-bind:key='index' class="nav-link" href="#"  v-bind:id="'stat-td-tr'+index" > {{data}} <span class="sr-only">(current)</span></a>
+          </div>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
@@ -120,6 +129,7 @@
         paths: [],
         stat: '',
         tableType: this.$store.state.Stat.tableType,
+        dimension: ''
       };
     },
     computed: {
@@ -128,6 +138,11 @@
           return this.$store.state.Stat.dimensionSel
         }
       },
+      // statList: {
+      //   get() {
+      //     return this.$store.state.Stat.statList
+      //   }
+      // },
       file: {
         get() {
           return this.$store.state.Stat.file
@@ -326,16 +341,18 @@
           case 'server': {
             if (this.$store.state.Stat.serverTable.data.length > 0) {
               if (this.dimensionSel[x] === '全部') {
-                this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
-                this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-                getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.$store.state.Stat.dimensionServer }, 'stat')
-              } else if (this.dimensionSel[x] === '自定义维度') {
-                if (this.selectedCol.length > 0) {
-                  this.$store.commit('STAT_SET_CHART_IS_SHOW', 'dimension');
-                } else {
-                  this.$store.commit('SET_NOTICE', '请选择维度！')
-                }
+                console.log(x);
+                // this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
+                //     this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
+                // getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.$store.state.Stat.dimensionServer }, 'stat')
+                //   } else if (this.dimensionSel[x] === '自定义维度') {
+                //     if (this.selectedCol.length > 0) {
+                //       this.$store.commit('STAT_SET_CHART_IS_SHOW', 'dimension');
+                //     } else {
+                //       this.$store.commit('SET_NOTICE', '请选择维度！')
+                //     }
               } else {
+                this.dimension = this.dimensionSel[x]
                 getList(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Stat.serverTable.tableName, this.dimensionSel[x], this.$store.state.System.user.username)
               }
             } else {
@@ -347,6 +364,9 @@
             break;
           }
         }
+      },
+      selXData: function (x) {
+        console.log(x);
       },
       showChart: function (id, type) {
         let option = this.$store.state.Stat.chartData

@@ -53,7 +53,8 @@ const state = {
   caseSelectedCol: [],
   xObj: {},
   barType: '',
-  fileTypes: ['本地', '远程', '区块链']
+  fileTypes: ['本地', '远程', '区块链'],
+  statList: [],
 };
 
 const mutations = {
@@ -311,9 +312,9 @@ const mutations = {
       state.localTable = table
     }
   },
-  // STAT_SET_TITLE_PAGE(state, num) {
-  //   state.colNum = num
-  // },
+  STAT_SET_STAT_LIST(state, data) {
+    state.statList = data
+  },
   STAT_SET_CHART_OPTION(state, opt) {
     state.chartIsShow = 'chart'
     state.chartOption = opt
@@ -436,6 +437,7 @@ const actions = {
     commit('STAT_SET_XOBJ');
     commit('STAT_SET_BAR_TYPE');
     commit('STAT_SET_FILE_TYPES');
+    commit('STAT_SET_STAT_LIST');
   },
 };
 export default {

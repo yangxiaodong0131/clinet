@@ -147,31 +147,75 @@ export default function appInit() {
     })
   }
 
+  function a(value) {
+    console.log(value)
+    const fRead = fs.createReadStream(value);
+    const fReadline = readline.createInterface({ input: fRead });
+    const f = []; // 将CSV文件逐行读到数组中
+    const t = {}; // 将数组逐行转换为js对象
+
+    fReadline.on('close', () => {
+      // if (value.endsWith('.csv')) {
+      f.shift();
+      f.forEach((line) => {
+        const x = line.split(' ');
+        const [a, ...rest] = x;
+        t[a] = rest;
+        if (value.endsWith('.csv')) {
+          global.hitbdata.table = t;
+        } else {
+          global.hitbdata.cdh = t;
+        }
+        // global.hitbdata.table = t;
+      })
+      // } else {
+      // f.shift();
+      // f.forEach((line) => {
+      //   const x = line.split(' ');
+      //   const [a, ...rest] = x;
+      //   t[a] = rest;
+      //   global.hitbdata.cdh = t;
+      // })
+    // }
+      // global.hitbdata.table = t;
+    });
+    fReadline.on('line', (line) => {
+      f.push(line)
+    })
+  }
+  const cdhFile = path.format({
+    dir: hitbdataLibrary,
+    base: 'cdh.cdh'
+  })
+  if (fs.existsSync(cdhFile)) {
+    a(cdhFile)
+  }
   // 导入数据，系统表结构
   const tableFile = path.format({
     dir: hitbdataSystem,
     base: 'hitb_table.csv'
   });
   if (fs.existsSync(tableFile)) {
-    const fRead = fs.createReadStream(tableFile);
-    const fReadline = readline.createInterface({ input: fRead });
-    const f = []; // 将CSV文件逐行读到数组中
-    const t = {}; // 将数组逐行转换为js对象
+    a(tableFile)
+    // const fRead = fs.createReadStream(tableFile);
+    // const fReadline = readline.createInterface({ input: fRead });
+    // const f = []; // 将CSV文件逐行读到数组中
+    // const t = {}; // 将数组逐行转换为js对象
 
-    fReadline.on('close', () => {
-      f.shift();
-      f.forEach((line) => {
-        const x = line.split(',');
-        if (!t[x[0]]) { t[x[0]] = []; }
-        const a = x.shift();
-        t[a].push(x);
-      })
-      global.hitbdata.table = t;
-    });
+    // fReadline.on('close', () => {
+    //   f.shift();
+    //   f.forEach((line) => {
+    //     const x = line.split(',');
+    //     if (!t[x[0]]) { t[x[0]] = []; }
+    //     const a = x.shift();
+    //     t[a].push(x);
+    //   })
+    //   global.hitbdata.table = t;
+    // });
 
-    fReadline.on('line', (line) => {
-      f.push(line)
-    })
+    // fReadline.on('line', (line) => {
+    //   f.push(line)
+    // })
   } else {
     axios.get('/static/hitb_table.csv')
       .then((res) => {

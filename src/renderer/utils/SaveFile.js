@@ -81,7 +81,7 @@ export default function saveFile(obj, x, p) {
   } else if (x && x.startsWith('cdh') && x.endsWith('.csv')) {
     const b = x.split('.')
     const fileName = path.format({
-      dir: global.hitbdata.path.system,
+      dir: global.hitbdata.path.library,
       base: `${b[0]}.cdh`
     });
 

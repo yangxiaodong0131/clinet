@@ -58,7 +58,7 @@
 
 <script>
   import saveEditDoc from '../../utils/EditSave'
-  import { unSaveFile } from '../../utils/SaveFile'
+  // import { unSaveFile } from '../../utils/SaveFile'
   import { getDocContent } from '../../utils/EditServerFile'
   import { getStat } from '../../utils/StatServerFile'
   import { getLibrary } from '../../utils/LibraryServerFile';
@@ -104,6 +104,7 @@
             this.$store.commit('EDIT_SET_DOC_TYPE', n)
           } else { n = this.$store.state.Edit.docType }
           this.$store.commit('SET_NOTICE', n);
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
           if (this.$store.state.Edit.rightPanel === 'server') {
             getDocContent(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username, n)
           } else if (global.hitbmodel[n] !== undefined) {
@@ -129,6 +130,7 @@
           this.saveDoc()
           document.getElementById('edit-editbar-input').focus()
         } else {
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice')
           this.$store.commit('SET_NOTICE', '请选择保存病案的文件！')
         }
       },
@@ -150,8 +152,10 @@
         }
         if (page === 1 && n === -1) {
           this.$store.commit('SET_NOTICE', '当前已是第一页')
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         } else if (countPage === page && n === 1 && ['/stat', '/library'].includes(this.$store.state.Edit.lastNav)) {
           this.$store.commit('SET_NOTICE', '当前已是尾页');
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         } else {
           switch (this.$store.state.Edit.lastNav) {
             case '/library':
@@ -162,6 +166,7 @@
                 this.$store.commit('LIBRARY_TABLE_PAGE', [n]);
                 this.$store.commit('EDIT_LOAD_FILE', this.$store.state.Library.localTable)
                 this.$store.commit('SET_NOTICE', `当前${this.$store.state.Library.tablePage}页,共${this.$store.state.Library.countPage}页`)
+                this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
               }
               break;
             case '/stat':
@@ -171,11 +176,13 @@
               } else {
                 this.$store.commit('STAT_TABLE_PAGE', n);
                 this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.tablePage}页,共${this.$store.state.Stat.countPage}页`)
+                this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
               }
               break;
             default:
               this.$store.commit('EDIT_SET_FILE_PAGE', n);
               this.$store.commit('SET_NOTICE', '下一页')
+              this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
               break;
           }
         }
@@ -239,6 +246,7 @@
           // saveFile(this, '未保存病案.cda', '/edit')
         } else {
           this.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         }
       },
       save: function (data) {
@@ -246,7 +254,7 @@
         if (this.$store.state.Edit.fileName === '未保存病案.cda') {
           // this.$store.commit('EDIT_ADD_DOC', this.$store.state.Edit.doc.toString());
           // // this.$store.commit('EDIT_ADD_DOC', [this.$store.state.Edit.fileIndex, this.$store.state.Edit.doc.toString()]);
-          unSaveFile(this, '2018年度病案.cda', '/edit')
+          // unSaveFile(this, '2018年度病案.cda', '/edit')
         }
       },
       leftEnter(e) {
@@ -260,6 +268,7 @@
             this.$store.commit('SET_NOTICE', '')
           } else {
             this.$store.commit('SET_NOTICE', '未查找到，请输入正确内容！')
+            this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
           }
           return index1
         })
