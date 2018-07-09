@@ -61,13 +61,13 @@ export default function saveFile(obj, x, p) {
           arr.push(obj.$store.state.Edit.file[x])
         })
         const data1 = arr.join('\n')
-        if (data1.length > 0) {
-          fs.writeFile(fileName, data1, (err) => {
-            if (!err) {
-              obj.$store.commit('SET_NOTICE', `文件成功保存到《${fileName}》！`)
-            }
-          })
-        }
+        // if (data1.length > 0) {
+        fs.writeFile(fileName, data1, (err) => {
+          if (!err) {
+            obj.$store.commit('SET_NOTICE', `文件成功保存到《${fileName}》！`)
+          }
+        })
+        // }
       }
     } else {
       console.log(fileName)

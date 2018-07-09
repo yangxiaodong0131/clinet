@@ -119,7 +119,6 @@
         }
       },
       enter(e) {
-        console.log(this.$store.state.Edit.rightPanels)
         if (this.$store.state.Edit.rightPanels.includes('病案编辑')) {
           if (this.$store.state.Edit.helpType === '病案历史') {
             getCaseHistory(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.doc, this.$store.state.System.user.username)
