@@ -58,6 +58,7 @@
 
 <script>
   import saveEditDoc from '../../utils/EditSave'
+  import { unSaveFile } from '../../utils/SaveFile'
   import { getDocContent } from '../../utils/EditServerFile'
   import { getStat } from '../../utils/StatServerFile'
   import { getLibrary } from '../../utils/LibraryServerFile';
@@ -235,12 +236,18 @@
             }
           })
           this.$store.commit('EDIT_ADD_DOC_SUMMARY', summary);
+          // saveFile(this, '未保存病案.cda', '/edit')
         } else {
           this.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
         }
       },
       save: function (data) {
         saveEditDoc(this, data)
+        if (this.$store.state.Edit.fileName === '未保存病案.cda') {
+          // this.$store.commit('EDIT_ADD_DOC', this.$store.state.Edit.doc.toString());
+          // // this.$store.commit('EDIT_ADD_DOC', [this.$store.state.Edit.fileIndex, this.$store.state.Edit.doc.toString()]);
+          unSaveFile(this, '2018年度病案.cda', '/edit')
+        }
       },
       leftEnter(e) {
         const doc = this.$store.state.Edit.doc

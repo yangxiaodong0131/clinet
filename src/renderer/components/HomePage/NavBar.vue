@@ -142,8 +142,16 @@
           case '数据采集-数据采集':
             this.$router.push('/edit');
             if (global.hitbDoc.length > 0) {
+              global.hitbDoc.forEach((x) => {
+                this.$store.commit('EDIT_SET_IS_SAVE_LOCAL', x);
+              })
+              this.$store.commit('EDIT_LOAD_FILES');
+              this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+              const index = this.$store.state.Edit.files.indexOf('未保存病案.cda')
               this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
               this.$store.commit('EDIT_LOAD_FILE', global.hitbDoc)
+              this.$store.commit('EDIT_SET_FILES_INDEX', index)
+              loadFile(this, '未保存病案.cda', 'user', 'edit')
             }
             if (this.$store.state.System.user.login) {
               // getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port, this.$store.state.System.user.username])

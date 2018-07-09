@@ -161,6 +161,8 @@
         const index1 = this.$store.state.Edit.files[this.$store.state.Edit.filesIndex].indexOf('-')
         const filename = this.$store.state.Edit.files[this.$store.state.Edit.filesIndex].substr(index1 + 1)
         console.log(filename);
+        console.log(data);
+        console.log(this.$store.state.Edit.downFile);
         saveFile(this, this.$store.state.Edit.loadFileName, [...this.$store.state.Edit.downFile, data]);
         this.$store.commit('EDIT_SET_FILE_INDEX', index)
         const date = new Date();
@@ -186,7 +188,7 @@
           const file = this.$store.state.Edit.file
           const type = typeof this.$store.state.Edit.file[0]
           let h = []
-          h = file[0]
+          h = file[index]
           // if (file.length === 20) {
           //   h = file[index]
           // } else {
