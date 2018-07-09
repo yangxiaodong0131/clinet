@@ -56,6 +56,7 @@ export default function saveFile(obj, x, p) {
     if (fileName.includes('未保存病案.cda')) {
       if (obj.$store.state.Edit.rightPanel === 'local') {
         const arr = []
+        console.log(obj.$store.state.Edit.isSaveLocal)
         obj.$store.state.Edit.isSaveLocal.forEach((x) => {
           arr.push(obj.$store.state.Edit.file[x])
         })
@@ -69,6 +70,8 @@ export default function saveFile(obj, x, p) {
         // }
       }
     } else {
+      console.log(fileName)
+      console.log(data)
       fs.writeFile(fileName, data, (err) => {
         if (!err) {
           obj.$store.commit('SET_NOTICE', `文件成功保存到《${fileName}》！`)
@@ -112,4 +115,29 @@ export default function saveFile(obj, x, p) {
     //   })
     // }
   }
+}
+
+export function unSaveFile(obj, x, p) {
+  const fileName = path.format({
+    dir: global.hitbdata.path.user,
+    base: x
+  });
+  // const data = obj.$store.state.Edit.file.map(x => `${x},\n`).toString()
+  let data = []
+  const a = typeof p
+  if (a === 'string') {
+    data = obj.$store.state.Edit.file.join('\n')
+  } else {
+    data = p.join('\n')
+  }
+  console.log(data)
+  console.log(fileName)
+  console.log(obj.$store.state.Edit.file)
+  // const fileName = '2018年度病案.cda'
+  console.log(obj.$store.state.Edit.isSaveLocal)
+  fs.writeFile(fileName, data, (err) => {
+    if (!err) {
+      obj.$store.commit('SET_NOTICE', `文件成功保存到《${fileName}》！`)
+    }
+  })
 }
