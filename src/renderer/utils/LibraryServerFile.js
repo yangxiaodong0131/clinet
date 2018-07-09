@@ -27,6 +27,9 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   const type = tableName.split('.csv')[0]
   let url = ''
   if (dimensionType !== '') {
+    if (dimensionType === 'time') {
+      dimensionType = 'year'
+    }
     url = `&${dimensionType}=${dimensionServer}`
   }
   axios({
@@ -54,6 +57,7 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
 // this, url, tableName, type, username, serverType
 export function getList(obj, url, tableName, type, username, serverType = 'server') {
   let file = tableName
+  console.log(file)
   // 去除文件名中的.csv
   file = tableName.split('.csv')[0]
   axios({
@@ -68,7 +72,7 @@ export function getList(obj, url, tableName, type, username, serverType = 'serve
       obj.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', type, []])
     }
   }).catch((err) => {
-    console.log(err);
+    console.log(err)
     obj.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', type, []])
   })
 }
