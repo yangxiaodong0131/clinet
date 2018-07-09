@@ -134,11 +134,13 @@
         this.$store.commit('EDIT_DELETE_DOC', index);
         this.$store.commit('EDIT_DELETE_DOC_SUMMARY', index);
         this.$store.commit('SET_NOTICE', '删除成功');
+        this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         this.$store.commit('EDIT_SET_DELETE_LOCAL', index[0])
       },
       uploadDoc: function (data, index) {
         if (!this.$store.state.System.user.login) {
           this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         } else {
           this.$store.commit('EDIT_SET_FILE_INDEX', index)
           // obj, data, fileName, content, id, saveType, username, doctype, mouldtype
