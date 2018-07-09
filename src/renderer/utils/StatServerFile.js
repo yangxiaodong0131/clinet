@@ -58,11 +58,12 @@ export function getList(obj, data, tableName, type, username, serverType = 'serv
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
-    if (res.status === 200) {
-      obj.$store.commit('STAT_SET_LEFT_PANEL', ['dimension', type, res.data.list])
-    } else {
-      obj.$store.commit('STAT_SET_LEFT_PANEL', ['dimension', type, []])
-    }
+    obj.$store.commit('STAT_SET_STAT_LIST', res.data.list)
+    // if (res.status === 200) {
+    //   obj.$store.commit('STAT_SET_LEFT_PANEL', ['dimension', type, res.data.list])
+    // } else {
+    //   obj.$store.commit('STAT_SET_LEFT_PANEL', ['dimension', type, []])
+    // }
   }).catch((err) => {
     console.log(err);
     obj.$store.commit('STAT_SET_LEFT_PANEL', ['dimension', type, []])
@@ -101,7 +102,7 @@ export function getStat(obj, data, opt, tableType, serverType = 'server') {
   } else if (opt.type === '时间' || opt.type === 'time') {
     url = `&time=${opt.value}`
   } else if (opt.type === '病种' || opt.type === 'drg' || opt.type === 'drg2') {
-    url = `&drg=${opt.value}`
+    url = `&drg=${opt.value}&type=drg`
   }
   axios({
     method: 'get',
