@@ -246,7 +246,6 @@
           }
           col.map((x) => {
             if (table.length > 0) {
-              // this.xObj[table[0][x]] = { bvalue: '', svalue: '' }
               name.push(table[0][x])
             } else if (table.length === undefined) {
               name.push(table.data[0][x])
@@ -399,7 +398,7 @@
       },
       serverPage: function (data) {
         this.$store.commit('STAT_SET_TABLE_PAGE', parseInt(data, 10))
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: parseInt(data, 10), username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.$store.state.Stat.dimensionServer }, 'stat')
+        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: parseInt(data, 10), username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverTableDimension }, 'stat')
       },
       chart: function (data) {
         this.$store.commit('STAT_SET_CHART_OPTION', data)
@@ -415,13 +414,12 @@
         // 图表
         if (index[0] === 'third') {
           this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-          // chartBar('chartLeft', null)
-          // chartLine('chartRight', null)
         }
         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
         if (this.$store.state.Stat.isServer) {
           if (data.endsWith('.csv')) {
-            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.$store.state.Stat.dimensionServer }, 'stat', this.$store.state.Stat.tableType)
+            this.$store.commit('STAT_CLEAR_SERVER_TABLE_DIMENSION');
+            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverTableDimension }, 'stat', this.$store.state.Stat.tableType)
           } else {
             getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
           }
@@ -453,7 +451,6 @@
               break;
           }
           const [a, ...b] = table
-          console.log(b)
           const index = a.indexOf(data)
           if (index > -1) {
             table.map((x) => {

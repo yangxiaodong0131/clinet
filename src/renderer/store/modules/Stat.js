@@ -30,6 +30,7 @@ const state = {
   selectedCol: [],
   compareTable: [],
   serverTable: { page: 1, countPage: 0, data: [], pageList: [], tableName: '' },
+  serverTableDimension: { org: '', time: '', drg: '' },
   localTables: {},
   localTable: [],
   chartData: [],
@@ -54,7 +55,7 @@ const state = {
   xObj: {},
   barType: '',
   fileTypes: ['本地', '远程', '区块链'],
-  statList: [],
+  statList: { time: [], org: [], drg: [] },
 };
 
 const mutations = {
@@ -236,6 +237,24 @@ const mutations = {
     ]
     state.isServer = true
     state.serverTable = opt
+  },
+  STAT_SERVER_TABLE_DIMENSION(state, opt) {
+    switch (opt[0]) {
+      case 'org':
+        state.serverTableDimension.org = opt[1]
+        break;
+      case 'time':
+        state.serverTableDimension.time = opt[1]
+        break;
+      case 'drg':
+        state.serverTableDimension.drg = opt[1]
+        break;
+      default:
+        break;
+    }
+  },
+  STAT_CLEAR_SERVER_TABLE_DIMENSION(state) {
+    state.serverTableDimension = { org: '', time: '', drg: '' }
   },
   STAT_SET_TABLE_TYPE(state, data) {
     if (data !== 'compare') {
@@ -438,6 +457,8 @@ const actions = {
     commit('STAT_SET_BAR_TYPE');
     commit('STAT_SET_FILE_TYPES');
     commit('STAT_SET_STAT_LIST');
+    commit('STAT_SERVER_TABLE_DIMENSION');
+    commit('STAT_CLEAR_SERVER_TABLE_DIMENSION');
   },
 };
 export default {

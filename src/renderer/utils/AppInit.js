@@ -148,7 +148,6 @@ export default function appInit() {
   }
 
   function a(value) {
-    console.log(value)
     const fRead = fs.createReadStream(value);
     const fReadline = readline.createInterface({ input: fRead });
     const f = []; // 将CSV文件逐行读到数组中
