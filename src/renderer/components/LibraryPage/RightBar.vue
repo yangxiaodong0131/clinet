@@ -156,6 +156,8 @@
       edit: function () {
         let f = []
         if (this.$store.state.Library.tableType === 'local') {
+          this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+          this.$store.commit('EDIT_SET_RIGHT_FOLDS', '本地文件');
           if (this.$store.state.Library.localTable.includes(undefined)) {
             f = this.$store.state.Library.localTable.filter(x => x !== undefined)
           } else {
@@ -163,6 +165,8 @@
           }
         }
         if (this.$store.state.Library.tableType === 'server') {
+          this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
+          this.$store.commit('EDIT_SET_RIGHT_FOLDS', '远程文件');
           this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
           this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
           this.$store.commit('EDIT_SET_FILES_INDEX', 0);
