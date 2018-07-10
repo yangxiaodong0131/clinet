@@ -65,7 +65,7 @@
 </template>
 
 <script>
-  import { getLibraryFiles, getLibrary, getList, librarDown } from '../../utils/LibraryServerFile';
+  import { getLibraryFiles, getLibrary, getList, librarDown, getLibrarySerach } from '../../utils/LibraryServerFile';
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
   export default {
@@ -234,8 +234,10 @@
             this.$store.commit('LIBRARY_GET_SEARCH_TABLE', this.library)
             break;
           case 'server':
-            // getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, this.$store.state.Library.dimensionType, data, 'edit', 'server')
-            getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', 'server')
+            getLibrarySerach(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, this.library, 'server')
+            break;
+          case 'block':
+            getLibrarySerach(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, this.library, 'block')
             break;
           default:
         }

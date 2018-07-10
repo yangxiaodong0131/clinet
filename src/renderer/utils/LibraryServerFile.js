@@ -84,25 +84,34 @@ export function librarDown(obj, url, filename) {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      console.log('---------------------');
       obj.$store.commit('SET_NOTICE', '下载成功')
       obj.$store.commit('LIBRARY_GET_DOWN_FILE', res.data.result)
-      // console.log(res.data.result)
       saveFile(obj, filename, '/library')
-      // fs.writeFile(fileNames, res.data.result, (err) => {
-      //   if (!err) {
-      //     obj.$store.commit('SET_NOTICE', '文件保存成功！')
-      //   }
-      // })
-      // obj.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', type, res.data.list])
     } else {
       obj.$store.commit('SET_NOTICE', '下载失败')
-      // obj.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', type, []])
     }
   }).catch((err) => {
     console.log(err);
     obj.$store.commit('SET_NOTICE', '下载失败')
-    // obj.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', type, []])
+  })
+}
+export function getLibrarySerach(obj, url, filename, value, servertype) {
+  axios({
+    method: 'get',
+    url: `http://${url[0]}:${url[1]}/library/rule_search?filename=${filename}&value=${value}&servertype=${servertype}`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    if (res.status === 200) {
+      const library = res.data.result
+      const opt = { page: 0, countPage: 0, data: library.slice(1), pageList: [], tableName: filename };
+      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', opt);
+    } else {
+      obj.$store.commit('SET_NOTICE', '下载失败')
+    }
+  }).catch((err) => {
+    console.log(err);
+    obj.$store.commit('SET_NOTICE', '下载失败')
   })
 }
 
