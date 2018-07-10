@@ -77,26 +77,30 @@
       },
       file: {
         get() {
-          // let f = []
-          // const file = this.$store.state.Edit.file
-          // let start = 0
-          // let fileLen = this.$store.state.Edit.file.length;
-          // if (fileLen > 100) {
-          //   if (this.$store.state.Edit.filePage > 0) {
-          //     start = 100 * this.$store.state.Edit.filePage
-          //     fileLen = start + 100
-          //   } else {
-          //     fileLen = 100
-          //   }
-          // }
-          // for (let i = start; i < fileLen; i += 1) {
-          //   f.push(file[i])
-          // }
-          // const type = typeof file[0]
-          // if (this.$store.state.Edit.lastNav !== '/edit' && type !== 'object') {
-          //   f = f.map(n => n.split(','))
-          // }
-          return this.$store.state.Edit.docSummary
+          let f = []
+          if (this.$store.state.Edit.lastNav === '/edit') {
+            f = this.$store.state.Edit.docSummary
+          } else {
+            const file = this.$store.state.Edit.file
+            let start = 0
+            let fileLen = this.$store.state.Edit.file.length;
+            if (fileLen > 100) {
+              if (this.$store.state.Edit.filePage > 0) {
+                start = 100 * this.$store.state.Edit.filePage
+                fileLen = start + 100
+              } else {
+                fileLen = 100
+              }
+            }
+            for (let i = start; i < fileLen; i += 1) {
+              f.push(file[i])
+            }
+            const type = typeof file[0]
+            if (this.$store.state.Edit.lastNav !== '/edit' && type !== 'object') {
+              f = f.map(n => n.split(','))
+            }
+          }
+          return f
         }
       },
       flag: {
