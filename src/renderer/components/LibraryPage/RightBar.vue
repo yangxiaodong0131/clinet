@@ -183,15 +183,20 @@
         switch (this.$store.state.Library.tableType) {
           case 'local': {
             if (this.$store.state.Library.localTable.length > 0) {
-              if (x === '全部') {
-                this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
-                loadFile(this, this.$store.state.Library.files[this.$store.state.Library.fileIndex], 'library')
-              } else if (x === '年份') {
-                this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', 'year']);
-                this.$store.commit('SET_NOTICE', '维度选择');
-              } else if (x === '版本') {
-                this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', 'version']);
-                this.$store.commit('SET_NOTICE', '维度选择');
+              switch (x) {
+                case '全部':
+                  this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
+                  loadFile(this, this.$store.state.Library.files[this.$store.state.Library.fileIndex], 'library')
+                  break;
+                case '年份':
+                  this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', 'year']);
+                  this.$store.commit('SET_NOTICE', '维度选择');
+                  break;
+                case '版本':
+                  this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', 'version']);
+                  this.$store.commit('SET_NOTICE', '维度选择');
+                  break;
+                default:
               }
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
@@ -200,13 +205,18 @@
           }
           case 'server': {
             if (this.$store.state.Library.serverTable.data.length > 0) {
-              if (x === '全部') {
-                this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
-                getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableNam, this.$store.state.Library.tablePage, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', 'block')
-              } else if (x === '年份') {
-                getList(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 'year', this.$store.state.System.user.username)
-              } else if (x === '版本') {
-                getList(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 'version', this.$store.state.System.user.username)
+              switch (x) {
+                case '全部':
+                  this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
+                  getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, this.$store.state.Library.tablePage, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', 'block')
+                  break;
+                case '年份':
+                  getList(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 'time', this.$store.state.System.user.username)
+                  break;
+                case '版本':
+                  getList(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 'version', this.$store.state.System.user.username)
+                  break;
+                default:
               }
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
@@ -224,7 +234,8 @@
             this.$store.commit('LIBRARY_GET_SEARCH_TABLE', this.library)
             break;
           case 'server':
-            getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableNam, 1, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', 'block')
+            // getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, this.$store.state.Library.dimensionType, data, 'edit', 'server')
+            getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', 'server')
             break;
           default:
         }
@@ -237,7 +248,6 @@
       docDown: function () {
         if (this.$store.state.Library.tableType === 'server') {
           const filename = this.$store.state.System.shareFileName
-          console.log(filename)
           librarDown(this, [this.$store.state.System.server, this.$store.state.System.port], filename);
         }
       }
