@@ -45,7 +45,9 @@ const state = {
   isSaveLocal: [],
   isSaveServer: [],
   docHis: [],
-  docSummary: []
+  docSummary: [],
+  editCdh: null,
+  editRightCdh: null,
 };
 
 const mutations = {
@@ -360,6 +362,13 @@ const mutations = {
     state.docSummary.splice(value, 1);
     state.doc = [];
   },
+  EDIT_SET_CDH(state, value) {
+    state.editCdh = value
+  },
+  EDIT_GET_RIGHT_CDH(state, value) {
+    console.log(value)
+    state.editRightCdh = value
+  }
 };
 
 const actions = {
@@ -431,6 +440,8 @@ const actions = {
     commit('EDIT_SET_LOAD_FILENAME');
     commit('EDIT_LOAD_FILE_DOWN');
     commit('EDIT_SERVER_CDH');
+    commit('EDIT_SET_CDH');
+    commit('EDIT_GET_RIGHT_CDH');
   },
 };
 

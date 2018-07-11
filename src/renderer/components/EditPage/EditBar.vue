@@ -235,6 +235,18 @@
         if (start > 0 && this.$store.state.Edit.editBarValue[start - 1] === ' ') {
           const value = this.$store.state.Edit.editBarValue.slice(0, start)
           const value1 = value.replace(/\s/ig, '')
+          const searchKeys = []
+          global.hitbdata.cdhHeader.forEach((n) => {
+            if (n.includes(value1)) {
+              searchKeys.push(n)
+            }
+          })
+          const obj = {}
+          searchKeys.forEach((n) => {
+            obj[n] = global.hitbdata.cdh[n]
+          })
+          this.$store.commit('EDIT_SET_CDH', 'search');
+          this.$store.commit('EDIT_GET_RIGHT_CDH', obj);
           if (global.hitbdata.cdh[value1] !== undefined) {
             this.$store.commit('EDIT_SET_HINT_TYPE', 'hint');
             this.$store.commit('EDIT_SET_HINT', global.hitbdata.cdh[value1]);
