@@ -65,7 +65,7 @@
 </template>
 
 <script>
-  import { getLibraryFiles, getLibrary, getList, librarDown } from '../../utils/LibraryServerFile';
+  import { getLibraryFiles, getLibrary, getList, librarDown, getLibrarySerach } from '../../utils/LibraryServerFile';
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
   export default {
@@ -156,6 +156,8 @@
       edit: function () {
         let f = []
         if (this.$store.state.Library.tableType === 'local') {
+          this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+          this.$store.commit('EDIT_SET_RIGHT_FOLDS', '本地文件');
           if (this.$store.state.Library.localTable.includes(undefined)) {
             f = this.$store.state.Library.localTable.filter(x => x !== undefined)
           } else {
@@ -163,6 +165,8 @@
           }
         }
         if (this.$store.state.Library.tableType === 'server') {
+          this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
+          this.$store.commit('EDIT_SET_RIGHT_FOLDS', '远程文件');
           this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
           this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
           this.$store.commit('EDIT_SET_FILES_INDEX', 0);
@@ -234,8 +238,10 @@
             this.$store.commit('LIBRARY_GET_SEARCH_TABLE', this.library)
             break;
           case 'server':
-            // getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, this.$store.state.Library.dimensionType, data, 'edit', 'server')
-            getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', 'server')
+            getLibrarySerach(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, this.library, 'server')
+            break;
+          case 'block':
+            getLibrarySerach(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, this.library, 'block')
             break;
           default:
         }

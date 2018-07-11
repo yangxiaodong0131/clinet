@@ -102,6 +102,7 @@
       change(e) {
         if (this.$store.state.Edit.editType === '病案编辑') {
           if (e.target.value.includes('~')) {
+            console.log(e.target.value)
             this.$store.commit('EDIT_SET_MODEL_NAME', e.target.value.replace('~', ''));
           } else {
           // const value = document.getElementById('edit-editbar-input').value
@@ -130,7 +131,7 @@
         }
       },
       enter(e) {
-        if (this.$store.state.Edit.editType.includes('病案编辑')) {
+        if (this.$store.state.Edit.editType === '病案编辑') {
           if (this.$store.state.Edit.helpType === '病案历史') {
             getCaseHistory(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.doc, this.$store.state.System.user.username)
           }

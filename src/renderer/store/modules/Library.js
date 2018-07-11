@@ -40,9 +40,22 @@ const mutations = {
     state.tableHeader = state.table.slice(0, 1)
     state.tableSel = state.table
     state.tableSel.splice(0, 1)
-    const time = state.dimensionSearch.time = state.tableHeader[0].indexOf('year') && state.tableHeader[0].indexOf('年份')
-    const version = state.dimensionSearch.version = state.tableHeader[0].indexOf('version') && state.tableHeader[0].indexOf('版本')
-    const org = state.dimensionSearch.org = state.tableHeader[0].indexOf('org') && state.tableHeader[0].indexOf('机构')
+    let time = null
+    let version = null
+    let org = null
+    state.dimensionOrg = [...new Set(state.table.map(a => a[org]))]
+    if (state.tableHeader[0].includes('year')) {
+      time = state.tableHeader[0].indexOf('year')
+      version = state.tableHeader[0].indexOf('version')
+      org = state.tableHeader[0].indexOf('org')
+    } else if (state.tableHeader[0].includes('年份')) {
+      time = state.tableHeader[0].indexOf('年份')
+      version = state.tableHeader[0].indexOf('版本')
+      org = state.tableHeader[0].indexOf('机构')
+    }
+    state.dimensionSearch.time = time
+    state.dimensionSearch.version = version
+    state.dimensionSearch.org = org
     state.dimensionOrg = [...new Set(state.table.map(a => a[org]))]
     state.dimensionTime = [...new Set(state.table.map(a => a[time]))]
     state.dimensionVersion = [...new Set(state.table.map(a => a[version]))]
@@ -114,7 +127,6 @@ const mutations = {
     }
   },
   LIBRARY_SET_DIMENSION(state, opt) {
-    console.log(opt)
     switch (opt[0]) {
       case 'org':
         // state.dimensionOrg.push(opt[1])
@@ -148,8 +160,8 @@ const mutations = {
       }
       state.localTables[i] = f
     }
-    // state.tablePage = 1
-    // state.localTable = state.localTables[state.tablePage].slice(1)
+    state.tablePage = 1
+    state.localTable = state.localTables[state.tablePage].slice(1)
   },
   LIBRARY_GET_FIELD(state, field) {
     state.field = field;
