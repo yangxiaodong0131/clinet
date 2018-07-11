@@ -65,7 +65,7 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
   })
 }
 
-export function saveEdit(obj, data, fileName, content, id, saveType, username, doctype, mouldtype) {
+export function saveEdit(obj, data, fileName, content, username, saveType, doctype, mouldtype, id) {
   content = content[0]
   const url = `http://${data[0]}:${data[1]}/edit/cda`
   const header = obj.$store.state.Edit.docHeader
