@@ -70,8 +70,6 @@ export default function saveFile(obj, x, p) {
         // }
       }
     } else {
-      console.log(fileName)
-      console.log(data)
       fs.writeFile(fileName, data, (err) => {
         if (!err) {
           obj.$store.commit('SET_NOTICE', `文件成功保存到《${fileName}》！`)
