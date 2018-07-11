@@ -450,8 +450,7 @@
             default:
               break;
           }
-          const [a, ...b] = table
-          console.log(b);
+          const a = table[0]
           const index = a.indexOf(data)
           if (index > -1) {
             table.map((x) => {
