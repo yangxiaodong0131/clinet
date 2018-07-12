@@ -26,11 +26,15 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   // 去除文件名中的.csv
   const type = tableName.split('.csv')[0]
   let url = ''
-  if (dimensionType !== '') {
-    if (dimensionType === 'time') {
-      dimensionType = 'year'
-    }
-    url = `&${dimensionType}=${dimensionServer}`
+  if (dimensionType !== null) {
+    const keys = Object.keys(dimensionServer)
+    keys.forEach((n) => {
+      if (dimensionServer[n] !== '') {
+        url = `&${n}=${dimensionServer[n]}${url}`
+      }
+    })
+  } else {
+    url = ''
   }
   axios({
     method: 'get',
@@ -42,7 +46,7 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
       const library = res.data.library
       const opt = { page: parseInt(res.data.page, 10), countPage: res.data.count, data: library.slice(1), pageList: res.data.page_list, tableName: tableName };
       obj.$store.commit('LIBRARY_SET_SERVER_TABLE', opt);
-      obj.$store.commit('LIBRARY_SET_SERVER_DIMENSIONS', res.data.list)
+      obj.$store.commit('LIBRARY_SET_LIBRARY_LIST', res.data.list);
       obj.$store.commit('LIBRARY_SET_COUNT_PAGE', res.data.count);
       obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Library.serverTable.page}页,共${obj.$store.state.Library.serverTable.countPage}页`);
       // obj.$store.commit('EDIT_LOAD_FILE', res.data.library.filter(x => x !== undefined).map(x => x.join(',')))
