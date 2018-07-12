@@ -17,6 +17,22 @@
           <ol class="">
             <li v-for="(data, index) in notice" v-bind:key='index'>{{data}}</li>
           </ol>
+          <!-- 显示当前文件 -->
+          <ul>
+            <li v-if="this.$store.state.Stat.tableType == 'compare'">当前文件:对比</li>
+            <li v-else>当前文件:  {{serverType}}--{{this.$store.state.Stat.fileName}}</li>
+          </ul>
+          <!-- 显示当前文件 -->
+          <!-- 远程维度选择提示 -->
+          <ul v-if="this.$store.state.Stat.tableType === 'server'">
+            <li v-if="this.$store.state.Stat.serverDimension.time === ''">时间: 全部</li>
+            <li v-else>时间: {{this.$store.state.Stat.serverDimension.time}}</li>
+            <li v-if="this.$store.state.Stat.serverDimension.org === ''">机构: 全部</li>
+            <li v-else>机构: {{this.$store.state.Stat.serverDimension.org}}</li>
+            <li v-if="['', '-'].includes(this.$store.state.Stat.serverDimension.drg)">病种: 未选择</li>
+            <li v-else>病种: {{this.$store.state.Stat.serverDimension.drg}}</li>
+          </ul>
+          <!-- 远程维度选择提示 -->
         </div>
       </div>
     </div>
@@ -124,6 +140,25 @@
       };
     },
     computed: {
+      serverType: {
+        get() {
+          let type = ''
+          switch (this.$store.state.Stat.tableType) {
+            case 'server':
+              type = '远程'
+              break;
+            case 'block':
+              type = '区块链'
+              break;
+            case 'compare':
+              type = '对比'
+              break;
+            default:
+              break;
+          }
+          return type
+        }
+      },
       xObj: {
         get() {
           return this.$store.state.Stat.xObj
@@ -398,7 +433,7 @@
       },
       serverPage: function (data) {
         this.$store.commit('STAT_SET_TABLE_PAGE', parseInt(data, 10))
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: parseInt(data, 10), username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverTableDimension }, 'stat')
+        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: parseInt(data, 10), username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat')
       },
       chart: function (data) {
         this.$store.commit('STAT_SET_CHART_OPTION', data)
@@ -418,8 +453,8 @@
         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
         if (this.$store.state.Stat.isServer) {
           if (data.endsWith('.csv')) {
-            this.$store.commit('STAT_CLEAR_SERVER_TABLE_DIMENSION');
-            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverTableDimension }, 'stat', this.$store.state.Stat.tableType)
+            this.$store.commit('STAT_CLEAR_TABLE_DIMENSION');
+            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat', this.$store.state.Stat.tableType)
           } else {
             getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
           }

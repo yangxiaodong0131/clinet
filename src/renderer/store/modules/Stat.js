@@ -30,7 +30,7 @@ const state = {
   selectedCol: [],
   compareTable: [],
   serverTable: { page: 1, countPage: 0, data: [], pageList: [], tableName: '' },
-  serverTableDimension: { org: '', time: '', drg: '' },
+  serverDimension: { org: '', time: '', drg: '' },
   localTables: {},
   localTable: [],
   chartData: [],
@@ -241,20 +241,20 @@ const mutations = {
   STAT_SERVER_TABLE_DIMENSION(state, opt) {
     switch (opt[0]) {
       case 'org':
-        state.serverTableDimension.org = opt[1]
+        state.serverDimension.org = opt[1]
         break;
       case 'time':
-        state.serverTableDimension.time = opt[1]
+        state.serverDimension.time = opt[1]
         break;
       case 'drg':
-        state.serverTableDimension.drg = opt[1]
+        state.serverDimension.drg = opt[1]
         break;
       default:
         break;
     }
   },
   STAT_CLEAR_SERVER_TABLE_DIMENSION(state) {
-    state.serverTableDimension = { org: '', time: '', drg: '' }
+    state.serverDimension = { org: '', time: '', drg: '' }
   },
   STAT_SET_TABLE_TYPE(state, data) {
     if (data !== 'compare') {
