@@ -7,7 +7,7 @@ const state = {
   docShow: [],
   docIndex: 0,
   docShowIndex: 0,
-  filesIndex: null,
+  filesIndex: 0,
   fileIndex: null,
   leftPanel: 'table',
   rightPanel: 'local',

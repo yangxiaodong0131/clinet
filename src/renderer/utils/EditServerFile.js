@@ -51,6 +51,7 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
         }
       })
       // obj.$store.commit('EDIT_LOAD_FILE', res.data)
+      console.log('----')
       obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
       obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
       obj.$store.commit('EDIT_LOAD_FILE', [res.data.cda.content])

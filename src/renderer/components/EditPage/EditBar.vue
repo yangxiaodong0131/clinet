@@ -102,7 +102,6 @@
       change(e) {
         if (this.$store.state.Edit.editType === '病案编辑') {
           if (e.target.value.includes('~')) {
-            console.log(e.target.value)
             this.$store.commit('EDIT_SET_MODEL_NAME', e.target.value.replace('~', ''));
           } else {
           // const value = document.getElementById('edit-editbar-input').value
@@ -124,7 +123,8 @@
                   }
                 });
               } else {
-                this.$store.commit('EDIT_DELETE_ITEM', n);
+                this.$store.commit('EDIT_UPDATE_DOC', [n, ' ', true]);
+                // this.$store.commit('EDIT_DELETE_ITEM', n);
               }
             }
           }

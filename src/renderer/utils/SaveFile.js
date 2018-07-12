@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path');
 export default function saveFile(obj, x, p) {
-  console.log(x)
   // console.log(p)
   let dir = global.hitbdata.path.home
   switch (p) {
@@ -56,7 +55,6 @@ export default function saveFile(obj, x, p) {
     if (fileName.includes('未保存病案.cda')) {
       if (obj.$store.state.Edit.rightPanel === 'local') {
         const arr = []
-        console.log(obj.$store.state.Edit.isSaveLocal)
         obj.$store.state.Edit.isSaveLocal.forEach((x) => {
           arr.push(obj.$store.state.Edit.file[x])
         })
@@ -128,11 +126,7 @@ export function unSaveFile(obj, x, p) {
   } else {
     data = p.join('\n')
   }
-  console.log(data)
-  console.log(fileName)
-  console.log(obj.$store.state.Edit.file)
   // const fileName = '2018年度病案.cda'
-  console.log(obj.$store.state.Edit.isSaveLocal)
   fs.writeFile(fileName, data, (err) => {
     if (!err) {
       obj.$store.commit('SET_NOTICE', `文件成功保存到《${fileName}》！`)
