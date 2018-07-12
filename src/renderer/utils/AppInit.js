@@ -193,6 +193,7 @@ export default function appInit() {
     fReadline.on('close', () => {
       // if (value.endsWith('.csv')) {
       f.shift();
+      global.hitbdata.cdhFile = f;
       f.forEach((line) => {
         const x = line.split(' ');
         const [a, ...rest] = x;
