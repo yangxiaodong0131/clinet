@@ -45,6 +45,8 @@
           let x = global.hitbdata.cdh
           if (this.$store.state.Edit.rightPanel === 'server') {
             x = this.$store.state.Edit.rightCdh
+          } else if (this.$store.state.Edit.editCdh === 'search') {
+            x = this.$store.state.Edit.editRightCdh
           } else {
             x = global.hitbdata.cdh
           }

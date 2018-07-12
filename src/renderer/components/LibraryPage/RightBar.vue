@@ -42,12 +42,28 @@
         <li class="nav-item active" v-on:click='edit()' id="library-edit">
           <a class="nav-link text-light" href="#" title="跳转到编辑来编辑该文件"> 编辑数据 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item dropdown">
+        <li v-if="this.$store.state.Library.tableType === 'server'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension-value" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            时间
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="height: 200px; overflow: auto">
+              <a v-for="(data, index) in dimensions.time" v-bind:key='index' v-on:click='selX(data, "org")' class="nav-link" href="#"  v-bind:id="'stat-td-tr'+index" > {{data}} <span class="sr-only">(current)</span></a>
+          </div>
+        </li>
+        <li v-if="this.$store.state.Library.tableType === 'server'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension-value" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            版本
+          </a>
+           <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="height: 200px; overflow: auto">
+              <a v-for="(data, index) in dimensions.version" v-bind:key='index' v-on:click='selX(data, "time")' class="nav-link" href="#"  v-bind:id="'stat-td-tr'+index" > {{data}} <span class="sr-only">(current)</span></a>
+          </div>
+        </li>
+        <li class="nav-item dropdown" v-if="this.$store.state.Library.tableType !== 'server'">
           <a class="nav-link dropdown-toggle text-light" href="#" id="library-dropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             维度选择
           </a>
           <div class="dropdown-menu" aria-labelledby="library-dropdown1">
-            <a v-for="(data, index) in dropdownTypes" v-bind:key='index' class="nav-link" href="#" v-on:click='selX(data)' v-bind:id="'library-dropdown-'+data">{{data}}</a>
+            <a v-for="(data, index) in dropdownTypes" v-bind:key='index' class="nav-link" href="#" v-on:click='selX(data, "local")' v-bind:id="'library-dropdown-'+data">{{data}}</a>
             <!-- <a class="nav-link" href="#" v-on:click='selX("机构")' id="library-dropdown-org"> 机构 <span class="sr-only">(current)</span></a> -->
             <!-- <a class="nav-link" href="#" v-on:click='selX("year")' id="library-dropdown-time"> 年份 <span class="sr-only">(current)</span></a>
             <a class="nav-link" href="#" v-on:click='selX("version")' id="library-dropdown-version"> 版本 <span class="sr-only">(current)</span></a>
@@ -65,7 +81,7 @@
 </template>
 
 <script>
-  import { getLibraryFiles, getLibrary, getList, librarDown, getLibrarySerach } from '../../utils/LibraryServerFile';
+  import { getLibraryFiles, getLibrary, librarDown, getLibrarySerach } from '../../utils/LibraryServerFile';
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
   export default {
@@ -86,6 +102,11 @@
           return this.$store.state.Library.dropdownTypes
         }
       },
+      dimensions: {
+        get() {
+          return this.$store.state.Library.dimensions
+        }
+      }
     },
     methods: {
       libraryFile: function (n) {
@@ -183,7 +204,7 @@
         this.$router.push('/edit');
         this.$store.commit('EDIT_SET_BAR_VALUE', '');
       },
-      selX: function (x) {
+      selX: function (value, x) {
         switch (this.$store.state.Library.tableType) {
           case 'local': {
             if (this.$store.state.Library.localTable.length > 0) {
@@ -208,17 +229,19 @@
             break;
           }
           case 'server': {
+            console.log('12112132')
             if (this.$store.state.Library.serverTable.data.length > 0) {
               switch (x) {
                 case '全部':
                   this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
                   getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, this.$store.state.Library.tablePage, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', 'block')
                   break;
-                case '年份':
-                  getList(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 'time', this.$store.state.System.user.username)
+                case 'time':
+                  getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, x, value, 'edit', 'server')
+                  // getList(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 'time', this.$store.state.System.user.username)
                   break;
-                case '版本':
-                  getList(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 'version', this.$store.state.System.user.username)
+                case 'version':
+                  getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, x, value, 'edit', 'server')
                   break;
                 default:
               }
