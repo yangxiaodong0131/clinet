@@ -101,23 +101,25 @@ const mutations = {
   LIBRARY_SET_LIBRARY_LIST(state, data) {
     state.libraryList = data
   },
-  STAT_CLEAR_SERVER_DIMENSION() {
-    state.serverDimension = { org: '', time: '', version: '' }
-  },
+  // STAT_CLEAR_SERVER_DIMENSION(state, value) {
+  //   state.serverDimension[value[1]] = value[0]
+  //   console.log(state.serverDimension)
+  // },
   LIBRARY_SET_SERVER_DIMENSION(state, opt) {
-    switch (opt[0]) {
+    switch (opt[1]) {
       case 'org':
-        state.serverDimension.org = opt[1]
+        state.serverDimension.org = opt[0]
         break;
       case 'time':
-        state.serverDimension.time = opt[1]
+        state.serverDimension.year = opt[0]
         break;
       case 'version':
-        state.serverDimension.version = opt[1]
+        state.serverDimension.version = opt[0]
         break;
       default:
         break;
     }
+    console.log(state.serverDimension)
   },
   LIBRARY_SET_TABLE_PAGE(state, page) {
     state.tablePage = page;
