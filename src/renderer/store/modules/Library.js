@@ -28,7 +28,8 @@ const state = {
   fileTypes: ['本地', '远程', '区块链'],
   dropdownTypes: ['年份', '版本', '全部'],
   downFile: [],
-  dimensions: { org: [], time: [], version: [] }
+  libraryList: { org: [], time: [], version: [] },
+  serverDimension: { org: '', time: '', version: '' }
 };
 
 const mutations = {
@@ -97,11 +98,29 @@ const mutations = {
     // .slice(1)
     state.localTable = state.localTables[state.tablePage]
   },
+  LIBRARY_SET_LIBRARY_LIST(state, data) {
+    state.libraryList = data
+  },
+  STAT_CLEAR_SERVER_DIMENSION() {
+    state.serverDimension = { org: '', time: '', version: '' }
+  },
+  LIBRARY_SET_SERVER_DIMENSION(state, opt) {
+    switch (opt[0]) {
+      case 'org':
+        state.serverDimension.org = opt[1]
+        break;
+      case 'time':
+        state.serverDimension.time = opt[1]
+        break;
+      case 'version':
+        state.serverDimension.version = opt[1]
+        break;
+      default:
+        break;
+    }
+  },
   LIBRARY_SET_TABLE_PAGE(state, page) {
     state.tablePage = page;
-  },
-  LIBRARY_SET_SERVER_DIMENSION(state, index) {
-    state.dimensionServer = index
   },
   LIBRARY_SET_LEFT_PANEL(state, opt) {
     if (state.tableType === 'local') {
@@ -243,6 +262,8 @@ const actions = {
     commit('LIBRARY_SET_DROPDOWN_TYPES');
     commit('LIBRARY_GET_DOWN_FILE');
     commit('LIBRARY_SET_SERVER_DIMENSIONS');
+    commit('LIBRARY_SET_LIBRARY_LIST');
+    commit('STAT_CLEAR_SERVER_DIMENSION');
   },
 };
 
