@@ -17,19 +17,18 @@
           <ol class="">
             <li v-for="(data, index) in notice" v-bind:key='index'>{{data}}</li>
           </ol>
-          <!-- 显示当前文件 -->
+
           <ul>
-            <li v-if="this.$store.state.Stat.tableType == 'compare'">当前文件:对比</li>
-            <li v-else>当前文件:  {{serverType}}--{{this.$store.state.Stat.fileName}}</li>
-          </ul>
-          <!-- 显示当前文件 -->
-          <!-- 远程维度选择提示 -->
-          <ul v-if="this.$store.state.Stat.tableType === 'server'">
-            <li v-if="this.$store.state.Stat.serverDimension.time === ''">时间: 全部</li>
+            <!-- 显示当前文件 -->
+            <li>当前文件:  {{serverType}}--{{this.$store.state.Stat.fileName}}</li>
+            <!-- 显示当前文件 -->
+            <!-- 远程维度选择提示 -->
+
+            <li v-if="this.$store.state.Stat.serverDimension.time === '' && ['server', 'block'].includes(this.$store.state.Stat.tableType)">时间: 全部</li>
             <li v-else>时间: {{this.$store.state.Stat.serverDimension.time}}</li>
-            <li v-if="this.$store.state.Stat.serverDimension.org === ''">机构: 全部</li>
+            <li v-if="this.$store.state.Stat.serverDimension.org === '' && ['server', 'block'].includes(this.$store.state.Stat.tableType)">机构: 全部</li>
             <li v-else>机构: {{this.$store.state.Stat.serverDimension.org}}</li>
-            <li v-if="['', '-'].includes(this.$store.state.Stat.serverDimension.drg)">病种: 未选择</li>
+            <li v-if="['', '-'].includes(this.$store.state.Stat.serverDimension.drg) && ['server', 'block'].includes(this.$store.state.Stat.tableType)">病种: 未选择</li>
             <li v-else>病种: {{this.$store.state.Stat.serverDimension.drg}}</li>
           </ul>
           <!-- 远程维度选择提示 -->
