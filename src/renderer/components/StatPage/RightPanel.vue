@@ -453,7 +453,7 @@
         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
         if (this.$store.state.Stat.isServer) {
           if (data.endsWith('.csv')) {
-            this.$store.commit('STAT_CLEAR_TABLE_DIMENSION');
+            this.$store.commit('STAT_CLEAR_SERVER_DIMENSION');
             getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat', this.$store.state.Stat.tableType)
           } else {
             getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)

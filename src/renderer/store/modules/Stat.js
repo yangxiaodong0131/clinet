@@ -238,7 +238,7 @@ const mutations = {
     state.isServer = true
     state.serverTable = opt
   },
-  STAT_SERVER_TABLE_DIMENSION(state, opt) {
+  STAT_SERVER_DIMENSION(state, opt) {
     switch (opt[0]) {
       case 'org':
         state.serverDimension.org = opt[1]
@@ -253,7 +253,7 @@ const mutations = {
         break;
     }
   },
-  STAT_CLEAR_SERVER_TABLE_DIMENSION(state) {
+  STAT_CLEAR_SERVER_DIMENSION(state) {
     state.serverDimension = { org: '', time: '', drg: '' }
   },
   STAT_SET_TABLE_TYPE(state, data) {
@@ -457,8 +457,8 @@ const actions = {
     commit('STAT_SET_BAR_TYPE');
     commit('STAT_SET_FILE_TYPES');
     commit('STAT_SET_STAT_LIST');
-    commit('STAT_SERVER_TABLE_DIMENSION');
-    commit('STAT_CLEAR_SERVER_TABLE_DIMENSION');
+    commit('STAT_SERVER_DIMENSION');
+    commit('STAT_CLEAR_SERVER_DIMENSION');
   },
 };
 export default {
