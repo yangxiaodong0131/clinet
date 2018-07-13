@@ -7,7 +7,7 @@ const state = {
   docShow: [],
   docIndex: 0,
   docShowIndex: 0,
-  filesIndex: null,
+  filesIndex: 0,
   fileIndex: null,
   leftPanel: 'table',
   rightPanel: 'local',
@@ -48,6 +48,8 @@ const state = {
   docSummary: [],
   editCdh: null,
   editRightCdh: null,
+  cdhFile: {},
+  cdhFilePage: 0
 };
 
 const mutations = {
@@ -366,9 +368,32 @@ const mutations = {
     state.editCdh = value
   },
   EDIT_GET_RIGHT_CDH(state, value) {
-    console.log(value)
     state.editRightCdh = value
-  }
+  },
+  EDIT_GET_CDH_FILE(state, m = 0) {
+    const t = {}
+    let arrays = []
+    state.cdhFilePagecount = Math.floor(global.hitbdata.cdhFile.length / 100)
+    switch (m) {
+      case 0:
+        arrays = global.hitbdata.cdhFile.slice(m, m + 100)
+        break;
+      case 1:
+        state.cdhFilePage += 1
+        arrays = global.hitbdata.cdhFile.slice((state.cdhFilePage * 100), ((state.cdhFilePage * 100) + 100))
+        break;
+      case -1:
+        state.cdhFilePage -= 1
+        arrays = global.hitbdata.cdhFile.slice((state.cdhFilePage * 100), ((state.cdhFilePage * 100) + 100))
+        break;
+      default:
+    }
+    arrays.forEach((n) => {
+      const [a, ...b] = n.split(' ')
+      t[a] = b;
+    })
+    state.cdhFile = t
+  },
 };
 
 const actions = {
@@ -442,6 +467,7 @@ const actions = {
     commit('EDIT_SERVER_CDH');
     commit('EDIT_SET_CDH');
     commit('EDIT_GET_RIGHT_CDH');
+    commit('EDIT_GET_CDH_FILE');
   },
 };
 

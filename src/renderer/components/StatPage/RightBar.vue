@@ -113,8 +113,6 @@
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
-        <a v-if="this.$store.state.Stat.tableType == 'compare'">当前文件:对比</a>
-        <a v-else>当前文件:{{this.$store.state.Stat.fileName}}</a>
         <input id="stat-right-search" class="mr-sm-2 form-control" type="search" placeholder="Search" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
       </form>
     </div>
@@ -249,7 +247,7 @@
           switch (this.$store.state.Stat.tableType) {
             case 'server':
               this.$store.commit('STAT_TABLE_PAGE', n);
-              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverTableDimension }, 'stat')
+              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat')
               table = this.$store.state.Stat.serverTable.data
               break;
             case 'local':
@@ -347,7 +345,7 @@
           case 'server': {
             if (this.$store.state.Stat.serverTable.data.length > 0) {
               this.$store.commit('STAT_SERVER_TABLE_DIMENSION', [type, x])
-              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverTableDimension }, 'stat')
+              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat')
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
             }
@@ -473,7 +471,7 @@
             }
             break;
           case 'server':
-            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 0, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverTableDimension }, 'stat')
+            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 0, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat')
             break;
           default:
         }
