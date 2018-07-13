@@ -49,7 +49,8 @@ const state = {
   editCdh: null,
   editRightCdh: null,
   cdhFile: {},
-  cdhFilePage: 0
+  cdhFilePage: 0,
+  secton: ''
 };
 
 const mutations = {
@@ -122,6 +123,9 @@ const mutations = {
     const x = message.map(m => m.split(' ').filter(i => i !== ''))
     state.doc = x;
     state.editBarValue = x[0]
+    if (global.hitbSections.includes(state.editBarValue)) {
+      state.section = state.editBarValue[0]
+    }
   },
   EDIT_LOAD_DOC_SHOW(state, message) {
     const x = message.map(m => m.split(' ').filter(i => i !== ''))
@@ -394,10 +398,18 @@ const mutations = {
     })
     state.cdhFile = t
   },
+  EDIT_SET_SECTION(state, value) {
+    if (value) {
+      state.section = value
+    } else {
+      state.section = state.editBarValue[0]
+    }
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_SET_SECTION');
     commit('EDIT_DELETE_DOC_SUMMARY');
     commit('EDIT_ADD_DOC_SUMMARY');
     commit('EDIT_SET_DOC_SUMMARY');
