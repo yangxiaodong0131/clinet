@@ -6,10 +6,10 @@
         <left-panel></left-panel>
       </div>
       <div class="col">
-        <div id="chartLeft" style="width: 600px; height:400px;" v-on:dblclick="chart('left')"></div>
+        <div id="chartLeft" style="width: 560px; height:400px;" v-on:dblclick="chart('left')"></div>
       </div>
       <div class="col">
-        <div id="chartRight" style="width: 600px; height:400px;" v-on:dblclick="chart('right')"></div>
+        <div id="chartRight" style="width: 560px; height:400px;" v-on:dblclick="chart('right')"></div>
       </div>
       <div class="col">
         <div class="alert alert-danger" id="stat-right-prompt" role="alert" style="height:100%; overflow-y:auto;">
@@ -18,18 +18,26 @@
             <li v-for="(data, index) in notice" v-bind:key='index'>{{data}}</li>
           </ol>
 
-          <ul>
+          <ul v-if="this.$store.state.Stat.serverTable.tableName != ''">
             <!-- 显示当前文件 -->
             <li>当前文件:  {{serverType}}--{{this.$store.state.Stat.fileName}}</li>
             <!-- 显示当前文件 -->
             <!-- 远程维度选择提示 -->
-
-            <li v-if="this.$store.state.Stat.serverDimension.time === '' && ['server', 'block'].includes(this.$store.state.Stat.tableType)">时间: 全部</li>
-            <li v-else>时间: {{this.$store.state.Stat.serverDimension.time}}</li>
-            <li v-if="this.$store.state.Stat.serverDimension.org === '' && ['server', 'block'].includes(this.$store.state.Stat.tableType)">机构: 全部</li>
-            <li v-else>机构: {{this.$store.state.Stat.serverDimension.org}}</li>
+            <li v-if="['', '全部'].includes(this.$store.state.Stat.serverDimension.org) && ['server', 'block'].includes(this.$store.state.Stat.tableType)">机构: 全部</li>
+            <li v-else>
+              机构: {{this.$store.state.Stat.serverDimension.org}}
+              <a class="badge badge-primary badge-pill" v-on:click='clearSelX("org")' href="#" style="color:#ffffff">X</a>
+            </li>
+            <li v-if="['', '全部'].includes(this.$store.state.Stat.serverDimension.time) && ['server', 'block'].includes(this.$store.state.Stat.tableType)">时间: 全部</li>
+            <li v-else>
+              时间: {{this.$store.state.Stat.serverDimension.time}}
+              <a class="badge badge-primary badge-pill" v-on:click='clearSelX("time")' href="#" style="color:#ffffff">X</a>
+            </li>
             <li v-if="['', '-'].includes(this.$store.state.Stat.serverDimension.drg) && ['server', 'block'].includes(this.$store.state.Stat.tableType)">病种: 未选择</li>
-            <li v-else>病种: {{this.$store.state.Stat.serverDimension.drg}}</li>
+            <li v-else>
+              病种: {{this.$store.state.Stat.serverDimension.drg}}
+              <a class="badge badge-primary badge-pill" v-on:click='clearSelX("drg")' href="#" style="color:#ffffff">X</a>
+            </li>
           </ul>
           <!-- 远程维度选择提示 -->
         </div>
@@ -499,6 +507,10 @@
         } else {
           this.$store.commit('STAT_SET_XOBJ', [data, -1]);
         }
+      },
+      clearSelX: function (type) {
+        this.$store.commit('STAT_SERVER_DIMENSION', [type, '全部'])
+        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat')
       },
     },
   };

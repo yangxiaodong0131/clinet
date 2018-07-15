@@ -374,7 +374,7 @@
             if (this.$store.state.Stat.serverTable.data.length > 0) {
               this.$store.commit('STAT_SERVER_DIMENSION', [selType, x])
               this.$store.commit('STAT_SERVER_DIMENSION', ['type', type])
-              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat')
+              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat')
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
             }
