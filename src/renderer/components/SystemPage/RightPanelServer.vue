@@ -78,7 +78,7 @@
                   <input type="text" class="form-control" id="InputPersonname" placeholder="Personname" v-model="personname" @input="register()">
                 </div>
               </form>
-              <button id="server-login" type="button" class="btn btn-outline-primary" v-on:click="sysytemUpdate()">确认修改</button>
+              <button id="server-login-1" type="button" class="btn btn-outline-primary" v-on:click="sysytemUpdate()">确认修改</button>
             </div>
           </div>
           <div v-if="this.toolbar === 'getUsers'">

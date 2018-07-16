@@ -58,18 +58,6 @@
             <a class="nav-link" href="#"  v-for="chart in charts" v-bind:key='chart' v-on:click='showChart("chartRight", chart)' v-bind:id="'stat-right-chart-'+chart"> {{chart}} <span class="sr-only">(current)</span></a>
           </div>
         </li>
-        <li v-if="this.$store.state.Stat.tableType !== 'compare'" class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            维度选择
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <!-- <a id="stat-right-dimension-org" class="nav-link" href="#" v-on:click='selX("机构")'> 机构 <span class="sr-only">(current)</span></a>
-            <a id="stat-right-dimension-time" class="nav-link" href="#" v-on:click='selX("时间")'> 时间 <span class="sr-only">(current)</span></a>
-            <a id="stat-right-dimension-disease" class="nav-link" href="#" v-on:click='selX("病种")' v-if="tableType === 'local'"> 病种 <span class="sr-only">(current)</span></a>
-            <a id="stat-right-dimension-disease" class="nav-link" href="#" v-on:click='selX("全部")'> 全部 <span class="sr-only">(current)</span></a> -->
-            <a v-for="(data, index) in dimensionSel" v-bind:key='index' class="nav-link" href="#" v-on:click='selX(index)' v-bind:id="'stat-td-tr'+index" > {{data}} <span class="sr-only">(current)</span></a>
-          </div>
-        </li>
         <!-- 加入对比 -->
         <li class="nav-item active" id="stat-left-page" v-on:click='compare()' v-if="this.$store.state.Stat.selectedRow.length > 0 || this.$store.state.Stat.selectedCol > 0"  title="当前选中记录加入到对比中">
           <a class="nav-link  text-light" href="#"> 加入对比 <span class="sr-only"></span></a>
@@ -91,10 +79,68 @@
         <li class="nav-item active" id="stat-right-page" v-on:click='title(10)' v-if="this.$store.state.Stat.haveRight">
           <a class="nav-link" href="#"> 右页 <span class="sr-only"></span></a>
         </li>
+        <li v-if="this.$store.state.Stat.tableType === 'local'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            维度选择
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+             <a v-for="(data, index) in dimensionSel" v-bind:key='index' class="nav-link" href="#" v-on:click='selX(index)' v-bind:id="'stat-td-tr'+index" > {{data}} <span class="sr-only">(current)</span></a>
+          </div>
+        </li>
+        <li v-if="this.$store.state.Stat.tableType === 'server'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension-value" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            机构
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="height: 500px; overflow: auto">
+            <h5 class="dropdown-item" href="#">机构</h5>
+            <div class="dropdown-divider"></div>
+            <a v-for="data in this.$store.state.Stat.statList.org" v-on:click='selX(data, "org", "org")' class="nav-link" href="#" > {{data}} <span class="sr-only">(current)</span></a>
+            <div class="dropdown-divider"></div>
+            <h5 class="dropdown-item" href="#">科室</h5>
+            <div class="dropdown-divider"></div>
+            <a v-for="data in this.$store.state.Stat.statList.department" v-on:click='selX(data, "org", "department")' class="nav-link" href="#" > {{data}} <span class="sr-only">(current)</span></a>
+          </div>
+        </li>
+         <li v-if="this.$store.state.Stat.tableType === 'server'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension-value" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">时间</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="height: 500px; overflow: auto">
+            <h5 class="dropdown-item" href="#">年份</h5>
+            <div class="dropdown-divider"></div>
+            <a v-for="data in this.$store.state.Stat.statList.year_time" v-on:click='selX(data, "time", "year_time")' class="nav-link" href="#" > {{data}} <span class="sr-only">(current)</span></a>
+            <div class="dropdown-divider"></div>
+            <h5 class="dropdown-item" href="#">半年</h5>
+            <div class="dropdown-divider"></div>
+            <a v-for="data in this.$store.state.Stat.statList.half_year" v-on:click='selX(data, "time", "half_year")' class="nav-link" href="#" > {{data}} <span class="sr-only">(current)</span></a>
+            <div class="dropdown-divider"></div>
+            <h5 class="dropdown-item" href="#">季度</h5>
+            <div class="dropdown-divider"></div>
+            <a v-for="data in this.$store.state.Stat.statList.season_time" v-on:click='selX(data, "time", "season_time")' class="nav-link" href="#" > {{data}} <span class="sr-only">(current)</span></a>
+            <div class="dropdown-divider"></div>
+            <h5 class="dropdown-item" href="#">月份</h5>
+            <div class="dropdown-divider"></div>
+            <a v-for="data in this.$store.state.Stat.statList.month_time" v-on:click='selX(data, "time", "month_time")' class="nav-link" href="#" > {{data}} <span class="sr-only">(current)</span></a>
+          </div>
+        </li>
+        <li v-if="this.$store.state.Stat.tableType === 'server'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="stat-right-dimension-value" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            病种
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="height: 300px; overflow: auto">
+            <h5 class="dropdown-item" href="#">MDC</h5>
+            <div class="dropdown-divider"></div>
+            <a v-for="data in this.$store.state.Stat.statList.mdc" v-on:click='selX(data, "drg", "mdc")' class="nav-link" href="#"  > {{data}} <span class="sr-only">(current)</span></a>
+            <div class="dropdown-divider"></div>
+            <h5 class="dropdown-item" href="#">ADRG</h5>
+            <div class="dropdown-divider"></div>
+            <a v-for="data in this.$store.state.Stat.statList.adrg"  v-on:click='selX(data, "drg", "adrg")' class="nav-link" href="#"  > {{data}} <span class="sr-only">(current)</span></a>
+            <div class="dropdown-divider"></div>
+            <h5 class="dropdown-item" href="#">DRG</h5>
+            <div class="dropdown-divider"></div>
+            <a v-for="data in this.$store.state.Stat.statList.drg" v-on:click='selX(data, "drg", "drg")' class="nav-link" href="#" > {{data}} <span class="sr-only">(current)</span></a>
+          </div>
+        </li>
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
-        <a v-if="this.$store.state.Stat.tableType == 'compare'">当前文件:对比</a>
-        <a v-else>当前文件:{{this.$store.state.Stat.fileName}}</a>
         <input id="stat-right-search" class="mr-sm-2 form-control" type="search" placeholder="Search" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
       </form>
     </div>
@@ -111,7 +157,7 @@
   import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
   // import saveFile from '../../utils/SaveFile';
-  import { getStatFiles, getStat, saveStat, getList } from '../../utils/StatServerFile';
+  import { getStatFiles, getStat, saveStat } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
 
   export default {
@@ -120,6 +166,7 @@
         paths: [],
         stat: '',
         tableType: this.$store.state.Stat.tableType,
+        dimension: ''
       };
     },
     computed: {
@@ -228,7 +275,7 @@
           switch (this.$store.state.Stat.tableType) {
             case 'server':
               this.$store.commit('STAT_TABLE_PAGE', n);
-              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.$store.state.Stat.dimensionServer }, 'stat')
+              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
               table = this.$store.state.Stat.serverTable.data
               break;
             case 'local':
@@ -301,10 +348,10 @@
         this.$store.commit('EDIT_SET_BAR_VALUE', '');
         this.$router.push('/edit');
       },
-      selX: function (x) {
-        this.$store.commit('SET_NOTICE', `选择维度：${this.dimensionSel[x]}`)
+      selX: function (x, selType = '', type = 'org') {
         switch (this.$store.state.Stat.tableType) {
           case 'local': {
+            this.$store.commit('SET_NOTICE', `选择维度：${this.dimensionSel[x]}`)
             if (this.$store.state.Stat.localTable.length > 0) {
               if (this.dimensionSel[x] === '全部') {
                 this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
@@ -325,19 +372,9 @@
           }
           case 'server': {
             if (this.$store.state.Stat.serverTable.data.length > 0) {
-              if (this.dimensionSel[x] === '全部') {
-                this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
-                this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-                getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.$store.state.Stat.dimensionServer }, 'stat')
-              } else if (this.dimensionSel[x] === '自定义维度') {
-                if (this.selectedCol.length > 0) {
-                  this.$store.commit('STAT_SET_CHART_IS_SHOW', 'dimension');
-                } else {
-                  this.$store.commit('SET_NOTICE', '请选择维度！')
-                }
-              } else {
-                getList(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Stat.serverTable.tableName, this.dimensionSel[x], this.$store.state.System.user.username)
-              }
+              this.$store.commit('STAT_SERVER_DIMENSION', [selType, x])
+              this.$store.commit('STAT_SERVER_DIMENSION', ['type', type])
+              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
             }
@@ -463,7 +500,7 @@
             }
             break;
           case 'server':
-            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 0, username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.stat }, 'stat')
+            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 0, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
             break;
           default:
         }

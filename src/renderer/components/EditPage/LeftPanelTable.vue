@@ -77,26 +77,30 @@
       },
       file: {
         get() {
-          // let f = []
-          // const file = this.$store.state.Edit.file
-          // let start = 0
-          // let fileLen = this.$store.state.Edit.file.length;
-          // if (fileLen > 100) {
-          //   if (this.$store.state.Edit.filePage > 0) {
-          //     start = 100 * this.$store.state.Edit.filePage
-          //     fileLen = start + 100
-          //   } else {
-          //     fileLen = 100
-          //   }
-          // }
-          // for (let i = start; i < fileLen; i += 1) {
-          //   f.push(file[i])
-          // }
-          // const type = typeof file[0]
-          // if (this.$store.state.Edit.lastNav !== '/edit' && type !== 'object') {
-          //   f = f.map(n => n.split(','))
-          // }
-          return this.$store.state.Edit.docSummary
+          let f = []
+          if (this.$store.state.Edit.lastNav === '/edit') {
+            f = this.$store.state.Edit.docSummary
+          } else {
+            const file = this.$store.state.Edit.file
+            let start = 0
+            let fileLen = this.$store.state.Edit.file.length;
+            if (fileLen > 100) {
+              if (this.$store.state.Edit.filePage > 0) {
+                start = 100 * this.$store.state.Edit.filePage
+                fileLen = start + 100
+              } else {
+                fileLen = 100
+              }
+            }
+            for (let i = start; i < fileLen; i += 1) {
+              f.push(file[i])
+            }
+            const type = typeof file[0]
+            if (this.$store.state.Edit.lastNav !== '/edit' && type !== 'object') {
+              f = f.map(n => n.split(','))
+            }
+          }
+          return f
         }
       },
       flag: {
@@ -134,11 +138,13 @@
         this.$store.commit('EDIT_DELETE_DOC', index);
         this.$store.commit('EDIT_DELETE_DOC_SUMMARY', index);
         this.$store.commit('SET_NOTICE', '删除成功');
+        this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         this.$store.commit('EDIT_SET_DELETE_LOCAL', index[0])
       },
       uploadDoc: function (data, index) {
         if (!this.$store.state.System.user.login) {
           this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         } else {
           this.$store.commit('EDIT_SET_FILE_INDEX', index)
           // obj, data, fileName, content, id, saveType, username, doctype, mouldtype
@@ -161,8 +167,6 @@
         const index1 = this.$store.state.Edit.files[this.$store.state.Edit.filesIndex].indexOf('-')
         const filename = this.$store.state.Edit.files[this.$store.state.Edit.filesIndex].substr(index1 + 1)
         console.log(filename);
-        console.log(data);
-        console.log(this.$store.state.Edit.downFile);
         saveFile(this, this.$store.state.Edit.loadFileName, [...this.$store.state.Edit.downFile, data]);
         this.$store.commit('EDIT_SET_FILE_INDEX', index)
         const date = new Date();

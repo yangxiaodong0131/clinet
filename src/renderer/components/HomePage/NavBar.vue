@@ -77,6 +77,8 @@
 <script>
   import loadFile from '../../utils/LoadFile';
   import saveFile from '../../utils/SaveFile'
+  import { cacheEditDoc } from '../../utils/EditSave'
+  import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
   export default {
     data() {
       return {
@@ -135,27 +137,36 @@
         if (n.includes('你好')) {
           n = '已登录'
         }
+        if (n !== '数据采集-数据采集' && n !== '未登录...') {
+          cacheEditDoc(this)
+        }
         switch (n) {
           case '首页':
             this.$router.push('/home');
             break;
           case '数据采集-数据采集':
             this.$router.push('/edit');
-            if (global.hitbDoc.length > 0) {
-              global.hitbDoc.forEach((x) => {
-                this.$store.commit('EDIT_SET_IS_SAVE_LOCAL', x);
-              })
-              this.$store.commit('EDIT_LOAD_FILES');
-              this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
-              const index = this.$store.state.Edit.files.indexOf('未保存病案.cda')
-              this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
-              this.$store.commit('EDIT_LOAD_FILE', global.hitbDoc)
-              this.$store.commit('EDIT_SET_FILES_INDEX', index)
-              loadFile(this, '未保存病案.cda', 'user', 'edit')
-            }
-            if (this.$store.state.System.user.login) {
-              // getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port, this.$store.state.System.user.username])
-              // getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
+            // if (global.hitbDoc.length > 0) {
+            //   global.hitbDoc.forEach((x) => {
+            //     this.$store.commit('EDIT_SET_IS_SAVE_LOCAL', x);
+            //   })
+            //   this.$store.commit('EDIT_LOAD_FILES');
+            //   this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+            //   const index = this.$store.state.Edit.files.indexOf('未保存病案.cda')
+            //   this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
+            //   this.$store.commit('EDIT_LOAD_FILE', global.hitbDoc)
+            //   this.$store.commit('EDIT_SET_FILES_INDEX', index)
+            //   loadFile(this, '未保存病案.cda', 'user', 'edit')
+            // } else if (!this.$store.state.Edit.fileName) {
+            // }
+            if (this.$store.state.Edit.rightPanel === 'server') {
+              this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
+              getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
+              getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
+              getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
+            } else {
+              loadFile(this, '2018年度病案.cda', 'user', 'edit')
+              this.$store.commit('EDIT_SET_FILES_INDEX', 0)
             }
             break;
           case '数据分析-数据分析':

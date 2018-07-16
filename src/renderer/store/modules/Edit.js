@@ -7,7 +7,7 @@ const state = {
   docShow: [],
   docIndex: 0,
   docShowIndex: 0,
-  filesIndex: null,
+  filesIndex: 0,
   fileIndex: null,
   leftPanel: 'table',
   rightPanel: 'local',
@@ -45,7 +45,12 @@ const state = {
   isSaveLocal: [],
   isSaveServer: [],
   docHis: [],
-  docSummary: []
+  docSummary: [],
+  editCdh: null,
+  editRightCdh: null,
+  cdhFile: {},
+  cdhFilePage: 0,
+  secton: ''
 };
 
 const mutations = {
@@ -118,6 +123,9 @@ const mutations = {
     const x = message.map(m => m.split(' ').filter(i => i !== ''))
     state.doc = x;
     state.editBarValue = x[0]
+    if (global.hitbSections.includes(state.editBarValue)) {
+      state.section = state.editBarValue[0]
+    }
   },
   EDIT_LOAD_DOC_SHOW(state, message) {
     const x = message.map(m => m.split(' ').filter(i => i !== ''))
@@ -360,10 +368,48 @@ const mutations = {
     state.docSummary.splice(value, 1);
     state.doc = [];
   },
+  EDIT_SET_CDH(state, value) {
+    state.editCdh = value
+  },
+  EDIT_GET_RIGHT_CDH(state, value) {
+    state.editRightCdh = value
+  },
+  EDIT_GET_CDH_FILE(state, m = 0) {
+    const t = {}
+    let arrays = []
+    state.cdhFilePagecount = Math.floor(global.hitbdata.cdhFile.length / 100)
+    switch (m) {
+      case 0:
+        arrays = global.hitbdata.cdhFile.slice(m, m + 100)
+        break;
+      case 1:
+        state.cdhFilePage += 1
+        arrays = global.hitbdata.cdhFile.slice((state.cdhFilePage * 100), ((state.cdhFilePage * 100) + 100))
+        break;
+      case -1:
+        state.cdhFilePage -= 1
+        arrays = global.hitbdata.cdhFile.slice((state.cdhFilePage * 100), ((state.cdhFilePage * 100) + 100))
+        break;
+      default:
+    }
+    arrays.forEach((n) => {
+      const [a, ...b] = n.split(' ')
+      t[a] = b;
+    })
+    state.cdhFile = t
+  },
+  EDIT_SET_SECTION(state, value) {
+    if (value) {
+      state.section = value
+    } else {
+      state.section = state.editBarValue[0]
+    }
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_SET_SECTION');
     commit('EDIT_DELETE_DOC_SUMMARY');
     commit('EDIT_ADD_DOC_SUMMARY');
     commit('EDIT_SET_DOC_SUMMARY');
@@ -431,6 +477,9 @@ const actions = {
     commit('EDIT_SET_LOAD_FILENAME');
     commit('EDIT_LOAD_FILE_DOWN');
     commit('EDIT_SERVER_CDH');
+    commit('EDIT_SET_CDH');
+    commit('EDIT_GET_RIGHT_CDH');
+    commit('EDIT_GET_CDH_FILE');
   },
 };
 

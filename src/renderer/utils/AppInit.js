@@ -146,76 +146,31 @@ export default function appInit() {
       console.log(err)
     })
   }
-
-  function a(value) {
-    console.log(value)
-    const fRead = fs.createReadStream(value);
-    const fReadline = readline.createInterface({ input: fRead });
-    const f = []; // 将CSV文件逐行读到数组中
-    const t = {}; // 将数组逐行转换为js对象
-
-    fReadline.on('close', () => {
-      // if (value.endsWith('.csv')) {
-      f.shift();
-      f.forEach((line) => {
-        const x = line.split(' ');
-        const [a, ...rest] = x;
-        t[a] = rest;
-        if (value.endsWith('.csv')) {
-          global.hitbdata.table = t;
-        } else {
-          global.hitbdata.cdh = t;
-        }
-        // global.hitbdata.table = t;
-      })
-      // } else {
-      // f.shift();
-      // f.forEach((line) => {
-      //   const x = line.split(' ');
-      //   const [a, ...rest] = x;
-      //   t[a] = rest;
-      //   global.hitbdata.cdh = t;
-      // })
-    // }
-      // global.hitbdata.table = t;
-    });
-    fReadline.on('line', (line) => {
-      f.push(line)
-    })
-  }
-  const cdhFile = path.format({
-    dir: hitbdataLibrary,
-    base: 'cdh.cdh'
-  })
-  if (fs.existsSync(cdhFile)) {
-    a(cdhFile)
-  }
   // 导入数据，系统表结构
   const tableFile = path.format({
     dir: hitbdataSystem,
     base: 'hitb_table.csv'
   });
   if (fs.existsSync(tableFile)) {
-    a(tableFile)
-    // const fRead = fs.createReadStream(tableFile);
-    // const fReadline = readline.createInterface({ input: fRead });
-    // const f = []; // 将CSV文件逐行读到数组中
-    // const t = {}; // 将数组逐行转换为js对象
+    const fRead = fs.createReadStream(tableFile);
+    const fReadline = readline.createInterface({ input: fRead });
+    const f = []; // 将CSV文件逐行读到数组中
+    const t = {}; // 将数组逐行转换为js对象
 
-    // fReadline.on('close', () => {
-    //   f.shift();
-    //   f.forEach((line) => {
-    //     const x = line.split(',');
-    //     if (!t[x[0]]) { t[x[0]] = []; }
-    //     const a = x.shift();
-    //     t[a].push(x);
-    //   })
-    //   global.hitbdata.table = t;
-    // });
+    fReadline.on('close', () => {
+      f.shift();
+      f.forEach((line) => {
+        const x = line.split(',');
+        if (!t[x[0]]) { t[x[0]] = []; }
+        const a = x.shift();
+        t[a].push(x);
+      })
+      global.hitbdata.table = t;
+    });
 
-    // fReadline.on('line', (line) => {
-    //   f.push(line)
-    // })
+    fReadline.on('line', (line) => {
+      f.push(line)
+    })
   } else {
     axios.get('/static/hitb_table.csv')
       .then((res) => {
@@ -229,6 +184,37 @@ export default function appInit() {
   }
 
   // 读取提示的cdh文件
+  function a(value) {
+    const fRead = fs.createReadStream(value);
+    const fReadline = readline.createInterface({ input: fRead });
+    const f = []; // 将CSV文件逐行读到数组中
+    const t = {}; // 将数组逐行转换为js对象
+    const header = []
+    fReadline.on('close', () => {
+      // if (value.endsWith('.csv')) {
+      f.shift();
+      global.hitbdata.cdhFile = f;
+      f.forEach((line) => {
+        const x = line.split(' ');
+        const [a, ...rest] = x;
+        header.push(a)
+        t[a] = rest;
+        global.hitbdata.cdh = t;
+      })
+      global.hitbdata.cdhHeader = header;
+    });
+    fReadline.on('line', (line) => {
+      f.push(line)
+    })
+  }
+  const cdhFile = path.format({
+    dir: hitbdataLibrary,
+    base: 'cdh.cdh'
+  })
+  if (fs.existsSync(cdhFile)) {
+    a(cdhFile)
+  }
+
   const editFile = path.format({
     dir: hitbdataSystem,
     base: 'hitb_edit.cdh'
@@ -245,25 +231,26 @@ export default function appInit() {
       });
   }
   if (fs.existsSync(editFile)) {
-    fs.lstat(editFile, (err) => {
-      if (!err) {
-        const fRead = fs.createReadStream(editFile);
-        const fReadline = readline.createInterface({ input: fRead });
-        const f = [];
-        fReadline.on('close', () => {
-          const obj = {}
-          f.forEach((x) => {
-            const s = x.split(' ').filter(i => i !== '');
-            const k = s.shift()
-            obj[k] = s
-          })
-          global.hitbdata.cdh = obj
-        });
-        fReadline.on('line', (line) => {
-          f.push(line)
-        })
-      }
-    })
+    a(editFile)
+    // fs.lstat(editFile, (err) => {
+    //   if (!err) {
+    //     const fRead = fs.createReadStream(editFile);
+    //     const fReadline = readline.createInterface({ input: fRead });
+    //     const f = [];
+    //     fReadline.on('close', () => {
+    //       const obj = {}
+    //       f.forEach((x) => {
+    //         const s = x.split(' ').filter(i => i !== '');
+    //         const k = s.shift()
+    //         obj[k] = s
+    //       })
+    //       global.hitbdata.cdh = obj
+    //     });
+    //     fReadline.on('line', (line) => {
+    //       f.push(line)
+    //     })
+    //   }
+    // })
   }
 
   // 读取模板的cda文件
@@ -533,6 +520,7 @@ export default function appInit() {
         console.log(error);
       });
   }
+
   // 用户本地文件
   const cdaFile = path.format({
     dir: hitbdataUser,
@@ -558,5 +546,37 @@ export default function appInit() {
         })
       }
     })
+  }
+
+  // 本地Section文件
+  const sections = path.format({
+    dir: hitbdataSystem,
+    base: 'hitb_sections.cda'
+  });
+  if (fs.existsSync(sections)) {
+    fs.lstat(sections, (err) => {
+      if (!err) {
+        const fRead = fs.createReadStream(sections);
+        const fReadline = readline.createInterface({ input: fRead });
+        const f = [];
+        fReadline.on('close', () => {
+          global.hitbSections = f
+        });
+        fReadline.on('line', (line) => {
+          f.push(line)
+        })
+      }
+    })
+  }
+  if (!fs.existsSync(sections)) {
+    axios.get('/static/hitb_sections.cda')
+      .then((res) => {
+        fs.writeFile(sections, res.data, (err) => {
+          console.log(err)
+        })
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 }
