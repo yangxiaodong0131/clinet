@@ -30,7 +30,7 @@ const state = {
   selectedCol: [],
   compareTable: [],
   serverTable: { page: 1, countPage: 0, data: [], pageList: [], tableName: '' },
-  serverDimension: { org: '', time: '', drg: '' },
+  serverDimension: { org: '', time: '', drg: '', type: 'org' },
   localTables: {},
   localTable: [],
   chartData: [],
@@ -55,7 +55,7 @@ const state = {
   xObj: {},
   barType: '',
   fileTypes: ['本地', '远程', '区块链'],
-  statList: { time: [], org: [], drg: [] },
+  statList: { org: [], department: [], year_time: [], half_year: [], season_time: [], month_time: [], drg: [], adrg: [], mdc: [] },
 };
 
 const mutations = {
@@ -238,7 +238,7 @@ const mutations = {
     state.isServer = true
     state.serverTable = opt
   },
-  STAT_SERVER_TABLE_DIMENSION(state, opt) {
+  STAT_SERVER_DIMENSION(state, opt) {
     switch (opt[0]) {
       case 'org':
         state.serverDimension.org = opt[1]
@@ -249,12 +249,15 @@ const mutations = {
       case 'drg':
         state.serverDimension.drg = opt[1]
         break;
+      case 'type':
+        state.serverDimension.type = opt[1]
+        break;
       default:
         break;
     }
   },
-  STAT_CLEAR_SERVER_TABLE_DIMENSION(state) {
-    state.serverDimension = { org: '', time: '', drg: '' }
+  STAT_CLEAR_SERVER_DIMENSION(state) {
+    state.serverDimension = { org: '', time: '', drg: '', type: 'org' }
   },
   STAT_SET_TABLE_TYPE(state, data) {
     if (data !== 'compare') {
@@ -332,7 +335,15 @@ const mutations = {
     }
   },
   STAT_SET_STAT_LIST(state, data) {
-    state.statList = data
+    state.statList.org = data.org
+    state.statList.department = data.department
+    state.statList.year_time = data.year_time
+    state.statList.half_year = data.half_year
+    state.statList.season_time = data.season_time
+    state.statList.month_time = data.month_time
+    state.statList.mdc = data.mdc
+    state.statList.adrg = data.adrg
+    state.statList.drg = data.drg
   },
   STAT_SET_CHART_OPTION(state, opt) {
     state.chartIsShow = 'chart'
@@ -457,8 +468,8 @@ const actions = {
     commit('STAT_SET_BAR_TYPE');
     commit('STAT_SET_FILE_TYPES');
     commit('STAT_SET_STAT_LIST');
-    commit('STAT_SERVER_TABLE_DIMENSION');
-    commit('STAT_CLEAR_SERVER_TABLE_DIMENSION');
+    commit('STAT_SERVER_DIMENSION');
+    commit('STAT_CLEAR_SERVER_DIMENSION');
   },
 };
 export default {

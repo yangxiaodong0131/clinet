@@ -62,7 +62,7 @@ export function getStat(obj, data, opt, tableType, serverType = 'server') {
   }
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/stat/stat_client?page=${opt.page}&server_type=${serverType}&page_type=${pageType}&tool_type=${toolType}&rows=20&username=${opt.username}&org=${opt.dimension.org}&time=${opt.dimension.time}&drg=${opt.dimension.drg}`,
+    url: `http://${data[0]}:${data[1]}/stat/stat_client?page=${opt.page}&server_type=${serverType}&page_type=${pageType}&tool_type=${toolType}&rows=20&username=${opt.username}&type=${opt.dimension.type}&org=${opt.dimension.org}&drg=${opt.dimension.drg}&time=${opt.dimension.time}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -70,48 +70,50 @@ export function getStat(obj, data, opt, tableType, serverType = 'server') {
       const stat = res.data.stat
       obj.$store.commit('SET_NOTICE', `当前${opt.page}页,共${res.data.count}页`)
       const resObj = { page: parseInt(res.data.page, 10), countPage: res.data.count, data: stat, pageList: res.data.page_list, tableName: tableName, tableSel: res.data.num, dimensionOrg: res.data.org_num, dimensionTime: res.data.time_num, dimensionDrg: res.data.drg_num }
-      obj.$store.commit('STAT_SET_STAT_LIST', res.data.list, res.data.type)
+      obj.$store.commit('STAT_SET_STAT_LIST', res.data.list)
       obj.$store.commit('STAT_SET_COUNT_PAGE', res.data.count)
       obj.$store.commit('STAT_SET_SERVER_TABLE', resObj)
       if (tableType === 'edit') {
         obj.$store.commit('EDIT_LOAD_FILE', res.data.stat.filter(x => x !== undefined).map(x => x.join(',')))
       }
       ChartData.default(obj, res.data.stat, obj.$store.state.Stat.selectedRow, obj.$store.state.Stat.selectedCol)
-      switch (obj.$store.state.Stat.chartLeft) {
-        case '柱状图':
-          ChartBar.default('chartLeft', obj.$store.state.Stat.chartData)
-          break;
-        case '折线图':
-          ChartLine.default('chartLeft', obj.$store.state.Stat.chartData)
-          break;
-        case '雷达图':
-          ChartRadar.default('chartLeft', obj.$store.state.Stat.chartData)
-          break;
-        case '散点图':
-          ChartScatter.default('chartLeft', obj.$store.state.Stat.chartData)
-          break;
-        case '饼图':
-          ChartPie.default('chartLeft', obj.$store.state.Stat.chartData)
-          break;
-        default: break;
-      }
-      switch (obj.$store.state.Stat.chartRight) {
-        case '柱状图':
-          ChartBar.default('chartRight', obj.$store.state.Stat.chartData)
-          break;
-        case '折线图':
-          ChartLine.default('chartRight', obj.$store.state.Stat.chartData)
-          break;
-        case '雷达图':
-          ChartRadar.default('chartRight', obj.$store.state.Stat.chartData)
-          break;
-        case '散点图':
-          ChartScatter.default('chartRight', obj.$store.state.Stat.chartData)
-          break;
-        case '饼图':
-          ChartPie.default('chartRight', obj.$store.state.Stat.chartData)
-          break;
-        default: break;
+      if (res.data.count > 0) {
+        switch (obj.$store.state.Stat.chartLeft) {
+          case '柱状图':
+            ChartBar.default('chartLeft', obj.$store.state.Stat.chartData)
+            break;
+          case '折线图':
+            ChartLine.default('chartLeft', obj.$store.state.Stat.chartData)
+            break;
+          case '雷达图':
+            ChartRadar.default('chartLeft', obj.$store.state.Stat.chartData)
+            break;
+          case '散点图':
+            ChartScatter.default('chartLeft', obj.$store.state.Stat.chartData)
+            break;
+          case '饼图':
+            ChartPie.default('chartLeft', obj.$store.state.Stat.chartData)
+            break;
+          default: break;
+        }
+        switch (obj.$store.state.Stat.chartRight) {
+          case '柱状图':
+            ChartBar.default('chartRight', obj.$store.state.Stat.chartData)
+            break;
+          case '折线图':
+            ChartLine.default('chartRight', obj.$store.state.Stat.chartData)
+            break;
+          case '雷达图':
+            ChartRadar.default('chartRight', obj.$store.state.Stat.chartData)
+            break;
+          case '散点图':
+            ChartScatter.default('chartRight', obj.$store.state.Stat.chartData)
+            break;
+          case '饼图':
+            ChartPie.default('chartRight', obj.$store.state.Stat.chartData)
+            break;
+          default: break;
+        }
       }
     }
   }).catch((err) => {

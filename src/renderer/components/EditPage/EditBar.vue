@@ -54,6 +54,7 @@
     computed: {
       editType: {
         get() {
+          console.log(this.$store.state.Edit.section)
           return this.$store.state.Edit.editType
         },
         set() {}
@@ -196,9 +197,17 @@
       },
       up() {
         this.$store.commit('EDIT_SET_DOC_INDEX', [-1]);
+        const value = this.$store.state.Edit.editBarValue
+        if (global.hitbSections.includes(value[0])) {
+          this.$store.commit('EDIT_SET_SECTION', value[0]);
+        }
       },
       down() {
         this.$store.commit('EDIT_SET_DOC_INDEX', [1]);
+        const value = this.$store.state.Edit.editBarValue
+        if (global.hitbSections.includes(value[0])) {
+          this.$store.commit('EDIT_SET_SECTION', value[0]);
+        }
       },
       itemUp() {
         if (this.$store.state.Edit.docIndex > 0 && this.$store.state.Edit.fileType === 'cda') {
