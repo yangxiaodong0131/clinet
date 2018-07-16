@@ -90,7 +90,8 @@
       helpType: {
         get() {
           return this.$store.state.Edit.helpType
-        }
+        },
+        set() {}
       },
       helpTypes: {
         get() {

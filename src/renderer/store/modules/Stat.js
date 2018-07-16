@@ -31,6 +31,7 @@ const state = {
   compareTable: [],
   serverTable: { page: 1, countPage: 0, data: [], pageList: [], tableName: '' },
   serverDimension: { org: '', time: '', drg: '', type: 'org' },
+  serverSort: { field: '机构', type: 'asc' },
   localTables: {},
   localTable: [],
   chartData: [],
@@ -147,6 +148,13 @@ const mutations = {
   },
   STAT_SET_SERVER_DIMENSION(state, index) {
     state.dimensionServer = index
+  },
+  STAT_SET_SERVER_SORT(state, opt) {
+    state.serverSort.field = opt[0]
+    state.serverSort.type = opt[1]
+  },
+  STAT_CLEAR_SERVER_SORT(state) {
+    state.serverSort = { field: '机构', type: 'asc' }
   },
   STAT_SET_DIMENSION(state, opt) {
     switch (opt[0]) {
@@ -470,6 +478,8 @@ const actions = {
     commit('STAT_SET_STAT_LIST');
     commit('STAT_SERVER_DIMENSION');
     commit('STAT_CLEAR_SERVER_DIMENSION');
+    commit('STAT_SET_SERVER_SORT');
+    commit('STAT_CLEAR_SERVER_SORT');
   },
 };
 export default {
