@@ -73,7 +73,7 @@
           // this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
           if (data.endsWith('.csv')) {
             this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension }, 'stat')
+            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
           } else {
             if (this.$store.state.Stat.serverMenu.type === '二级菜单') {
               this.$store.commit('STAT_SET_SERVER_MENU', ['三级菜单', []]);
