@@ -88,7 +88,7 @@
         get() {
           return this.$store.state.Library.tableType
         }
-       }
+      }
     },
     methods: {
       onClick: function (data, index) {
@@ -106,7 +106,7 @@
       },
       sort: function (type, value) {
         getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'library', this.$store.state.Library.tableType, [type, value])
-       }
+      }
     },
   };
 </script>
