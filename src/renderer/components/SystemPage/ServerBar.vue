@@ -299,7 +299,7 @@
         sUpdateDepart(this, [this.$store.state.System.server, this.$store.state.System.port], this.depId, this.departmentInfo);
       },
       upHelp: function () {
-        sUpHelp(this, [this.$store.state.System.server, this.$store.state.System.port], '编辑器帮助', '')
+        sUpHelp(this, [this.$store.state.System.server, this.$store.state.System.port], '病案质控', '')
       }
     },
   };
