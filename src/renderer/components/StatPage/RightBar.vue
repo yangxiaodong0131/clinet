@@ -94,11 +94,11 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="height: 500px; overflow: auto">
             <h5 class="dropdown-item" href="#">机构</h5>
             <div class="dropdown-divider"></div>
-            <a v-for="(data, index) in this.$store.state.Stat.statList.org" v-on:click='selX(data, "org", "org")' class="nav-link" href="#" v-bind:key="index" v-bind:id="'stat-right-dimension-org-org'+index"> {{data}} <span class="sr-only">(current)</span></a>
+            <a v-for="(data, index) in this.$store.state.Stat.statList.org" v-on:click='selX(data, "org", "org")' class="nav-link" href="#" v-bind:key="'org'+index" v-bind:id="'stat-right-dimension-org-org'+index"> {{data}} <span class="sr-only">(current)</span></a>
             <div class="dropdown-divider"></div>
             <h5 class="dropdown-item" href="#">科室</h5>
             <div class="dropdown-divider"></div>
-            <a v-for="(data, index) in this.$store.state.Stat.statList.department" v-on:click='selX(data, "org", "department")' class="nav-link" href="#" v-bind:key="index" v-bind:id="'stat-right-dimension-org-dep'+index"> {{data}} <span class="sr-only">(current)</span></a>
+            <a v-for="(data, index) in this.$store.state.Stat.statList.department" v-on:click='selX(data, "org", "department")' class="nav-link" href="#" v-bind:key="'department'+index" v-bind:id="'stat-right-dimension-org-dep'+index"> {{data}} <span class="sr-only">(current)</span></a>
           </div>
         </li>
          <li v-if="this.$store.state.Stat.tableType === 'server'" class="nav-item dropdown">
@@ -106,19 +106,19 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="height: 500px; overflow: auto">
             <h5 class="dropdown-item" href="#">年份</h5>
             <div class="dropdown-divider"></div>
-            <a v-for="(data, index) in this.$store.state.Stat.statList.year_time" v-on:click='selX(data, "time", "year_time")' class="nav-link" href="#" v-bind:key="index" v-bind:id="'stat-right-dimension-time-year'+index"> {{data}} <span class="sr-only">(current)</span></a>
+            <a v-for="(data, index) in this.$store.state.Stat.statList.year_time" v-on:click='selX(data, "time", "year_time")' class="nav-link" href="#" v-bind:key="'year'+index" v-bind:id="'stat-right-dimension-time-year'+index"> {{data}} <span class="sr-only">(current)</span></a>
             <div class="dropdown-divider"></div>
             <h5 class="dropdown-item" href="#">半年</h5>
             <div class="dropdown-divider"></div>
-            <a v-for="(data, index) in this.$store.state.Stat.statList.half_year" v-on:click='selX(data, "time", "half_year")' class="nav-link" href="#" v-bind:key="index" v-bind:id="'stat-right-dimension-time-h-year'+index"> {{data}} <span class="sr-only">(current)</span></a>
+            <a v-for="(data, index) in this.$store.state.Stat.statList.half_year" v-on:click='selX(data, "time", "half_year")' class="nav-link" href="#" v-bind:key="'half'+index" v-bind:id="'stat-right-dimension-time-h-year'+index"> {{data}} <span class="sr-only">(current)</span></a>
             <div class="dropdown-divider"></div>
             <h5 class="dropdown-item" href="#">季度</h5>
             <div class="dropdown-divider"></div>
-            <a v-for="(data, index) in this.$store.state.Stat.statList.season_time" v-on:click='selX(data, "time", "season_time")' class="nav-link" href="#" v-bind:key="index" v-bind:id="'stat-right-dimension-time-s'+index"> {{data}} <span class="sr-only">(current)</span></a>
+            <a v-for="(data, index) in this.$store.state.Stat.statList.season_time" v-on:click='selX(data, "time", "season_time")' class="nav-link" href="#" v-bind:key="'season'+index" v-bind:id="'stat-right-dimension-time-s'+index"> {{data}} <span class="sr-only">(current)</span></a>
             <div class="dropdown-divider"></div>
             <h5 class="dropdown-item" href="#">月份</h5>
             <div class="dropdown-divider"></div>
-            <a v-for="(data, index) in this.$store.state.Stat.statList.month_time" v-on:click='selX(data, "time", "month_time")' class="nav-link" href="#" v-bind:key="index" v-bind:id="'stat-right-dimension-time-m'+index"> {{data}} <span class="sr-only">(current)</span></a>
+            <a v-for="(data, index) in this.$store.state.Stat.statList.month_time" v-on:click='selX(data, "time", "month_time")' class="nav-link" href="#" v-bind:key="'month'+index" v-bind:id="'stat-right-dimension-time-m'+index"> {{data}} <span class="sr-only">(current)</span></a>
           </div>
         </li>
         <li v-if="this.$store.state.Stat.tableType === 'server'" class="nav-item dropdown">
@@ -128,15 +128,15 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="height: 300px; overflow: auto">
             <h5 class="dropdown-item" href="#">MDC</h5>
             <div class="dropdown-divider"></div>
-            <a v-for="(data, index) in this.$store.state.Stat.statList.mdc" v-on:click='selX(data, "drg", "mdc")' class="nav-link" href="#"  v-bind:key="index" v-bind:id="'stat-right-dimension-drg-m'+index"> {{data}} <span class="sr-only">(current)</span></a>
+            <a v-for="(data, index) in this.$store.state.Stat.statList.mdc" v-on:click='selX(data, "drg", "mdc")' class="nav-link" href="#"  v-bind:key="'mdc'+index" v-bind:id="'stat-right-dimension-drg-m'+index"> {{data}} <span class="sr-only">(current)</span></a>
             <div class="dropdown-divider"></div>
             <h5 class="dropdown-item" href="#">ADRG</h5>
             <div class="dropdown-divider"></div>
-            <a v-for="(data, index) in this.$store.state.Stat.statList.adrg"  v-on:click='selX(data, "drg", "adrg")' class="nav-link" href="#"  v-bind:key="index" v-bind:id="'stat-right-dimension-drg-a'+index"> {{data}} <span class="sr-only">(current)</span></a>
+            <a v-for="(data, index) in this.$store.state.Stat.statList.adrg"  v-on:click='selX(data, "drg", "adrg")' class="nav-link" href="#"  v-bind:key="'adrg'+index" v-bind:id="'stat-right-dimension-drg-a'+index"> {{data}} <span class="sr-only">(current)</span></a>
             <div class="dropdown-divider"></div>
             <h5 class="dropdown-item" href="#">DRG</h5>
             <div class="dropdown-divider"></div>
-            <a v-for="(data, index) in this.$store.state.Stat.statList.drg" v-on:click='selX(data, "drg", "drg")' class="nav-link" href="#" v-bind:key="index" v-bind:id="'stat-right-dimension-drg-d'+index"> {{data}} <span class="sr-only">(current)</span></a>
+            <a v-for="(data, index) in this.$store.state.Stat.statList.drg" v-on:click='selX(data, "drg", "drg")' class="nav-link" href="#" v-bind:key="'drg'+index" v-bind:id="'stat-right-dimension-drg-d'+index"> {{data}} <span class="sr-only">(current)</span></a>
           </div>
         </li>
         <!-- 详情显示 -->
