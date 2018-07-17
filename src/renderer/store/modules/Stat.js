@@ -30,6 +30,7 @@ const state = {
   selectedCol: [],
   compareTable: [],
   serverTable: { page: 1, countPage: 0, data: [], pageList: [], tableName: '' },
+  serverTableInfo: { data: [] },
   serverDimension: { org: '', time: '', drg: '', type: 'org' },
   serverSort: { field: '机构', type: 'asc' },
   localTables: {},
@@ -269,13 +270,16 @@ const mutations = {
   },
   STAT_SET_TABLE_TYPE(state, data) {
     if (data !== 'compare') {
-      if (data === 'server' || data === 'case' ||　data === 'block') {
+      if (data === 'server' || data === 'case' ||　data === 'block' || data === 'info') {
         state.isServer = true
       } else {
         state.isServer = false
       }
     }
     state.tableType = data
+  },
+  STAT_SET_SERVER_TABLE_INFO(state, data) {
+    state.serverTableInfo.data = data
   },
   STAT_SET_CHART_LEFT(state, data) {
     state.chartLeft = data
@@ -480,6 +484,7 @@ const actions = {
     commit('STAT_CLEAR_SERVER_DIMENSION');
     commit('STAT_SET_SERVER_SORT');
     commit('STAT_CLEAR_SERVER_SORT');
+    commit('STAT_SET_SERVER_TABLE_INFO');
   },
 };
 export default {

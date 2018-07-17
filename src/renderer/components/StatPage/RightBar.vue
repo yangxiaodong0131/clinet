@@ -139,6 +139,14 @@
             <a v-for="(data, index) in this.$store.state.Stat.statList.drg" v-on:click='selX(data, "drg", "drg")' class="nav-link" href="#" v-bind:key="index" v-bind:id="'stat-right-dimension-drg-d'+index"> {{data}} <span class="sr-only">(current)</span></a>
           </div>
         </li>
+        <!-- 详情显示 -->
+        <li class="nav-item active" id="stat-left-info" v-on:click='statInfo()' v-if="(this.$store.state.Stat.selectedRow.length > 0 || this.$store.state.Stat.selectedCol > 0) && this.$store.state.Stat.tableType === 'server'"  title="显示详情">
+          <a class="nav-link  text-light" href="#"> 详情 <span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item active" id="stat-left-info" v-on:click='returnStat()' v-if="this.$store.state.Stat.tableType === 'info'"  title="显示详情">
+          <a class="nav-link  text-light" href="#"> 返回 <span class="sr-only"></span></a>
+        </li>
+        <!-- 详情显示 -->
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
         <input id="stat-right-search" class="mr-sm-2 form-control" type="search" placeholder="Search" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
@@ -157,7 +165,7 @@
   import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
   // import saveFile from '../../utils/SaveFile';
-  import { getStatFiles, getStat, saveStat } from '../../utils/StatServerFile';
+  import { getStatFiles, getStat, saveStat, getStatInfo } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
 
   export default {
@@ -531,6 +539,23 @@
         let array = []
         array = this.$store.state.Stat.selectedRow.map(n => this.$store.state.Stat.serverTable.data[n])
         share(this, [this.$store.state.System.server, this.$store.state.System.port], 'stat', filename, this.$store.state.System.user.username, array)
+      },
+      statInfo: function () {
+        const selectRow = this.$store.state.Stat.selectedRow;
+        const selectNum = selectRow[selectRow.length - 1];
+        const data = this.$store.state.Stat.serverTable.data[selectNum]
+        // const selectStat =
+        const dimension = { type: this.$store.state.Stat.serverDimension.type, org: data[0], time: data[1] }
+        if (this.$store.state.Stat.serverTable.data[0].includes('病种')) {
+          dimension.drg = data[2]
+        } else {
+          dimension.drg = ''
+        }
+        getStatInfo(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, dimension: dimension }, this.$store.state.System.user.username, 'server')
+        // console.log(this.$store.state.Stat.selectedRow);
+      },
+      returnStat: function () {
+        this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
       }
     },
   };
