@@ -265,3 +265,7 @@ export function editDocShow(obj, data, value) {
   })
   // console.log(diag)
 }
+
+export function addDocControl(obj, data, value) {
+  console.log(value)
+}
