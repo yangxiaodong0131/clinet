@@ -50,7 +50,8 @@ const state = {
   editRightCdh: null,
   cdhFile: {},
   cdhFilePage: 0,
-  secton: ''
+  secton: '',
+  docControl: []
 };
 
 const mutations = {
@@ -405,10 +406,18 @@ const mutations = {
       state.section = state.editBarValue[0]
     }
   },
+  EDIT_ADD_DOC_CONTROL(state, value) {
+    state.docControl.push(value)
+  },
+  EDIT_DELETE_DOC_CONTROL(state, value) {
+    state.docControl.splice(value, 1);
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_ADD_DOC_CONTROL');
+    commit('EDIT_DELETE_DOC_CONTROL');
     commit('EDIT_SET_SECTION');
     commit('EDIT_DELETE_DOC_SUMMARY');
     commit('EDIT_ADD_DOC_SUMMARY');

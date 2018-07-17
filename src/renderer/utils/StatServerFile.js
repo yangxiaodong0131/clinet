@@ -121,6 +121,48 @@ export function getStat(obj, data, opt, tableType, serverType = 'server') {
   })
 }
 
+export function getStatInfo(obj, data, opt, username, serverType = 'server') {
+  let file = opt.tableName
+  // 去除文件名中的.csv
+  file = file.split('.csv')[0]
+  // 切分查看是否有总数.平均.占比等工具查询
+  let pageType = file
+  file = file.split('_')
+  let toolType = ''
+  if (['总数', '平均', '占比'].includes(file[file.length - 1])) {
+    pageType = file.splice(0, file.length - 1).join('_')
+    switch (file[file.length - 1]) {
+      case '总数':
+        toolType = 'total'
+        break;
+      case '平均':
+        toolType = 'avg'
+        break;
+      case '占比':
+        toolType = 'rate'
+        break;
+      default:
+        break;
+    }
+  }
+  axios({
+    method: 'get',
+    url: `http://${data[0]}:${data[1]}/stat/stat_info_client?page=${opt.page}&type=${opt.dimension.type}&org=${opt.dimension.org}&drg=${opt.dimension.drg}&time=${opt.dimension.time}&server_type=${serverType}&username=${username}&page_type=${pageType}&tool_type=${toolType}`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    if (res.status === 200) {
+      obj.$store.commit('STAT_SET_SERVER_TABLE_INFO', res.data.stat)
+      obj.$store.commit('STAT_SET_TABLE_TYPE', 'info')
+    } else {
+      obj.$store.commit('SET_NOTICE', '保存对比失败!');
+    }
+  }).catch((err) => {
+    console.log(err)
+    obj.$store.commit('SET_NOTICE', '保存对比失败!');
+  })
+}
+
 // 保存对比
 export function saveStat(obj, compare, data, user = { username: '' }) {
   axios({

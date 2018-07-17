@@ -68,6 +68,7 @@ const state = {
   checkDataAll: [],
   checkDataNum: 0,
   checkDataPage: 0,
+  checkDataAllPage: { page: 0, num: 0 },
   // 文件上传信息
   upLoadFile: [],
   loadTable: 0,
@@ -376,7 +377,9 @@ const mutations = {
         break;
     }
     state.checkData = state.checkDataAll.map(n => n.slice(state.checkDataNum * 10, (state.checkDataNum * 10) + 10))
+    state.checkDataAllPage.name = Math.floor(state.checkDataAll / 10)
     const [header, ...body] = state.checkData
+    state.checkDataAllPage.page = Math.floor(state.body.length / 20)
     const bodys = body.slice(state.checkDataPage * 20, (state.checkDataPage * 20) + 20);
     const c = [header, ...bodys]
     if (c.length !== 1) {

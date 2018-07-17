@@ -157,6 +157,9 @@
                   }
                   this.$store.commit('EDIT_SET_DOC_INDEX', [1]);
                   n += 1
+                  if (!global.hitbdata.cdhHeader.includes(v[0])) {
+                    this.$store.commit('EDIT_ADD_DOC_CONTROL', v[0]);
+                  }
                 });
               } else {
                 this.$store.commit('EDIT_DELETE_ITEM', n);
