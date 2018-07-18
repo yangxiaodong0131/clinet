@@ -43,6 +43,9 @@
       }
     },
     methods: {
+      close(data) {
+        this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);
+      },
       addControl(data) {
         addDocControl(this, [this.$store.state.System.server, this.$store.state.System.port], data)
       },
