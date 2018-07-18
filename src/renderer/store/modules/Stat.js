@@ -31,6 +31,7 @@ const state = {
   compareTable: [],
   serverTable: { page: 1, countPage: 0, data: [], pageList: [], tableName: '' },
   serverTableInfo: { data: [] },
+  downloadTable: [],
   serverDimension: { org: '', time: '', drg: '', type: 'org' },
   serverSort: { field: '机构', type: 'asc' },
   localTables: {},
@@ -438,6 +439,9 @@ const mutations = {
   STAT_SET_FILE_TYPES(state, value) {
     state.fileTypes = value
   },
+  STAT_SET_DOWNLOAD_TABLE(state, data) {
+    state.downloadTable = data
+  }
 };
 
 const actions = {
@@ -485,6 +489,7 @@ const actions = {
     commit('STAT_SET_SERVER_SORT');
     commit('STAT_CLEAR_SERVER_SORT');
     commit('STAT_SET_SERVER_TABLE_INFO');
+    commit('STAT_SET_DOWNLOAD_TABLE');
   },
 };
 export default {

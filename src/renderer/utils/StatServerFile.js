@@ -1,3 +1,4 @@
+import saveFile from './SaveFile';
 const axios = require('axios');
 const qs = require('qs');
 const ChartScatter = require('./ChartScatter');
@@ -204,4 +205,44 @@ export function getStatWt4(obj, data, org, time, drg, serverType = 'server') {
     obj.$store.commit('SET_NOTICE', '保存对比失败!');
   })
   obj.$store.commit('STAT_SET_TABLE_TYPE', serverType)
+}
+
+export function downloadStat(obj, data, opt, tableType, serverType = 'server') {
+  let file = opt.tableName
+  const tableName = file
+  // 去除文件名中的.csv
+  file = file.split('.csv')[0]
+  // 切分查看是否有总数.平均.占比等工具查询
+  let pageType = file
+  file = file.split('_')
+  let toolType = ''
+  if (['总数', '平均', '占比'].includes(file[file.length - 1])) {
+    pageType = file.splice(0, file.length - 1).join('_')
+    switch (file[file.length - 1]) {
+      case '总数':
+        toolType = 'total'
+        break;
+      case '平均':
+        toolType = 'avg'
+        break;
+      case '占比':
+        toolType = 'rate'
+        break;
+      default:
+        break;
+    }
+  }
+  axios({
+    method: 'get',
+    url: `http://${data[0]}:${data[1]}/stat/download_client?page=${opt.page}&server_type=${serverType}&page_type=${pageType}&tool_type=${toolType}&rows=20&username=${opt.username}&type=${opt.dimension.type}&org=${opt.dimension.org}&drg=${opt.dimension.drg}&time=${opt.dimension.time}&order=${opt.order.field}&order_type=${opt.order.type}`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    if (res.status === 200) {
+      obj.$store.commit('STAT_SET_DOWNLOAD_TABLE', res.data.stat)
+      saveFile(obj, tableName, '/stat')
+    }
+  }).catch((err) => {
+    console.log(err);
+  })
 }

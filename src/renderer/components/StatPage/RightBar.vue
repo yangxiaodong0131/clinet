@@ -147,6 +147,9 @@
           <a class="nav-link  text-light" href="#"> 返回 <span class="sr-only"></span></a>
         </li>
         <!-- 详情显示 -->
+        <li class="nav-item active" id="stat-left-download" v-on:click='statDownload()' v-if="this.$store.state.Stat.serverTable.data.length > 0 && this.$store.state.Stat.tableType === 'server'"  title="下载到本地">
+          <a class="nav-link  text-light" href="#"> 下载 <span class="sr-only"></span></a>
+        </li>
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
         <input id="stat-right-search" class="mr-sm-2 form-control" type="search" placeholder="Search" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
@@ -165,7 +168,7 @@
   import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
   // import saveFile from '../../utils/SaveFile';
-  import { getStatFiles, getStat, saveStat, getStatInfo } from '../../utils/StatServerFile';
+  import { getStatFiles, getStat, saveStat, getStatInfo, downloadStat } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
 
   export default {
@@ -556,6 +559,9 @@
       },
       returnStat: function () {
         this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
+      },
+      statDownload: function () {
+        downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
       }
     },
   };
