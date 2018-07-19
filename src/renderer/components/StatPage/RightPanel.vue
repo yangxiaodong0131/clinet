@@ -17,8 +17,7 @@
           <ol class="">
             <li v-for="(data, index) in notice" v-bind:key='index'>{{data}}</li>
           </ol>
-
-          <ul v-if="this.$store.state.Stat.serverTable.tableName != ''">
+          <ul v-if="this.$store.state.Stat.serverTable.tableName != '' && this.$store.state.Stat.tableType === 'server'">
             <!-- 显示当前文件 -->
             <li>当前文件:  {{serverType}}--{{this.$store.state.Stat.fileName}}</li>
             <!-- 显示当前文件 -->
@@ -113,7 +112,7 @@
       </div>
     </div>
     <div>
-      <table>
+      <table v-if="this.$store.state.Stat.tableType === 'server'">
         <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index">
           <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex">
             <a class="oi oi-sort-ascending" v-if="serverSort.type === 'asc' && serverSort.field == data" ></a>
@@ -121,6 +120,17 @@
             &nbsp;&nbsp;&nbsp;&nbsp;<span v-on:click="onClickTd(x, xindex)">{{data}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
             <a class="oi oi-sort-descending"  v-if="serverSort.type === 'desc' && serverSort.field == data"></a>
             <a class="oi oi-sort-descending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'desc')"></a>
+          </th>
+        </tr>
+        <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===index)}" v-if="index > 0">
+          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" v-on:click="onClickTd(data, index)" class="stat-right-table-td"  v-if="index < 10">{{data[index]}}</td>
+        </tr>
+      </table>
+
+      <table v-else>
+        <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index">
+          <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex">
+            <span v-on:click="onClickTd(x, xindex)">{{data}}</span>
           </th>
         </tr>
         <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===index)}" v-if="index > 0">

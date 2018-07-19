@@ -125,4 +125,3 @@ export function getLibrarySerach(obj, url, filename, value, servertype) {
     obj.$store.commit('SET_NOTICE', '下载失败')
   })
 }
-
