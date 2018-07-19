@@ -24,7 +24,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(value, index) in this.$store.state.System.wt4Tables"  v-bind:key="index" v-on:click="getWt4Record(index, 'local')" v-bind:class="{'table-danger': localHightLight.includes(index)}">
+          <tr v-for="(value, index) in this.$store.state.System.wt4Tables"  v-bind:key="index" v-on:click="getWt4Record(index, 'local')" v-bind:class="{'table-danger': localHightLight.includes(index)}" class="server-drg-rightpanel-local-tr">
             <td>{{value.age}}</td>
             <td>{{value.gender}}</td>
             <td>{{value.sf0108}}</td>

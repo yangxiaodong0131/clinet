@@ -12,10 +12,10 @@
         <li class="nav-item active" v-on:click='getServerData()' id="server-drg-sercase-data">
           <a class="nav-link text-light" href="#"> 服务器病案数据 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="page('up')" id="server-drg-checkdata">
+        <li class="nav-item active" v-on:click="page('up')" id="server-drg-previous">
           <a class="nav-link text-light" href="#"> 前页 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="page('down')" id="server-drg-checkdata">
+        <li class="nav-item active" v-on:click="page('down')" id="server-drg-next">
           <a class="nav-link text-light" href="#"> 后页 <span class="sr-only">(current)</span></a>
         </li>
         <!-- <li class="nav-item active" v-on:click='compareData' id="server-drg-checkdata">
@@ -164,7 +164,7 @@
             this.$store.commit('SET_NOTICE', '已经是第一页');
           } else if (value === 'down' && this.localPage + 1 === this.$store.state.System.wt4TablePage) {
             this.$store.commit('SET_NOTICE', '已经是最后一页');
-          } else if (value === 'down' && this.localPage + 1 < this.$store.state.System.wt4TablePage) {
+          } else if (value === 'down') {
             this.$store.commit('SYSTEM_SET_LOCAL_PAGE', value);
             sGetWt4(this, [this.server, this.port], this.localPage)
             this.$store.commit('SET_NOTICE', `当前页数${this.localPage}`);

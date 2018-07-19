@@ -55,7 +55,7 @@
             版本
           </a>
            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="height: 10rem; overflow: auto">
-              <a v-for="(data, index) in libraryList.version" v-bind:key='index' v-on:click='selX(data, "version")' class="nav-link" href="#"  v-bind:id="'library-td--version-tr'+index" > {{data}} <span class="sr-only">(current)</span></a>
+              <a v-for="(data, index) in libraryList.version" v-bind:key='index' v-on:click='selX(data, "version")' class="nav-link" href="#"  v-bind:id="'library-td-version-tr'+index" > {{data}} <span class="sr-only">(current)</span></a>
           </div>
         </li>
         <li class="nav-item dropdown" v-if="this.$store.state.Library.tableType !== 'server'">
@@ -208,7 +208,7 @@
         switch (this.$store.state.Library.tableType) {
           case 'local': {
             if (this.$store.state.Library.localTable.length > 0) {
-              switch (x) {
+              switch (value) {
                 case '全部':
                   this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
                   loadFile(this, this.$store.state.Library.files[this.$store.state.Library.fileIndex], 'library')
