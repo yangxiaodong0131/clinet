@@ -443,6 +443,7 @@ export function sCompDrg(obj, data, dataWt4, version, type = '') {
 }
 // 获取分析字段和范围
 export function sGetTarget(obj, data, type) {
+  console.log('12123')
   let url = ''
   if (type === 'list') {
     url = `http://${data[0]}:${data[1]}/stat/target1/`
@@ -459,6 +460,7 @@ export function sGetTarget(obj, data, type) {
       console.log(res)
       obj.$store.commit('SYSTEM_GET_TARGET_LIST', res.data.list)
     } else {
+      console.log(res)
       obj.$store.commit('SYSTEM_GET_TARGET', res.data)
     }
   }).catch((err) => {

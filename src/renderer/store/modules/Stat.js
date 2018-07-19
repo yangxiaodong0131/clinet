@@ -59,6 +59,7 @@ const state = {
   barType: '',
   fileTypes: ['本地', '远程', '区块链'],
   statList: { org: [], department: [], year_time: [], half_year: [], season_time: [], month_time: [], drg: [], adrg: [], mdc: [] },
+  customindex: []
 };
 
 const mutations = {
@@ -441,6 +442,13 @@ const mutations = {
   },
   STAT_SET_DOWNLOAD_TABLE(state, data) {
     state.downloadTable = data
+  },
+  STAT_SET_CUSTOM_INDEX(state, data) {
+    if (state.customindex.includes(data)) {
+      state.customindex.splice(state.customindex.findIndex(v => v === data), 1)
+    } else {
+      state.customindex.push(data)
+    }
   }
 };
 
@@ -490,6 +498,7 @@ const actions = {
     commit('STAT_CLEAR_SERVER_SORT');
     commit('STAT_SET_SERVER_TABLE_INFO');
     commit('STAT_SET_DOWNLOAD_TABLE');
+    commit('STAT_SET_CUSTOM_INDEX');
   },
 };
 export default {
