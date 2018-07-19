@@ -267,5 +267,18 @@ export function editDocShow(obj, data, value) {
 }
 
 export function addDocControl(obj, data, value) {
-  console.log(value)
+  axios({
+    method: 'post',
+    url: `http://${data[0]}:${data[1]}/edit/cdh_control`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    // data: qs.stringify({ diag: `["${value2.join('","')}"]` }),
+    data: qs.stringify({ key: value }),
+    responseType: 'json'
+  }).then((res) => {
+    obj.$store.commit('SET_NOTICE', res.data.result)
+    // obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda)
+  }).catch((err) => {
+    console.log(err);
+    obj.$store.commit('SET_NOTICE', '病案历史查询失败')
+  })
 }
