@@ -246,3 +246,36 @@ export function downloadStat(obj, data, opt, tableType, serverType = 'server') {
     console.log(err);
   })
 }
+export function sCustom(obj, data, value, username) {
+  axios({
+    method: 'get',
+    url: `http://${data[0]}:${data[1]}/stat/custom?custom=${value}&username=${username}`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    if (res.status === 200) {
+      obj.$store.commit('SET_NOTICE', res.data.result);
+      // obj.$store.commit('STAT_SET_DOWNLOAD_TABLE', res.data.stat)
+      // saveFile(obj, tableName, '/stat')
+    }
+  }).catch((err) => {
+    console.log(err);
+  })
+}
+export function sGetCustom(obj, data, username, tableName) {
+  console.log(tableName)
+  axios({
+    method: 'get',
+    url: `http://${data[0]}:${data[1]}/stat/custom_select?username=${username}&tableName=${tableName}`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    if (res.status === 200) {
+      // obj.$store.commit('SET_NOTICE', res.data.result);
+      // obj.$store.commit('STAT_SET_DOWNLOAD_TABLE', res.data.stat)
+      // saveFile(obj, tableName, '/stat')
+    }
+  }).catch((err) => {
+    console.log(err);
+  })
+}

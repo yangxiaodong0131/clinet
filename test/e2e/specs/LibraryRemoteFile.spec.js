@@ -46,7 +46,7 @@ describe('LibraryRemoteFile', function () {
       .getText('#notice-bar')
       .then(function (rightpanel) {
         console.log(rightpanel)
-        expect(rightpanel).to.equal('系统通知：文件保存成功！');
+        expect(rightpanel).to.equal('系统通知：文件「mdc.csv」保存成功！');
       })
       .pause(1000)
     // 2.1.7.1.1、点击表中一行（例：第四行），当前行高亮显示
