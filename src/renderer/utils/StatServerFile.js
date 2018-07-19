@@ -44,6 +44,7 @@ export function getStat(obj, data, opt, tableType, serverType = 'server') {
   // 切分查看是否有总数.平均.占比等工具查询
   let pageType = file
   file = file.split('_')
+  console.log(file)
   let toolType = ''
   if (['总数', '平均', '占比'].includes(file[file.length - 1])) {
     pageType = file.splice(0, file.length - 1).join('_')

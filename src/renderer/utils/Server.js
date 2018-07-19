@@ -469,6 +469,20 @@ export function sGetTarget(obj, data, type) {
   })
 }
 
+export function sGetTargetKey(obj, data, type, username) {
+  axios({
+    method: 'get',
+    url: `http://${data[0]}:${data[1]}/stat/target_key?file=${type}&username=${username}`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    obj.$store.commit('SYSTEM_GET_TARGET_LIST_KEY', res.data)
+  }).catch((err) => {
+    console.log(err)
+    obj.$store.commit('SYSTEM_GET_TARGET', {})
+  })
+}
+
 function fileInsert(obj, data) {
   axios({
     method: 'GET',

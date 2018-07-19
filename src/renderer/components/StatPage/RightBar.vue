@@ -175,7 +175,7 @@
   import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
   // import saveFile from '../../utils/SaveFile';
-  import { getStatFiles, getStat, saveStat, getStatInfo, downloadStat, sGetCustom } from '../../utils/StatServerFile';
+  import { getStatFiles, getStat, saveStat, getStatInfo, downloadStat } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
   // import sGetTarget from '../../utils/Server';
 
@@ -578,7 +578,7 @@
       },
       customselece: function () {
         console.log(this.$store.state.Stat.fileName)
-        sGetCustom(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username, this.$store.state.Stat.fileName)
+        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: 'defind__.csv', page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
         console.log('12132213')
       }
     },
