@@ -64,6 +64,7 @@ const state = {
   persons: {},
   pageInfo: { org: '1', department: '1' },
   targetList: [],
+  targetKey: [],
   checkData: [],
   checkDataAll: [],
   checkDataNum: 0,
@@ -395,6 +396,9 @@ const mutations = {
   SYSTEM_SECTION(state, value) {
     state.systemSection = value
   },
+  SYSTEM_GET_TARGET_LIST_KEY(state, value) {
+    state.targetKey = value
+  },
 };
 
 const actions = {
@@ -441,6 +445,7 @@ const actions = {
     commit('SYSTEM_GET_PAGEINFO');
     commit('SYSTEM_SET_SEARCH');
     commit('SYSTEM_GET_TARGET_LIST');
+    commit('SYSTEM_GET_TARGET_LIST_KEY')
     commit('SYSTEM_GET_CHECKDATA');
     commit('SYSTEM_GET_CHECKDATA_PAGE');
     commit('SYSTEM_SET_SERVER_LOAD_TABLE');
