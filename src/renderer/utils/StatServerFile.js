@@ -68,12 +68,12 @@ export function getStat(obj, data, opt, tableType, serverType = 'server') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      const stat = res.data.stat
       obj.$store.commit('SET_NOTICE', `当前${opt.page}页,共${res.data.count}页`)
-      const resObj = { page: parseInt(res.data.page, 10), countPage: res.data.count, data: stat, pageList: res.data.page_list, tableName: tableName, tableSel: res.data.num, dimensionOrg: res.data.org_num, dimensionTime: res.data.time_num, dimensionDrg: res.data.drg_num }
+      const resObj = { page: parseInt(res.data.page, 10), countPage: res.data.count, pageList: res.data.page_list, tableName: tableName, tableSel: res.data.num, dimensionOrg: res.data.org_num, dimensionTime: res.data.time_num, dimensionDrg: res.data.drg_num }
       obj.$store.commit('STAT_SET_STAT_LIST', res.data.list)
       obj.$store.commit('STAT_SET_COUNT_PAGE', res.data.count)
-      obj.$store.commit('STAT_SET_SERVER_TABLE', resObj)
+      obj.$store.commit('STAT_SET_TABLE_TEST', ['server', res.data.stat])
+      obj.$store.commit('STAT_SET_TABLE_INFO', resObj)
       if (tableType === 'edit') {
         obj.$store.commit('EDIT_LOAD_FILE', res.data.stat.filter(x => x !== undefined).map(x => x.join(',')))
       }

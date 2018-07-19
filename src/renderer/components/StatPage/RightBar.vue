@@ -209,10 +209,10 @@
     },
     methods: {
       statFile: function (n) {
+        this.$store.commit('STAT_SET_TABLE_PAGE', 1)
+        this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
         if (n === '本地') {
           this.$store.commit('SET_NOTICE', '选择本地文件')
-          this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-          this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
           this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
           this.$store.commit('STAT_LOAD_FILES');
           this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
@@ -222,10 +222,8 @@
           } else {
             this.$store.commit('SET_NOTICE', '选择远程文件')
             this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-            this.$store.commit('STAT_SET_TABLE_PAGE', 1)
             this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
             this.$store.commit('STAT_SET_BAR_TYPE', 'server')
-            this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
             getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
           }
         } else if (n === '区块链') {
@@ -236,8 +234,6 @@
             this.$store.commit('STAT_SET_TABLE_TYPE', 'block');
             this.$store.commit('STAT_SET_BAR_TYPE', 'block');
             this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-            this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-            this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
             getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.username, 'block')
           }
         }
@@ -363,7 +359,7 @@
         switch (this.$store.state.Stat.tableType) {
           case 'local': {
             this.$store.commit('SET_NOTICE', `选择维度：${this.dimensionSel[x]}`)
-            if (this.$store.state.Stat.localTable.length > 0) {
+            if (this.$store.state.Stat.statTable.data.length > 0) {
               if (this.dimensionSel[x] === '全部') {
                 this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
                 loadFile(this, this.$store.state.Stat.fileName, 'stat')

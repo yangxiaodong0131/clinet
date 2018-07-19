@@ -3,39 +3,16 @@ const fs = require('fs');
 const state = {
   files: [],
   file: [],
+  // 存储读取文件切分后
   table: [],
-  tablePage: 1,
   tableSel: [],
   leftPanel: 'file',
-  leftBar: null,
-  leftLine: null,
-  leftRadar: null,
-  leftScatter: null,
-  rightBar: null,
-  rightLine: null,
-  rightRadar: null,
-  rightScatter: null,
-  dimension: null,
   dimensionSel: ['时间', '机构', '病种', '全部', '自定义维度'],
-  dimensionType: null,
-  dimensionOrg: [],
-  dimensionTime: [],
-  dimensionDrg: [],
-  dimensionOrgSel: [],
-  dimensionTimeSel: [],
-  dimensionDrgSel: [],
   notice: [],
-  tableHeader: [],
   selectedRow: [],
   selectedCol: [],
-  compareTable: [],
-  serverTable: { page: 1, countPage: 0, data: [], pageList: [], tableName: '' },
-  serverTableInfo: { data: [] },
-  downloadTable: [],
-  serverDimension: { org: '', time: '', drg: '', type: 'org' },
-  serverSort: { field: '机构', type: 'asc' },
+  compareTable1: [],
   localTables: {},
-  localTable: [],
   chartData: [],
   haveRight: false,
   colNum: 10,
@@ -43,22 +20,19 @@ const state = {
   chartRight: '折线图',
   tableType: 'local',
   fileIndex: { first: 0, second: 0, third: 0 },
-  dimensionServer: '',
   isServer: false,
   fileName: null,
-  countPage: 0,
-  titlePage: 0,
-  compareTable1: [],
   chartOption: '',
   chartIsShow: 'chart',
   serverMenu: { first: [], second: [], third: [], type: '' },
-  caseTable: { page: 1, countPage: 0, data: [], pageList: [], tableName: '' },
-  caseSelectedRow: [],
-  caseSelectedCol: [],
   xObj: {},
   barType: '',
   fileTypes: ['本地', '远程', '区块链'],
-  statList: { org: [], department: [], year_time: [], half_year: [], season_time: [], month_time: [], drg: [], adrg: [], mdc: [] },
+  statList: { org: [], department: [], time: [], year_time: [], half_year: [], season_time: [], month_time: [], drg: [], adrg: [], mdc: [], localList: [] },
+  dimension: { org: '', time: '', drg: '', type: 'org' },
+  statTable: { data: [], compare: [], info: [], download: [] },
+  statTableInfo: { page: 1, countPage: 0, pageList: [], tableName: '', tableSel: [], dimensionOrg: '', dimensionTime: '', dimensionDrg: '', header: [] },
+  tableSort: { field: '机构', type: 'asc' },
 };
 
 const mutations = {
@@ -67,6 +41,55 @@ const mutations = {
   },
   STAT_SET_FILE_NAME(state, value) {
     state.fileName = value;
+  },
+  // state,[type, ]
+  STAT_SET_TABLE(state, opt) {
+    if (opt[0] === 'local') {
+      state.file = opt[1];
+      state.table = opt[1].map(x => x.split(','))
+      state.statTableInfo.header = state.table.slice(0, 1)
+      // state.statTable = opt[1]
+      state.tableSel = state.table
+      state.tableSel.splice(0, 1)
+      state.statList.org = [...new Set(state.table.map(a => a[0]))]
+      state.statList.time = [...new Set(state.table.map(a => a[1]))]
+      state.statList.drg = [...new Set(state.table.map(a => a[2]))]
+      state.notice = [
+        `病案总数：${state.tableSel.length - 1}`,
+        `机构总数：${state.statList.org.length}`,
+        `时间维度总数：${state.statList.time.length - 1}`,
+        `病种维度总数：${state.statList.drg.length - 1}`,
+      ]
+      const page = Math.ceil(state.tableSel.length / 20)
+      // const page = 1
+      state.countPage = page
+      for (let i = 1; i < page; i += 1) {
+        const f = []
+        f.push(state.statTableInfo.header[0])
+        for (let j = 1; j < 20; j += 1) {
+          f.push(state.tableSel[i * j])
+        }
+        state.localTables[i] = f
+      }
+      state.statTable.data = state.localTables[state.statTableInfo.page]
+      if (state.statTableInfo.header[0].length > 10) {
+        state.haveRight = true
+        state.colNum = 10
+        const table = []
+        const indexs = [...Array(10)].map((v, k) => k)
+        state.statTable.data.forEach((xs) => {
+          table.push(indexs.map(x => xs[x]))
+        })
+        state.statTable.data = table
+      }
+    } else if (opt[0] === 'server') {
+      state.statTable.data = opt[1]
+    }
+    // } else if ()
+    // state.statTable = opt[1]
+  },
+  STAT_SET_TABLE_INFO(state, opt) {
+    state.statTableInfo = opt
   },
   STAT_LOAD_FILE(state, message) {
     state.isServer = false
@@ -109,18 +132,16 @@ const mutations = {
     // console.log(state.localTables);
   },
   STAT_TABLE_PAGE(state, n) {
-    if (state.tableType === 'server' && n === 0) {
-      state.serverTable.page = n;
-    } else if (state.countPage !== n) {
-      state.tablePage += n;
-      state.localTable = state.localTables[state.tablePage]
+    if (state.countPage !== n) {
+      state.statTableInfo.page += n;
+      state.statTable.data = state.localTables[state.statTableInfo.page]
     }
   },
   STAT_SET_COUNT_PAGE(state, n) {
     state.countPage = n
   },
   STAT_SET_TABLE_PAGE(state, n) {
-    state.tablePage = n
+    state.statTableInfo.page = n
   },
   STAT_SERVER_FILES(state, opt) {
     state.files = opt.data;
@@ -128,24 +149,23 @@ const mutations = {
   STAT_SET_LEFT_PANEL(state, opt) {
     if (state.tableType === 'local') {
       state.leftPanel = opt[0];
-      state.dimensionType = opt[1];
+      // state.dimensionType = opt[1];
       switch (opt[1]) {
         case '机构':
-          state.dimension = state.dimensionOrg
+          state.statList.localList = state.statList.org
           break;
         case '时间':
-          state.dimension = state.dimensionTime
+          state.statList.localList = state.statList.Time
           break;
         case '病种':
-          state.dimension = state.dimensionDrg
+          state.statList.localList = state.statList.drg
           break;
         default:
           break;
       }
-    } else {
-      state.leftPanel = opt[0]
-      state.dimension = opt[2]
-      state.dimensionType = opt[1]
+      if (opt[1]) {
+        state.dimension.type = opt[1]
+      }
     }
   },
   STAT_SET_SERVER_DIMENSION(state, index) {
@@ -213,7 +233,7 @@ const mutations = {
     }
   },
   STAT_SET_COMPARE_TABLE(state, data) {
-    state.compareTable = data
+    state.statTable.compare = data
     // const compare = this.$store.state.Stat.compareTable
     // 取得所有对比行中所有的key并去重
     let keys = []
@@ -251,23 +271,23 @@ const mutations = {
   STAT_SERVER_DIMENSION(state, opt) {
     switch (opt[0]) {
       case 'org':
-        state.serverDimension.org = opt[1]
+        state.dimension.org = opt[1]
         break;
       case 'time':
-        state.serverDimension.time = opt[1]
+        state.dimension.time = opt[1]
         break;
       case 'drg':
-        state.serverDimension.drg = opt[1]
+        state.dimension.drg = opt[1]
         break;
       case 'type':
-        state.serverDimension.type = opt[1]
+        state.dimension.type = opt[1]
         break;
       default:
         break;
     }
   },
   STAT_CLEAR_SERVER_DIMENSION(state) {
-    state.serverDimension = { org: '', time: '', drg: '', type: 'org' }
+    state.dimension = { org: [], time: [], drg: [], type: 'org', localList: [] }
   },
   STAT_SET_TABLE_TYPE(state, data) {
     if (data !== 'compare') {
@@ -386,9 +406,9 @@ const mutations = {
     }
     state.serverMenu.type = type
   },
-  STAT_SET_CASE_TABLE(state, value) {
-    state.caseTable = value
-  },
+  // STAT_SET_CASE_TABLE(state, value) {
+  //   // state.caseTable = value
+  // },
   STAT_SET_DIMENSION_SEL(state, value) {
     const index = state.dimensionSel.indexOf(value)
     if (index === -1) {
@@ -415,18 +435,18 @@ const mutations = {
     state.caseSelectedRow = []
     state.caseSelectedCol = []
   },
-  STAT_SET_TABLE(state, value) {
-    switch (value[0]) {
-      case 'local':
-        state.localTable = value[1]
-        break;
-      case 'server':
-        state.serverTable.data = value[1]
-        break;
-      default:
-        break;
-    }
-  },
+  // STAT_SET_TABLE(state, value) {
+  //   switch (value[0]) {
+  //     case 'local':
+  //       state.localTable = value[1]
+  //       break;
+  //     case 'server':
+  //       state.serverTable.data = value[1]
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // },
   STAT_SET_XOBJ(state, value) {
     const key = Object.keys(state.xObj)
     if ((!key.includes(value[0]) && value[1] === 0) || value[1] === -1) {
@@ -462,6 +482,8 @@ const actions = {
     commit('STAT_SET_CHART_RIGHT');
     commit('STAT_SET_CHART_DATA');
     commit('STAT_SET_TABLE_TYPE');
+    commit('STAT_SET_TABLE');
+    commit('STAT_SET_TABLE_INFO');
     commit('STAT_SET_FILE_INDEX');
     commit('STAT_SET_FILE_FLAG');
     commit('STAT_GET_FILE_SEARCH');
@@ -479,7 +501,6 @@ const actions = {
     commit('STAT_SET_CASE_ROW');
     commit('STAT_SET_CASE_COL');
     commit('STAT_SET_CASE_FLAG');
-    commit('STAT_SET_TABLE');
     commit('STAT_SET_XOBJ');
     commit('STAT_SET_BAR_TYPE');
     commit('STAT_SET_FILE_TYPES');
