@@ -111,6 +111,7 @@
         <button type="submit" class="btn btn-primary" v-on:click="selX(data, 0)">清空</button>
       </div>
     </div>
+    <right-panel-custom v-if="this.$store.state.Stat.chartIsShow === 'custom'"></right-panel-custom>
     <div>
       <table v-if="this.$store.state.Stat.tableType === 'server'">
         <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index">
@@ -156,11 +157,12 @@
   import chartBar from '../../utils/ChartBar';
   import chartPie from '../../utils/ChartPie';
   import RightBar from './RightBar';
+  import RightPanelCustom from './RightPanelCustom';
   import LeftPanel from './LeftPanel';
   import { getStatFiles, getStat, getStatWt4 } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
   export default {
-    components: { RightBar, LeftPanel },
+    components: { RightBar, LeftPanel, RightPanelCustom },
     data() {
       return {
       };

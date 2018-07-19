@@ -150,6 +150,13 @@
         <li class="nav-item active" id="stat-left-download" v-on:click='statDownload()' v-if="this.$store.state.Stat.serverTable.data.length > 0 && this.$store.state.Stat.tableType === 'server'"  title="下载到本地">
           <a class="nav-link  text-light" href="#"> 下载 <span class="sr-only"></span></a>
         </li>
+        <!-- 自定义查询 -->
+        <li class="nav-item active" v-on:click='customselece()' v-if="this.$store.state.Stat.serverTable.data.length > 0 && this.$store.state.Stat.tableType === 'server'"  title="自定义查询">
+          <a class="nav-link  text-light" href="#"> 自定义 <span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item active" v-on:click='custom()' v-if="this.$store.state.Stat.serverTable.data.length > 0 && this.$store.state.Stat.tableType === 'server'"  title="自定义查询">
+          <a class="nav-link  text-light" href="#"> 自定义查询 <span class="sr-only"></span></a>
+        </li>
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
         <input id="stat-right-search" class="mr-sm-2 form-control" type="search" placeholder="Search" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
@@ -159,7 +166,7 @@
 </template>
 
 <script>
-  import { share } from '../../utils/Server';
+  import { share, sGetTarget } from '../../utils/Server';
   import chartLine from '../../utils/ChartLine';
   import chartScatter from '../../utils/ChartScatter';
   import chartRadar from '../../utils/ChartRadar';
@@ -168,8 +175,9 @@
   import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
   // import saveFile from '../../utils/SaveFile';
-  import { getStatFiles, getStat, saveStat, getStatInfo, downloadStat } from '../../utils/StatServerFile';
+  import { getStatFiles, getStat, saveStat, getStatInfo, downloadStat, sGetCustom } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
+  // import sGetTarget from '../../utils/Server';
 
   export default {
     data() {
@@ -562,6 +570,16 @@
       },
       statDownload: function () {
         downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
+      },
+      custom: function () {
+        sGetTarget(this, [this.$store.state.System.server, this.$store.state.System.port], 'list');
+        this.$store.commit('STAT_SET_CHART_IS_SHOW', 'custom');
+        console.log('这是自定义查询')
+      },
+      customselece: function () {
+        console.log(this.$store.state.Stat.fileName)
+        sGetCustom(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username, this.$store.state.Stat.fileName)
+        console.log('12132213')
       }
     },
   };
