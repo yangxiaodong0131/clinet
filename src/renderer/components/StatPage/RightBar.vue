@@ -64,12 +64,12 @@
         </li>
         <!-- 加入对比 -->
         <!-- 显示对比 -->
-        <li class="nav-item active" id="stat-show-contrast" v-on:click='showCompare()' v-if="this.$store.state.Stat.compareTable.length > 0"  title="显示当前已加入对比的内容">
+        <li class="nav-item active" id="stat-show-contrast" v-on:click='showCompare()' v-if="this.$store.state.Stat.compareTable1.length > 0"  title="显示当前已加入对比的内容">
           <a class="nav-link text-light" href="#"> 显示对比 <span class="sr-only">(current)</span></a>
         </li>
         <!-- 显示对比 -->
         <!-- 保存对比 -->
-        <li class="nav-item active" id="stat-save-contrast" v-on:click='saveCompare()'  v-if="this.$store.state.Stat.compareTable.length > 0">
+        <li class="nav-item active" id="stat-save-contrast" v-on:click='saveCompare()'  v-if="this.$store.state.Stat.compareTable1.length > 0">
           <a class="nav-link text-light" href="#"  title="将目前对比内容保存为文件"> 保存对比 <span class="sr-only">(current)</span></a>
         </li>
         <!-- 保存对比 -->
@@ -147,14 +147,14 @@
           <a class="nav-link  text-light" href="#"> 返回 <span class="sr-only"></span></a>
         </li>
         <!-- 详情显示 -->
-        <li class="nav-item active" id="stat-left-download" v-on:click='statDownload()' v-if="this.$store.state.Stat.serverTable.data.length > 0 && this.$store.state.Stat.tableType === 'server'"  title="下载到本地">
+        <li class="nav-item active" id="stat-left-download" v-on:click='statDownload()' v-if="this.$store.state.Stat.tableType === 'server'"  title="下载到本地">
           <a class="nav-link  text-light" href="#"> 下载 <span class="sr-only"></span></a>
         </li>
         <!-- 自定义查询 -->
-        <li class="nav-item active" v-on:click='customselece()' v-if="this.$store.state.Stat.serverTable.data.length > 0 && this.$store.state.Stat.tableType === 'server'"  title="自定义查询">
+        <li class="nav-item active" v-on:click='customselece()' v-if="this.$store.state.Stat.tableType === 'server'"  title="自定义查询">
           <a class="nav-link  text-light" href="#"> 自定义 <span class="sr-only"></span></a>
         </li>
-        <li class="nav-item active" v-on:click='custom()' v-if="this.$store.state.Stat.serverTable.data.length > 0 && this.$store.state.Stat.tableType === 'server'"  title="自定义查询">
+        <li class="nav-item active" v-on:click='custom()' v-if="this.$store.state.Stat.tableType === 'server'"  title="自定义查询">
           <a class="nav-link  text-light" href="#"> 自定义查询 <span class="sr-only"></span></a>
         </li>
       </ul>
@@ -465,7 +465,7 @@
         }
         const col = this.$store.state.Stat.selectedCol
         const row = this.$store.state.Stat.selectedRow
-        const compareTable = this.$store.state.Stat.compareTable
+        const compareTable = this.$store.state.Stat.compareTable1
         if (this.$store.state.Stat.tableType !== 'compare') {
           if (row.length > 0 && row[0] !== 0) {
             addContrast(this, table, compareTable, header, col, row)
@@ -475,7 +475,7 @@
         }
       },
       showCompare: function () {
-        if (this.$store.state.Stat.compareTable.length > 0) {
+        if (this.$store.state.Stat.compareTable1.length > 0) {
           this.$store.commit('STAT_SET_TABLE_TYPE', 'compare');
         } else {
           this.$store.commit('SET_NOTICE', '对比数据为空,请选择对比数据!');
@@ -486,12 +486,12 @@
           // 取得所有对比行中所有的key并去重
           const compareFile = []
           let keys = []
-          keys = keys.concat.apply([], this.$store.state.Stat.compareTable.map(x => Object.keys(x)))
+          keys = keys.concat.apply([], this.$store.state.Stat.compareTable1.map(x => Object.keys(x)))
           keys = Array.from(new Set(keys))
           // 存储表头
           compareFile.push(keys)
           // 取得表内容,取不到的用-代替
-          this.$store.state.Stat.compareTable.forEach((xs) => {
+          this.$store.state.Stat.compareTable1.forEach((xs) => {
             const f = []
             keys.forEach((x, i) => {
               if (xs[x]) {
