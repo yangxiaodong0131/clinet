@@ -17,9 +17,9 @@
           <ol class="">
             <li v-for="(data, index) in notice" v-bind:key='index'>{{data}}</li>
           </ol>
-          <ul v-if="this.$store.state.Stat.serverTable.tableName != '' && this.$store.state.Stat.tableType === 'server'">
+          <ul v-if="this.$store.state.Stat.statTableInfo.tableName != '' && this.$store.state.Stat.tableType === 'server'">
             <!-- 显示当前文件 -->
-            <li>当前文件:  {{serverType}}--{{this.$store.state.Stat.fileName}}</li>
+            <li>当前文件:  {{serverType}}--{{this.$store.state.Stat.statTableInfo.tableName}}</li>
             <!-- 显示当前文件 -->
             <!-- 远程维度选择提示 -->
             <li v-if="['', '全部'].includes(this.$store.state.Stat.serverDimension.org) && ['server', 'block'].includes(this.$store.state.Stat.tableType)">机构: 全部</li>
@@ -214,24 +214,8 @@
         get() {
           let table = []
           switch (this.$store.state.Stat.tableType) {
-            case 'local': {
-              table = this.$store.state.Stat.localTable
-              break;
-            }
-            case 'server': {
-              table = this.$store.state.Stat.serverTable.data
-              break;
-            }
-            case 'block': {
-              table = this.$store.state.Stat.serverTable.data
-              break;
-            }
-            case 'case': {
-              table = this.$store.state.Stat.caseTable.data
-              break;
-            }
-            default: {
-              const compare = this.$store.state.Stat.compareTable
+            case 'compare': {
+              const compare = this.$store.state.Stat.statTable.compare;
               // 取得所有对比行中所有的key并去重
               let keys = []
               keys = keys.concat.apply([], compare.map(x => Object.keys(x)))
@@ -250,6 +234,14 @@
                 })
                 table.push(f)
               })
+              break;
+            }
+            case 'info': {
+              table = this.$store.state.Stat.statTable.info;
+              break;
+            }
+            default: {
+              table = this.$store.state.Stat.statTable.data;
               break;
             }
           }
@@ -286,7 +278,7 @@
       },
       page: {
         get() {
-          return { pageList: this.$store.state.Stat.serverTable.pageList, page: this.$store.state.Stat.serverTable.page }
+          return { pageList: this.$store.state.Stat.statTableInfo.pageList, page: this.$store.state.Stat.statTableInfo.page }
         }
       },
       header: {
@@ -356,7 +348,7 @@
           })
           if (this.$store.state.Stat.tableType === 'local') {
             if (value.includes(true)) {
-              const a = this.$store.state.Stat.localTable[0]
+              const a = this.$store.state.Stat.statTable.data[0]
               if (a.includes(data[index])) {
                 this.$store.commit('STAT_SET_COL', index);
               }
@@ -397,27 +389,9 @@
           this.$store.commit('STAT_GET_FIELD_INDEX', index);
         }
         this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-        const id = 'chartLeft'
-        const type = this.$store.state.Stat.chartLeft
-        let table = []
-        switch (this.$store.state.Stat.tableType) {
-          case 'local':
-            table = this.$store.state.Stat.localTable
-            break;
-          case 'server':
-            table = this.$store.state.Stat.serverTable.data
-            break;
-          case 'block':
-            table = this.$store.state.Stat.serverTable.data
-            break;
-          case 'case':
-            this.$store.commit('STAT_SET_CASE_ROW', index);
-            table = this.$store.state.Stat.caseTable.data
-            break;
-          default:
-            table = this.$store.state.Stat.compareTable
-            break;
-        }
+        const id = 'chartLeft';
+        const type = this.$store.state.Stat.chartLeft;
+        const table = this.$store.state.Stat.statTable.data;
         chartData(this, table, this.flag, this.flagTd)
         let chartdata = []
         if (this.$store.state.Stat.chartData.length === 0) {
@@ -466,7 +440,7 @@
       },
       serverPage: function (data) {
         this.$store.commit('STAT_SET_TABLE_PAGE', parseInt(data, 10))
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: parseInt(data, 10), username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
+        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: parseInt(data, 10), username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
       },
       chart: function (data) {
         this.$store.commit('STAT_SET_CHART_OPTION', data)
@@ -537,11 +511,11 @@
       },
       clearSelX: function (type) {
         this.$store.commit('STAT_SERVER_DIMENSION', [type, '全部'])
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
+        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
       },
       onClickSort: function (field, type) {
         this.$store.commit('STAT_SET_SERVER_SORT', [field, type])
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
+        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
       }
     },
   };
