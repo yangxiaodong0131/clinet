@@ -6,7 +6,7 @@
           <!-- <div class="col-md-7" id="homechart" style="height:28rem">
           </div> -->
           <div class="col-md-12" style="padding-top:2rem;">
-            <table class="table table-bordered"style="min-height:10px;" >
+            <table class="table table-bordered" style="min-height:10px;" >
               <thead>
                 <tr>
                   <th>待办事项</th>
@@ -225,7 +225,7 @@
   //   },
   // };
 
-  import hoemchart from '../../utils/HomeChart';
+  // import hoemchart from '../../utils/HomeChart';
   export default {
     data() {
       return {
@@ -239,9 +239,9 @@
         tsRecord: ['新生儿病历', '产科病历', '儿科病历']
       };
     },
-    mounted: function () {
-      hoemchart('homechart')
-    },
+    // mounted: function () {
+    //   hoemchart('homechart')
+    // },
     methods: {
     },
   };
