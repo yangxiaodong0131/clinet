@@ -422,15 +422,23 @@ const mutations = {
     }
   },
   EDIT_ADD_DOC_CONTROL(state, value) {
-    state.docControl.push(value)
+    if (!value[1]) {
+      state.docControl.push(`${value[0]}`)
+    } else {
+      state.docControl.push(`${value[0]}:${value[1]}`)
+    }
   },
   EDIT_DELETE_DOC_CONTROL(state, value) {
     state.docControl.splice(value, 1);
+  },
+  EDIT_SET_DOC_CONTROL(state, value) {
+    state.docControl = value
   },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_SET_DOC_CONTROL');
     commit('EDIT_UPDATE_DOC_SUMMARY');
     commit('EDIT_ADD_DOC_CONTROL');
     commit('EDIT_DELETE_DOC_CONTROL');
