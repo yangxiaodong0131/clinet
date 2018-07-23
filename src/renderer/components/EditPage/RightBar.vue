@@ -101,7 +101,6 @@
     },
     methods: {
       help: function (n) {
-        console.log(n)
         if (n) {
           this.$store.commit('EDIT_SET_RIGHT_PANELS', n);
           this.$store.commit('SET_NOTICE', n);
@@ -130,6 +129,9 @@
             }
           } else if (n === '病案历史') {
             getCaseHistory(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.doc, this.$store.state.System.user.username)
+          } else if (n === '病案质控') {
+            const controls = global.hitbControls[0].split(',')
+            this.$store.commit('EDIT_SET_DOC_CONTROL', controls);
           }
         }
       },

@@ -464,10 +464,14 @@ const mutations = {
     state.downloadTable = data
   },
   STAT_SET_CUSTOM_INDEX(state, data) {
-    if (state.customindex.includes(data)) {
-      state.customindex.splice(state.customindex.findIndex(v => v === data), 1)
+    if (typeof data === 'string') {
+      if (state.customindex.includes(data)) {
+        state.customindex.splice(state.customindex.findIndex(v => v === data), 1)
+      } else {
+        state.customindex.push(data)
+      }
     } else {
-      state.customindex.push(data)
+      state.customindex = data
     }
   }
 };

@@ -558,9 +558,7 @@
         console.log('这是自定义查询')
       },
       customselece: function () {
-        console.log(this.$store.state.Stat.fileName)
         getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: 'defind__.csv', page: this.$store.state.statTableInfo.page, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
-        console.log('12132213')
       }
     },
   };
