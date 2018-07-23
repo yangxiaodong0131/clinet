@@ -326,7 +326,7 @@
     methods: {
       onClickTd: function (data, index) {
         this.$store.commit('STAT_SET_XOBJ', [data[index], 0]);
-        const header = this.$store.state.Stat.serverTable.data[0]
+        const header = this.$store.state.Stat.statTable.data[0]
         let cindex = 0
         let oindex = 0
         let tindex = 0
@@ -473,26 +473,9 @@
       },
       selX: function (data, value) {
         if (value === 1) {
-          let tableType = ''
-          let table = []
+          const tableType = this.$store.state.Stat.tableType
           const table1 = []
-          // let header = []
-          switch (this.$store.state.Stat.tableType) {
-            case 'local':
-              table = this.$store.state.Stat.localTable
-              tableType = 'local'
-              break;
-            case 'server':
-              table = this.$store.state.Stat.serverTable.data
-              tableType = 'server'
-              break;
-            case 'block':
-              table = this.$store.state.Stat.serverTable.data
-              tableType = 'block'
-              break;
-            default:
-              break;
-          }
+          const table = this.$store.state.Stat.statTable.data
           const a = table[0]
           const index = a.indexOf(data)
           if (index > -1) {
