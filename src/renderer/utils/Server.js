@@ -459,6 +459,7 @@ export function sGetTarget(obj, data, type) {
     if (type === 'list') {
       console.log(res)
       obj.$store.commit('SYSTEM_GET_TARGET_LIST', res.data.list)
+      obj.$store.commit('STAT_SET_CUSTOM_INDEX', res.data.key)
     } else {
       console.log(res)
       obj.$store.commit('SYSTEM_GET_TARGET', res.data)
