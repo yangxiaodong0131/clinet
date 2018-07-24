@@ -111,7 +111,11 @@
         <button type="submit" class="btn btn-primary" v-on:click="selX(data, 0)">清空</button>
       </div>
     </div>
-    <right-panel-custom v-if="this.$store.state.Stat.chartIsShow === 'custom'"></right-panel-custom>
+    <div class="row" v-if="this.$store.state.Stat.chartIsShow === 'custom'">
+      <div class="col-md-12">
+        <right-panel-custom></right-panel-custom>
+      </div>
+    </div>
     <div>
       <table v-if="this.$store.state.Stat.tableType === 'server'">
         <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index">
