@@ -283,21 +283,18 @@
       page: function (n) {
         if (this.$store.state.Stat.tablePage === 1 && n === -1) {
           this.$store.commit('SET_NOTICE', '当前已是第一页')
-        } else if ((this.$store.state.Stat.tablePage === this.$store.state.Stat.countPage && n === 1) || this.$store.state.Stat.countPage === 0) {
+        } else if ((this.$store.state.Stat.tablePage === this.$store.state.Stat.statTableInfo.countPage && n === 1) || this.$store.state.Stat.statTableInfo.countPage === 0) {
           this.$store.commit('SET_NOTICE', '当前已是尾页');
         } else {
-          let table = []
           switch (this.$store.state.Stat.tableType) {
             case 'server':
               this.$store.commit('STAT_TABLE_PAGE', n);
-              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
-              table = this.$store.state.Stat.serverTable.data
+              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: this.$store.state.Stat.statTableInfo.page, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
               break;
             case 'local':
               this.$store.commit('STAT_TABLE_PAGE', n);
-              this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.tablePage}页,共${this.$store.state.Stat.countPage}页`)
-              table = this.$store.state.Stat.localTable
-              chartData(this, table, this.$store.state.Stat.selectedRow, this.$store.state.Stat.selectedCol)
+              this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
+              chartData(this, this.$store.state.Stat.statTable.data, this.$store.state.Stat.selectedRow, this.$store.state.Stat.selectedCol)
               break;
             default:
               break;
@@ -345,7 +342,7 @@
           case 'local':
             if (this.$store.state.Stat.fileIndex !== null) {
               this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
-              this.$store.commit('EDIT_LOAD_FILE', this.$store.state.Stat.localTable);
+              this.$store.commit('EDIT_LOAD_FILE', this.$store.state.Stat.statTable.data);
             }
             this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
             this.$store.commit('EDIT_SET_FILES_INDEX', this.$store.state.Stat.fileIndex);
@@ -354,7 +351,7 @@
             this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
             this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
             this.$store.commit('EDIT_SET_FILES_INDEX', 0);
-            this.$store.commit('EDIT_LOAD_FILE', this.$store.state.Stat.serverTable.data);
+            this.$store.commit('EDIT_LOAD_FILE', this.$store.state.Stat.statTable.data);
             break;
           default:
         }
@@ -386,10 +383,10 @@
             break;
           }
           case 'server': {
-            if (this.$store.state.Stat.serverTable.data.length > 0) {
+            if (this.$store.state.Stat.statTable.data.length > 0) {
               this.$store.commit('STAT_SERVER_DIMENSION', [selType, x])
               this.$store.commit('STAT_SERVER_DIMENSION', ['type', type])
-              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
+              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
             }
@@ -449,20 +446,8 @@
         }
       },
       compare: function () {
-        let table = []
-        let header = []
-        switch (this.$store.state.Stat.tableType) {
-          case 'server':
-            table = this.$store.state.Stat.serverTable.data
-            header = this.$store.state.Stat.serverTable.data[0]
-            break;
-          case 'local':
-            table = this.$store.state.Stat.localTable
-            header = this.$store.state.Stat.tableHeader[0]
-            break;
-          default:
-            break;
-        }
+        const table = this.$store.state.Stat.statTable.data
+        const header = this.$store.state.Stat.statTableInfo.header
         const col = this.$store.state.Stat.selectedCol
         const row = this.$store.state.Stat.selectedRow
         const compareTable = this.$store.state.Stat.compareTable1
@@ -482,7 +467,7 @@
         }
       },
       saveCompare: function () {
-        if (this.$store.state.Stat.tableType === 'server' || this.$store.state.Stat.serverTable !== []) {
+        if (this.$store.state.Stat.tableType === 'server' && this.$store.state.Stat.statTable.data !== []) {
           // 取得所有对比行中所有的key并去重
           const compareFile = []
           let keys = []
@@ -515,7 +500,7 @@
             }
             break;
           case 'server':
-            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: 0, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
+            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 0, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
             break;
           default:
         }
@@ -526,7 +511,7 @@
             // this.$store.commit('STAT_SET_TITLE_PAGE', n);
             break;
           case 'local':
-            if (n > 0 && this.$store.state.Stat.colNum + n <= this.$store.state.Stat.tableHeader[0].length) {
+            if (n > 0 && this.$store.state.Stat.colNum + n <= this.$store.state.Stat.statTableInfo.header.length) {
               this.$store.commit('STAT_SET_COL_NUM', this.$store.state.Stat.colNum + n);
             } else if (n < 0 && this.$store.state.Stat.colNum + n > 0) {
               this.$store.commit('STAT_SET_COL_NUM', this.$store.state.Stat.colNum + n);
@@ -542,30 +527,30 @@
         this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
       },
       blockShare: function () {
-        const filename = this.$store.state.Stat.serverTable.tableName
+        const filename = this.$store.state.Stat.statTableInfo.tableName
         let array = []
-        array = this.$store.state.Stat.selectedRow.map(n => this.$store.state.Stat.serverTable.data[n])
+        array = this.$store.state.Stat.selectedRow.map(n => this.$store.state.Stat.statTable.data[n])
         share(this, [this.$store.state.System.server, this.$store.state.System.port], 'stat', filename, this.$store.state.System.user.username, array)
       },
       statInfo: function () {
         const selectRow = this.$store.state.Stat.selectedRow;
         const selectNum = selectRow[selectRow.length - 1];
-        const data = this.$store.state.Stat.serverTable.data[selectNum]
+        const data = this.$store.state.Stat.statTable.data[selectNum]
         // const selectStat =
-        const dimension = { type: this.$store.state.Stat.serverDimension.type, org: data[0], time: data[1] }
-        if (this.$store.state.Stat.serverTable.data[0].includes('病种')) {
+        const dimension = { type: this.$store.state.Stat.dimension.type, org: data[0], time: data[1] }
+        if (this.$store.state.Stat.statTable.data[0].includes('病种')) {
           dimension.drg = data[2]
         } else {
           dimension.drg = ''
         }
-        getStatInfo(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, dimension: dimension }, this.$store.state.System.user.username, 'server')
+        getStatInfo(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: this.$store.state.statTableInfo.tablePage, dimension: dimension }, this.$store.state.System.user.username, 'server')
         // console.log(this.$store.state.Stat.selectedRow);
       },
       returnStat: function () {
         this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
       },
       statDownload: function () {
-        downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
+        downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: this.$store.state.statTableInfo.page, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
       },
       custom: function () {
         sGetTarget(this, [this.$store.state.System.server, this.$store.state.System.port], 'list');
@@ -573,7 +558,7 @@
         console.log('这是自定义查询')
       },
       customselece: function () {
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: 'defind__.csv', page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.serverDimension, order: this.$store.state.Stat.serverSort }, 'stat')
+        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: 'defind__.csv', page: this.$store.state.statTableInfo.page, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
       }
     },
   };

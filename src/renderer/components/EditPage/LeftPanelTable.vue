@@ -144,14 +144,6 @@
         this.$store.commit('EDIT_SET_DELETE_LOCAL', index[0])
       },
       uploadDoc: function (data, index) {
-        if (!this.$store.state.System.user.login) {
-          this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-        } else {
-          this.$store.commit('EDIT_SET_FILE_INDEX', index)
-          // obj, data, fileName, content, id, saveType, username, doctype, mouldtype
-          saveEdit(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.files[this.$store.state.Edit.filesIndex], [data], '', '上传', this.$store.state.System.user.username, 1, this.$store.state.Edit.docType, '病案')
-        }
         const date = new Date();
         let month = date.getMonth() + 1;
         let strDate = date.getDate();
@@ -162,9 +154,17 @@
           strDate = `0${strDate}`
         }
         const currentdate = `${date.getFullYear()}-${month}-${strDate} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-        this.$store.commit('EDIT_UPDATE_DOC_HEADER', ['上传时间', currentdate]);
-        this.$store.commit('EDIT_UPDATE_DOC_SUMMARY', [index, `上传时间:${currentdate}`]);
-        this.$store.commit('EDIT_SET_DOC_STATE');
+        if (!this.$store.state.System.user.login) {
+          this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+        } else {
+          this.$store.commit('EDIT_SET_FILE_INDEX', index)
+          // obj, data, fileName, content, id, saveType, username, doctype, mouldtype
+          saveEdit(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.files[this.$store.state.Edit.filesIndex], [data], '', '上传', this.$store.state.System.user.username, 1, this.$store.state.Edit.docType, '病案')
+          this.$store.commit('EDIT_UPDATE_DOC_HEADER', ['上传时间', currentdate]);
+          this.$store.commit('EDIT_UPDATE_DOC_SUMMARY', [index, `上传时间:${currentdate}`]);
+          this.$store.commit('EDIT_SET_DOC_STATE');
+        }
       },
       downloadDoc: function (data, index) {
         const index1 = this.$store.state.Edit.files[this.$store.state.Edit.filesIndex].indexOf('-')
