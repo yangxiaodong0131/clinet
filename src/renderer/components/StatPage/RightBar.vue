@@ -154,8 +154,11 @@
         <li class="nav-item active" v-on:click='customselece()' v-if="this.$store.state.Stat.tableType === 'server'"  title="自定义查询">
           <a class="nav-link  text-light" href="#"> 自定义 <span class="sr-only"></span></a>
         </li>
-        <li class="nav-item active" v-on:click='custom()' v-if="this.$store.state.Stat.tableType === 'server'"  title="自定义查询">
+        <li class="nav-item active" v-on:click='custom()' v-if="this.$store.state.Stat.tableType === 'server' && this.customs"  title="自定义查询">
           <a class="nav-link  text-light" href="#"> 自定义查询 <span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item active" v-on:click='customInsert()' v-if="this.$store.state.Stat.tableType === 'server' && this.customs"  title="自定义保存">
+          <a class="nav-link  text-light" href="#"> 自定义保存 <span class="sr-only"></span></a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
@@ -175,7 +178,7 @@
   import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
   // import saveFile from '../../utils/SaveFile';
-  import { getStatFiles, getStat, saveStat, getStatInfo, downloadStat } from '../../utils/StatServerFile';
+  import { getStatFiles, getStat, saveStat, getStatInfo, downloadStat, sCustom } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
   // import sGetTarget from '../../utils/Server';
 
@@ -185,7 +188,8 @@
         paths: [],
         stat: '',
         tableType: this.$store.state.Stat.tableType,
-        dimension: ''
+        dimension: '',
+        customs: false
       };
     },
     computed: {
@@ -558,7 +562,17 @@
         console.log('这是自定义查询')
       },
       customselece: function () {
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: 'defind__.csv', page: this.$store.state.statTableInfo.page, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+        this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
+        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: 'defind__.csv', page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
+        // this.$store.commit('STAT_SET_CHART_IS_SHOW', 'custom');
+        if (this.customs) {
+          this.customs = false
+        } else {
+          this.customs = true
+        }
+      },
+      customInsert: function () {
+        sCustom(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Stat.customindex, this.$store.state.System.user.username)
       }
     },
   };
