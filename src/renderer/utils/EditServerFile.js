@@ -267,13 +267,13 @@ export function editDocShow(obj, data, value) {
 }
 
 export function addDocControl(obj, data, value, username) {
-  console.log(username)
+  const [key, values] = value.split(':')
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/edit/cdh_control`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     // data: qs.stringify({ diag: `["${value2.join('","')}"]` }),
-    data: qs.stringify({ key: value, username: username }),
+    data: qs.stringify({ key: key, value: values, username: username }),
     responseType: 'json'
   }).then((res) => {
     obj.$store.commit('SET_NOTICE', res.data.result)
