@@ -283,3 +283,7 @@ export function addDocControl(obj, data, value, username) {
     obj.$store.commit('SET_NOTICE', '病案历史查询失败')
   })
 }
+
+export function getExpertHint(obj, data, value) {
+  console.log(value)
+}

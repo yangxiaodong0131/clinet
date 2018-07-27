@@ -44,7 +44,7 @@
 
 <script>
   import { message, join } from '../../utils/Socket'
-  import { getCaseHistory, editDocShow } from '../../utils/EditServerFile'
+  import { getCaseHistory, editDocShow, getExpertHint } from '../../utils/EditServerFile'
   import { getDate } from '../../utils/EditSave'
   export default {
     // mounted: function () {
@@ -158,8 +158,13 @@
                   }
                   this.$store.commit('EDIT_SET_DOC_INDEX', [1]);
                   n += 1
+                  console.log(v)
                   if (!global.hitbdata.cdhHeader.includes(v[0]) && this.$store.state.Edit.rightPanels.includes('病案质控')) {
                     this.$store.commit('EDIT_ADD_DOC_CONTROL', v);
+                  }
+                  if (this.$store.state.Edit.rightPanels.includes('专家提示') && v[0].includes('症状')) {
+                    console.log('====')
+                    getExpertHint(this, [this.$store.state.System.server, this.$store.state.System.port], v[1])
                   }
                 });
               } else {
