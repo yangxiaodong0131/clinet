@@ -14,9 +14,9 @@
         </tr>
         <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" v-bind:class="{'table-danger': rowHeight == index}" class="library-rightpanel">
           <td v-for="(field, index1) in data" v-bind:key='index1' >
-            <a href="#" class="oi oi-sort-ascending" v-if="index === 0 && tableType === 'server'" v-on:click="sort('asc', data[index1])"></a>
+            <a href="#" class="oi oi-sort-ascending" v-if="index === 0 && tableType === 'server'" v-on:click="sort('asc', data[index1])" v-bind:id="'library-hd-asc'+ index1"></a>
               {{data[index1]}}
-            <a href="#" class="oi oi-sort-descending" v-if="index === 0 && tableType === 'server'" v-on:click="sort('desc', data[index1])"></a>
+            <a href="#" class="oi oi-sort-descending" v-if="index === 0 && tableType === 'server'" v-on:click="sort('desc', data[index1])" v-bind:id="'library-hd-desc'+ index1"></a>
           </td>
         </tr>
       </table>

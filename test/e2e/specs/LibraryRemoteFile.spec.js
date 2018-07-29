@@ -88,6 +88,18 @@ describe('LibraryRemoteFile', function () {
       .then(function (leftlist) {
         expect(leftlist).to.be.an('array');
       })
+      .click('#library-hd-asc0')
+      .click('#library-hd-asc1')  
+      .getText('.library-rightpanel')
+      .then(function (leftlist) {
+        expect(leftlist).to.be.an('array');
+      })
+      .click('#library-hd-desc0')
+      .click('#library-hd-desc1')
+      .getText('.library-rightpanel')
+      .then(function (leftlist) {
+        expect(leftlist).to.be.an('array');
+      })
     //   .getText('#library-dropdown-全部')
     //   .then(function (org) {
     //     expect(org).to.equal('');
