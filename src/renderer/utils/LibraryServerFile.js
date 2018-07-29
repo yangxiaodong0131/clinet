@@ -44,17 +44,19 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   }
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
+    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}&sort_value=${sort.field}&sort_type=${sort.type}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
       const library = res.data.library
-      const opt = { page: parseInt(res.data.page, 10), countPage: res.data.count, data: library.slice(1), pageList: res.data.page_list, tableName: tableName };
-      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', opt);
+      const opt = { page: parseInt(res.data.page, 10), countPage: res.data.count, pageList: res.data.page_list, tableName: tableName };
+      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', library.slice(1));
+      obj.$store.commit('LIBRARY_SET_TABLE_INFO', opt)
+      obj.$store.commit('LIBRARY_SET_SERVER_SORT', [res.data.sort_value, res.data.sort_type])
       obj.$store.commit('LIBRARY_SET_LIBRARY_LIST', res.data.list);
       obj.$store.commit('LIBRARY_SET_COUNT_PAGE', res.data.count);
-      obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Library.serverTable.page}页,共${obj.$store.state.Library.serverTable.countPage}页`);
+      obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Library.libraryTableInfo.page}页,共${obj.$store.state.Library.libraryTableInfo.countPage}页`);
       // obj.$store.commit('EDIT_LOAD_FILE', res.data.library.filter(x => x !== undefined).map(x => x.join(',')))
       // .map(x => x.join(','))
     } else {
