@@ -128,7 +128,7 @@
           </th>
         </tr>
         <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===index)}" v-if="index > 0">
-          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" v-on:click="onClickTd(data, index)" class="stat-right-table-td"  v-if="index < 10">{{data[index]}}</td>
+          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" v-on:click="onClickTd(data, index)" class="stat-right-table-td"  v-if="index < 11">{{data[index]}}</td>
         </tr>
       </table>
 
@@ -139,7 +139,7 @@
           </th>
         </tr>
         <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===index)}" v-if="index > 0">
-          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" v-on:click="onClickTd(data, index)" class="stat-right-table-td"  v-if="index < 10">{{data[index]}}</td>
+          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" v-on:click="onClickTd(data, index)" class="stat-right-table-td"  v-if="index < 11">{{data[index]}}</td>
         </tr>
       </table>
     </div>
@@ -476,6 +476,7 @@
         }
       },
       selX: function (data, value) {
+        this.$store.commit('STAT_SET_FILE_FLAG');
         if (value === 1) {
           const tableType = this.$store.state.Stat.tableType
           const table1 = []
@@ -497,7 +498,8 @@
         }
       },
       clearSelX: function (type) {
-        this.$store.commit('STAT_SERVER_DIMENSION', [type, '全部'])
+        this.$store.commit('STAT_SET_FILE_FLAG');
+        this.$store.commit('STAT_SERVER_DIMENSION', [type, '-']);
         getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
       },
       onClickSort: function (field, type) {

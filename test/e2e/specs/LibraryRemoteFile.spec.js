@@ -72,7 +72,7 @@ describe('LibraryRemoteFile', function () {
       // .waitUntilTextExists('#notice-bar', '选择的不是CSV文件，不能导入！')
     // // 2.1.8、点击维度选择(library-dropdown)，显示维度下拉选项
     // // 2.1.8.1、工具栏的维度选择-机构(library-org)，左侧列表显示当前数据内所有机构，提示：机构维度选择成功，若机构列无内容，提示：无机构维度！
-      .click('.library-leftlist')  
+      .click('.library-leftlist')
       .click('#library-right-dimension-time')
       .click('#library-td-time-tr1')
       .pause(1000)
@@ -80,7 +80,7 @@ describe('LibraryRemoteFile', function () {
       .then(function (leftlist) {
         expect(leftlist).to.be.an('array');
       })
-      .click('.library-leftlist')  
+      .click('.library-leftlist')
       .click('#library-right-dimension-version')
       .click('#library-td--version-tr2')
       .pause(1000)
@@ -89,7 +89,7 @@ describe('LibraryRemoteFile', function () {
         expect(leftlist).to.be.an('array');
       })
       .click('#library-hd-asc0')
-      .click('#library-hd-asc1')  
+      .click('#library-hd-asc1')
       .getText('.library-rightpanel')
       .then(function (leftlist) {
         expect(leftlist).to.be.an('array');
