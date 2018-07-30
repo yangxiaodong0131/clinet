@@ -27,10 +27,6 @@ export function socketConnect(obj, data, user) {
       obj.$store.commit('SYSTEM_SET_CONNECT_INFO', true)
     }
   })
-  // channel2.push('cdh帮助', {})
-  // channel2.on('cdh帮助', (res) => {
-  //   obj.$store.commit('EDIT_SERVER_CDH', res.cdh)
-  // })
   channel2.on('ping', (r) => {
     obj.$store.commit('EDIT_SET_CHAT_USERS', r.users);
   })
@@ -89,7 +85,14 @@ export function message(obj, message, username = '', type = 'message') {
 
 export function leave(obj, username = '') {
   channel.push('离开房间', { body: '离开房间', username: username, create_room_time: createRoomTime });
-  obj.$store.commit('SET_NOTICE', '已离开房间')
+  // 当离开聊天房间后,立即加入公共房间
+  channel.on('已离开房间', () => {
+    channel2 = socket.channel('online:lobby', { username: username })
+    channel2.join()
+      .receive('ok', () => {
+        obj.$store.commit('SET_NOTICE', '已离开房间')
+      })
+  })
 }
 
 export function offline(obj, username = '') {
