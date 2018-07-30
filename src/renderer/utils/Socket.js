@@ -77,7 +77,6 @@ export function join(obj, filename, username) {
   })
 }
 
-
 export function invite(obj, filename, username = '') {
   channel2.push('邀请加入', { body: '', room: obj.$store.state.System.user.username, username: username, create_room_time: createRoomTime, invite: username, room_owner: obj.$store.state.System.user.username })
   obj.$store.commit('SET_NOTICE', '邀请成功')
@@ -91,4 +90,9 @@ export function message(obj, message, username = '', type = 'message') {
 export function leave(obj, username = '') {
   channel.push('离开房间', { body: '离开房间', username: username, create_room_time: createRoomTime });
   obj.$store.commit('SET_NOTICE', '已离开房间')
+}
+
+export function offline(obj, username = '') {
+  channel2.push('用户下线', { username: username })
+  obj.$store.commit('SYSTEM_SET_USER', ['更新用户信息成功', { username: '', org: '', type: 2, login: false }]);
 }
