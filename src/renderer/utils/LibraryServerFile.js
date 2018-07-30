@@ -38,13 +38,14 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   }
   let sorts = ''
   if (sort.length !== 0) {
-    sorts = `&sort_type=${sort[0]}&sort_value=${sort[1]}`
+    sorts = `&sort_type=${sort.type}&sort_value=${sort.field}`
   } else {
     sorts = ''
   }
+  console.log(sorts)
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}&sort_value=${sort.field}&sort_type=${sort.type}`,
+    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
