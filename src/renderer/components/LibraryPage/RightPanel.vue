@@ -9,15 +9,29 @@
         v-if ="this.$store.state.Library.tableType === 'server' || this.$store.state.Library.tableType === 'block'"
       </table> -->
       <table>
-        <tr>
+        <!-- <tr>
           <td v-for="(field, index) in this.$store.state.Library.title" v-bind:key='index'>{{field}}</td>
-        </tr>
-        <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" v-bind:class="{'table-danger': rowHeight == index}" class="library-rightpanel">
+        </tr> -->
+        <!-- <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" v-bind:class="{'table-danger': rowHeight == index}" class="library-rightpanel">
           <td v-for="(field, index1) in data" v-bind:key='index1' >
-            <a href="#" class="oi oi-sort-ascending" v-if="index === 0 && tableType === 'server'" v-on:click="sort('asc', data[index1])"></a>
+            <a class="oi oi-sort-ascending" v-if="serverSort.type === 'asc' && serverSort.field == data" v-on:click="sort('asc', data[index1])" v-bind:id="'library-hd-asc'+ index1"></a>
+            <a class="oi oi-sort-ascending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'asc')" v-bind:id="'library-hd-asc'+xindex1"></a>
+
               {{data[index1]}}
-            <a href="#" class="oi oi-sort-descending" v-if="index === 0 && tableType === 'server'" v-on:click="sort('desc', data[index1])"></a>
+            <a href="#" class="oi oi-sort-descending" v-if="index === 0 && tableType === 'server'" v-on:click="sort('desc', data[index1])" v-bind:id="'library-hd-desc'+ index1"></a>
           </td>
+        </tr> -->
+        <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index">
+          <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex">
+            <a class="oi oi-sort-ascending" v-if="serverSort.type === 'asc' && serverSort.field == data" ></a>
+            <a class="oi oi-sort-ascending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'asc')" v-bind:id="'library-table-asc'+xindex"></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span v-on:click="onClickTd(x, xindex)">{{data}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="oi oi-sort-descending"  v-if="serverSort.type === 'desc' && serverSort.field == data"></a>
+            <a class="oi oi-sort-descending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'desc')" v-bind:id="'library-table-desc'+xindex"></a>
+          </th>
+        </tr>
+        <tr v-for="(data, index) in xs" v-bind:key='index' class="library-right-table-tr" v-if="index > 0">
+          <td v-for="(field, index) in data"  v-bind:key='index' class="library-right-table-td"  v-if="index < 11">{{data[index]}}</td>
         </tr>
       </table>
       <nav aria-label="Page navigation example" v-if="this.$store.state.Library.tableType === 'server'">
@@ -48,29 +62,34 @@
     computed: {
       page: {
         get() {
-          return { pageList: this.$store.state.Library.serverTable.pageList, page: this.$store.state.Library.serverTable.page }
+          return { pageList: this.$store.state.Library.libraryTableInfo.pageList, page: this.$store.state.Library.libraryTableInfo.page }
+        }
+      },
+      serverSort: {
+        get() {
+          return this.$store.state.Library.serverSort
         }
       },
       xs: {
         get() {
-          let table = []
-          switch (this.$store.state.Library.tableType) {
-            case 'local': {
-              table = this.$store.state.Library.localTable;
-              break;
-            }
-            case 'server': {
-              table = this.$store.state.Library.serverTable.data
-              break;
-            }
-            case 'block': {
-              table = this.$store.state.Library.serverTable.data
-              break;
-            }
-            default: {
-              break;
-            }
-          }
+          const table = this.$store.state.Library.libraryTable.data
+          // switch (this.$store.state.Library.tableType) {
+          //   case 'local': {
+          //     table = this.$store.state.Library.localTable;
+          //     break;
+          //   }
+          //   case 'server': {
+          //     table = this.$store.state.Library.serverTable.data
+          //     break;
+          //   }
+          //   case 'block': {
+          //     table = this.$store.state.Library.serverTable.data
+          //     break;
+          //   }
+          //   default: {
+          //     break;
+          //   }
+          // }
           return table
         }
       },
@@ -101,11 +120,15 @@
       serverPage: function (data) {
         const page = parseInt(data, 10)
         this.$store.commit('LIBRARY_SET_TABLE_PAGE', page);
-        getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, page, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', this.$store.state.Library.tableType, ['asc', ''])
+        getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, page, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', this.$store.state.Library.tableType, ['asc', ''])
         // getLibrary(obj, data, tableName, pageNum, dimensionType, dimensionServer, type1, serverType = 'server'
       },
       sort: function (type, value) {
-        getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.serverTable.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'library', this.$store.state.Library.tableType, [type, value])
+        getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'library', this.$store.state.Library.tableType, [type, value])
+      },
+      onClickSort: function (field, type) {
+        this.$store.commit('LIBRARY_SET_SERVER_SORT', [field, type])
+        getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'library', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
       }
     },
   };
