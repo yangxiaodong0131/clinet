@@ -241,7 +241,7 @@ const mutations = {
     state.dropdownTypes = value
   },
   LIBRARY_GET_DOWN_FILE(state, value) {
-    state.libraryTable.down = value
+    state.libraryTable.download = value
   },
   LIBRARY_SET_SERVER_DIMENSIONS(state, value) {
     state.dimensions = value
