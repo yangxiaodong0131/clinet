@@ -37,7 +37,7 @@ describe('LibraryRemoteFile', function () {
       .pause(1000)
       .getHTML('.library-rightpanel')
       .then(function (rightpanel) {
-        expect(rightpanel).to.be.an('array');
+        expect(rightpanel).to.be.an('string');
       })
       .pause(1000)
     // 点击下载按钮、、
@@ -54,13 +54,13 @@ describe('LibraryRemoteFile', function () {
       .click('#library-down')
       .getHTML('.library-rightpanel')
       .then(function (rightpanel) {
-        expect(rightpanel).to.be.an('array');
+        expect(rightpanel).to.be.an('string');
       })
     // 2.1.7.3、点击工具栏的前一页(library-up)，右侧表中显示上一页内容第四行高亮并提示：翻页成功！table底部页数减一，提示翻页成功，若减一后页数小于0，提示：当前已经是第一页！
       .click('#library-up')
       .getHTML('.library-rightpanel')
       .then(function (rightpanel) {
-        expect(rightpanel).to.be.an('array');
+        expect(rightpanel).to.be.an('string');
       })
     // 2.1.7.4、点击工具栏的编辑数据(remote-file)，进入编辑页面，编辑页面右侧显示当前数据，左侧显示第四行高亮的内容（传入id到编辑页面用于返回）
       .click('#library-edit')
@@ -78,7 +78,7 @@ describe('LibraryRemoteFile', function () {
       .pause(1000)
       .getText('.library-rightpanel')
       .then(function (leftlist) {
-        expect(leftlist).to.be.an('array');
+        expect(leftlist).to.be.an('string');
       })
       .click('.library-leftlist')
       .click('#library-right-dimension-version')
@@ -86,19 +86,19 @@ describe('LibraryRemoteFile', function () {
       .pause(1000)
       .getText('.library-rightpanel')
       .then(function (leftlist) {
-        expect(leftlist).to.be.an('array');
+        expect(leftlist).to.be.an('string');
       })
-      .click('#library-hd-asc0')
-      .click('#library-hd-asc1')
+      .click('#library-table-asc0')
+      .click('#library-table-asc1')
       .getText('.library-rightpanel')
       .then(function (leftlist) {
-        expect(leftlist).to.be.an('array');
+        expect(leftlist).to.be.an('string');
       })
-      .click('#library-hd-desc0')
-      .click('#library-hd-desc1')
+      .click('#library-table-desc0')
+      .click('#library-table-desc1')
       .getText('.library-rightpanel')
       .then(function (leftlist) {
-        expect(leftlist).to.be.an('array');
+        expect(leftlist).to.be.an('string');
       })
     //   .getText('#library-dropdown-全部')
     //   .then(function (org) {
