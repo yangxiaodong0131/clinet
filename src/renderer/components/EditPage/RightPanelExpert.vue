@@ -9,7 +9,7 @@
       </tr>
       <tr v-for="(data, index) in expertHint" v-bind:key='index'>
         <td> {{index + 1}} </td>
-        <td>{{data}}</td>
+        <td v-on:click="getItem(data, index)">{{data}}</td>
       </tr>
     </table>
     <table v-if="this.$store.state.Edit.rightFolds.includes('专家提示')">
@@ -45,7 +45,12 @@
       },
       fold(data) {
         this.$store.commit('EDIT_SET_RIGHT_FOLDS', data);
-      }
+      },
+      getItem: function (item) {
+        const value = `${this.$store.state.Edit.editBarValue} ${item}`
+        this.$store.commit('EDIT_SET_BAR_VALUE', value)
+        document.getElementById('edit-editbar-input').focus()
+      },
     }
   };
 </script>
