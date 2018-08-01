@@ -12,6 +12,9 @@
         <li class="nav-item active" v-on:click='getUsers()' id="server-user-setup">
           <a class="nav-link text-light" href="#"> 用户设置 <span class="sr-only">(current)</span></a>
         </li>
+        <li class="nav-item active" v-on:click='test()' id="server-user-setup">
+          <a class="nav-link text-light" href="#"> statCdaTest <span class="sr-only">(current)</span></a>
+        </li>
         <li v-if="toolbar === 'getUsers' && user.login === true" v-on:click="updateUserPage()" id="server-user-change">
           <a class="nav-link text-light" href="#">修改</a>
         </li>
@@ -70,6 +73,7 @@
     sCreateOrg, sUpdateOrg, sGetDepart, sCreateDepart, sUpdateDepart, sUpHelp } from '../../utils/Server';
   // import { open } from '../../utils/BlockAccount'
   import loadFile from '../../utils/LoadFile';
+  import statCda from '../../utils/StatCda';
   export default {
     data() {
       return {
@@ -154,6 +158,9 @@
       }
     },
     methods: {
+      test: function () {
+        statCda(this)
+      },
       getServers: function () {
         loadFile(this, 'hitb_server.csv', 'system')
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'getServers');
