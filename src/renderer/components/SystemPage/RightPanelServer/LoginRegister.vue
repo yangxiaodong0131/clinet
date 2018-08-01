@@ -55,7 +55,7 @@
 </template>
 
 <script>
-  import { sRegister, sUpdateUser } from '../../../utils/Server'
+  import { sRegister, sUpdateUser } from '../../../utils/ServerUser'
   import { socketConnect } from '../../../utils/Socket';
   export default {
     data() {
