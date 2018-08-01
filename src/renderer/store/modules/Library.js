@@ -25,7 +25,7 @@ const state = {
   libraryList: { org: [], time: [], version: [] },
   serverDimension: { org: '', time: '', version: '' },
   libraryTable: { data: [], download: [] },
-  serverSort: { field: '', type: 'asc' },
+  serverSort: { field: '编码', type: 'asc' },
   libraryTableInfo: { page: 1, countPage: 0, pageList: [], tableName: '', header: [], title: [] }
 };
 
@@ -195,7 +195,7 @@ const mutations = {
     state.serverSort.type = opt[1]
   },
   LIBRARY_CLEAR_SERVER_SORT(state) {
-    state.serverSort = { field: '', type: 'asc' }
+    state.serverSort = { field: '编码', type: 'asc' }
   },
   LIBRARY_GET_FIELD_INDEX(state, index) {
     if (state.fieldIndex.includes(index)) {
