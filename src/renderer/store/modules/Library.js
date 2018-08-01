@@ -25,7 +25,7 @@ const state = {
   libraryList: { org: [], time: [], version: [] },
   serverDimension: { org: '', time: '', version: '' },
   libraryTable: { data: [], download: [] },
-  serverSort: { field: '编码', type: 'asc' },
+  serverSort: { field: '', type: 'asc' },
   libraryTableInfo: { page: 1, countPage: 0, pageList: [], tableName: '', header: [], title: [] }
 };
 
@@ -45,12 +45,12 @@ const mutations = {
     state.dimensionOrg = [...new Set(state.table.map(a => a[org]))]
     if (state.libraryTableInfo.header[0].includes('year')) {
       time = state.libraryTableInfo.header[0].indexOf('year')
-      version = state.ibraryTableInfo.header[0].indexOf('version')
-      org = state.ibraryTableInfo.header[0].indexOf('org')
-    } else if (state.ibraryTableInfo.header[0].includes('年份')) {
-      time = state.ibraryTableInfo.header[0].indexOf('年份')
-      version = state.ibraryTableInfo.header[0].indexOf('版本')
-      org = state.ibraryTableInfo.header[0].indexOf('机构')
+      version = state.libraryTableInfo.header[0].indexOf('version')
+      org = state.libraryTableInfo.header[0].indexOf('org')
+    } else if (state.libraryTableInfo.header[0].includes('年份')) {
+      time = state.libraryTableInfo.header[0].indexOf('年份')
+      version = state.libraryTableInfo.header[0].indexOf('版本')
+      org = state.libraryTableInfo.header[0].indexOf('机构')
     }
     state.dimensionSearch.time = time
     state.dimensionSearch.version = version
@@ -69,7 +69,7 @@ const mutations = {
     state.countPage = page
     for (let i = 1; i <= page; i += 1) {
       const f = []
-      f.push(state.ibraryTableInfo.header[0])
+      f.push(state.libraryTableInfo.header[0])
       for (let j = 1; j <= 35; j += 1) {
         f.push(state.tableSel[(i) * j])
       }
@@ -93,7 +93,11 @@ const mutations = {
       state.libraryTableInfo.page = 1
     }
     // .slice(1)
-    state.libraryTable.data = state.localTables[state.libraryTableInfo.page]
+    if (state.localTables[state.libraryTableInfo.page] !== undefined) {
+      state.libraryTable.data = state.localTables[state.libraryTableInfo.page]
+    }
+    // console.log(state.localTables[state.libraryTableInfo.page])
+    // state.libraryTable.data = state.localTables[state.libraryTableInfo.page]
   },
   LIBRARY_SET_TABLE_INFO(state, opt) {
     state.libraryTableInfo = opt
@@ -191,7 +195,7 @@ const mutations = {
     state.serverSort.type = opt[1]
   },
   LIBRARY_CLEAR_SERVER_SORT(state) {
-    state.serverSort = { field: '编码', type: 'asc' }
+    state.serverSort = { field: '', type: 'asc' }
   },
   LIBRARY_GET_FIELD_INDEX(state, index) {
     if (state.fieldIndex.includes(index)) {
@@ -237,7 +241,7 @@ const mutations = {
     state.dropdownTypes = value
   },
   LIBRARY_GET_DOWN_FILE(state, value) {
-    state.libraryTable.down = value
+    state.libraryTable.download = value
   },
   LIBRARY_SET_SERVER_DIMENSIONS(state, value) {
     state.dimensions = value

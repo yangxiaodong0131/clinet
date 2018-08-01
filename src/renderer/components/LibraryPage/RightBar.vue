@@ -153,10 +153,10 @@
         if (this.$store.state.Library.tableType === 'local') {
           this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
           this.$store.commit('EDIT_SET_RIGHT_FOLDS', '本地文件');
-          if (this.$store.state.Library.localTable.includes(undefined)) {
-            f = this.$store.state.Library.localTable.filter(x => x !== undefined)
+          if (this.$store.state.Library.libraryTable.data.includes(undefined)) {
+            f = this.$store.state.Library.libraryTable.data.filter(x => x !== undefined)
           } else {
-            f = this.$store.state.Library.localTable
+            f = this.$store.state.Library.libraryTable.data
           }
         }
         if (this.$store.state.Library.tableType === 'server') {
@@ -181,7 +181,7 @@
       selX: function (value, x) {
         switch (this.$store.state.Library.tableType) {
           case 'local': {
-            if (this.$store.state.Library.localTable.length > 0) {
+            if (this.$store.state.Library.libraryTable.data.length > 0) {
               console.log(value)
               switch (x) {
                 case '全部':
@@ -207,7 +207,7 @@
             if (this.$store.state.Library.libraryTableInfo.tableName) {
               this.$store.commit('LIBRARY_SET_SERVER_DIMENSION', [value, x]);
               console.log(this.$store.state.Library.serverDimension)
-              getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'edit', 'server', ['asc', ''])
+              getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'edit', 'server', this.$store.state.Library.serverSort)
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
             }
