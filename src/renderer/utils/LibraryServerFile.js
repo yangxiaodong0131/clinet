@@ -37,12 +37,12 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
     url = ''
   }
   let sorts = ''
-  if (sort.length !== 0) {
+  if (sort.field !== '') {
     sorts = `&sort_type=${sort.type}&sort_value=${sort.field}`
   } else {
     sorts = ''
   }
-  console.log(sorts)
+  console.log(sort)
   axios({
     method: 'get',
     url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
