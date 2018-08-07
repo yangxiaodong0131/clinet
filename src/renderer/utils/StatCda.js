@@ -43,7 +43,7 @@ export default function statCda(obj, data = ['127.0.0.1', '80']) {
     cda.pmh = cdaPmh;
   });
   // 现病史
-  const mh = stat['既往史'];
+  const mh = stat['现病史'];
   mh.forEach((item) => {
     const cdaMhArray = cda.pmh;
     cdaMhArray.push(item.split('；'));
