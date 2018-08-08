@@ -1,33 +1,34 @@
 const axios = require('axios');
 const qs = require('qs');
 export function getEditFiles(obj, data, type, username, serverType = 'server') {
-  let url = ''
-  if (type === 'user') {
-    url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
-  } else {
-    url = `http://${data[0]}:${data[1]}/edit/cda_file?username=${username}&server_type=${serverType}`
-  }
-  axios({
-    method: 'get',
-    url: url,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    responseType: 'json'
-  }).then((res) => {
-    if (res.status === 200) {
-      obj.$store.commit('EDIT_SERVER_FILES', res.data.cda)
-      if (type === 'user') {
-        obj.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
-      } else {
-        obj.$store.commit('EDIT_SET_SERVER_TYPE', 'show');
-      }
-      obj.$store.commit('SET_NOTICE', res.data.info);
-    } else {
-      obj.$store.commit('EDIT_SERVER_FILES', [])
-    }
-  }).catch((err) => {
-    console.log(err);
-    obj.$store.commit('EDIT_SERVER_FILES', [])
-  })
+  console.log(serverType)
+  // let url = ''
+  // if (type === 'user') {
+  //   url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
+  // } else {
+  //   url = `http://${data[0]}:${data[1]}/edit/cda_file?username=${username}&server_type=${serverType}`
+  // }
+  // axios({
+  //   method: 'get',
+  //   url: url,
+  //   headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+  //   responseType: 'json'
+  // }).then((res) => {
+  //   if (res.status === 200) {
+  //     obj.$store.commit('EDIT_SERVER_FILES', res.data.cda)
+  //     if (type === 'user') {
+  //       obj.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
+  //     } else {
+  //       obj.$store.commit('EDIT_SET_SERVER_TYPE', 'show');
+  //     }
+  //     obj.$store.commit('SET_NOTICE', res.data.info);
+  //   } else {
+  //     obj.$store.commit('EDIT_SERVER_FILES', [])
+  //   }
+  // }).catch((err) => {
+  //   console.log(err);
+  //   obj.$store.commit('EDIT_SERVER_FILES', [])
+  // })
 }
 // this, [url, port, filename, serverType]
 export function getEdit(obj, data, filename, serverType = 'server', type = '') {
@@ -92,24 +93,25 @@ export function saveEdit(obj, data, fileName, content, username, saveType, docty
 }
 
 export function getDocTypes(obj, data, username) {
-  axios({
-    method: 'get',
-    url: `http://${data[0]}:${data[1]}/edit/mouldlist?username=${username}`,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    responseType: 'json'
-  }).then((res) => {
-    if (res.status === 200) {
-      const results = res.data.result.map(n => n.slice(0, -4))
-      obj.$store.commit('EDIT_SET_DOC_TYPES', results)
-      obj.$store.commit('SET_NOTICE', '模板列表查询成功')
-    } else {
-      obj.$store.commit('SET_NOTICE', '模板列表查询失败')
-    }
-  }).catch((err) => {
-    console.log(err);
-    obj.$store.commit('SET_NOTICE', '模板列表查询失败')
-  })
-  obj.$store.commit('SET_NOTICE', '远程docType未查询')
+  console.log(username)
+  // axios({
+  //   method: 'get',
+  //   url: `http://${data[0]}:${data[1]}/edit/mouldlist?username=${username}`,
+  //   headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+  //   responseType: 'json'
+  // }).then((res) => {
+  //   if (res.status === 200) {
+  //     const results = res.data.result.map(n => n.slice(0, -4))
+  //     obj.$store.commit('EDIT_SET_DOC_TYPES', results)
+  //     obj.$store.commit('SET_NOTICE', '模板列表查询成功')
+  //   } else {
+  //     obj.$store.commit('SET_NOTICE', '模板列表查询失败')
+  //   }
+  // }).catch((err) => {
+  //   console.log(err);
+  //   obj.$store.commit('SET_NOTICE', '模板列表查询失败')
+  // })
+  // obj.$store.commit('SET_NOTICE', '远程docType未查询')
 }
 
 export function getDocContent(obj, data, username, filename) {
@@ -135,24 +137,25 @@ export function getDocContent(obj, data, username, filename) {
 }
 
 export function getHelpTypes(obj, data) {
-  axios({
-    method: 'get',
-    url: `http://${data[0]}:${data[1]}/edit/helplist`,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    responseType: 'json'
-  }).then((res) => {
-    if (res.status === 200) {
-      const b = res.data.result
-      if (b) {
-        obj.$store.commit('EDIT_SET_HELP_TYPES', b)
-      }
-    } else {
-      obj.$store.commit('SET_NOTICE', '远程帮助失败')
-    }
-  }).catch((err) => {
-    console.log(err);
-    obj.$store.commit('SET_NOTICE', '远程帮助失败')
-  })
+  console.log(data)
+  // axios({
+  //   method: 'get',
+  //   url: `http://${data[0]}:${data[1]}/edit/helplist`,
+  //   headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+  //   responseType: 'json'
+  // }).then((res) => {
+  //   if (res.status === 200) {
+  //     const b = res.data.result
+  //     if (b) {
+  //       obj.$store.commit('EDIT_SET_HELP_TYPES', b)
+  //     }
+  //   } else {
+  //     obj.$store.commit('SET_NOTICE', '远程帮助失败')
+  //   }
+  // }).catch((err) => {
+  //   console.log(err);
+  //   obj.$store.commit('SET_NOTICE', '远程帮助失败')
+  // })
 }
 
 export function clinetHelp(obj, data, name) {
