@@ -301,7 +301,8 @@ export function editBarEnter(obj, targetValue) {
             if (!global.hitbdata.cdhHeader.includes(v[0]) && obj.$store.state.Edit.rightPanels.includes('病案质控')) {
               obj.$store.commit('EDIT_ADD_DOC_CONTROL', v);
             }
-            if (obj.$store.state.Edit.rightPanels.includes('专家提示') && v[0].includes('症状')) {
+            if (obj.$store.state.Edit.rightPanels.includes('专家提示')) {
+              console.log(v)
               getExpertHint(obj, [obj.$store.state.System.server, obj.$store.state.System.port], v)
             }
           });
