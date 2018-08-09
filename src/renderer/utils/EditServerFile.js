@@ -257,14 +257,15 @@ export function editDocState(obj, doc) {
 }
 
 export function editDocShow(obj, data, value) {
-  const value2 = value.join(' ')
+  console.log(value)
+  // const value2 = value.join(' ')
   // const value2 = value[1].split(',').map(x => x.split(' ')[1])
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/stat/cda_consult`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     // data: qs.stringify({ diag: `["${value2.join('","')}"]` }),
-    data: qs.stringify({ item: value2, server_type: 'server' }),
+    data: qs.stringify({ item: value, server_type: 'server' }),
     responseType: 'json'
   }).then((res) => {
     console.log(res);
@@ -295,12 +296,16 @@ export function addDocControl(obj, data, value, username) {
 }
 
 export function getExpertHint(obj, data, value) {
-  const [hd, ...values] = value
+  // const [hd, ...values] = value
+  // console.log(hd)
+  console.log(value)
+  const arr = []
+  arr.push(value[0])
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/library/symptom_serach`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    data: qs.stringify({ symptom: values }),
+    data: qs.stringify({ symptom: arr }),
     responseType: 'json'
   }).then((res) => {
     // console.log(res.data.result)
@@ -314,5 +319,5 @@ export function getExpertHint(obj, data, value) {
     console.log(err);
     obj.$store.commit('SET_NOTICE', '专家提示查询失败')
   })
-  console.log(hd)
+  // console.log(values)
 }
