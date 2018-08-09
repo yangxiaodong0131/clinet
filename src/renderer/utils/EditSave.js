@@ -73,7 +73,7 @@ export function saveEditDoc(obj, data) {
   //     obj.$store.commit('EDIT_SET_DELETE_LOCAL', obj.$store.state.Edit.fileIndex)
   //   }
   // }
-  // console.log(fileName)
+  console.log(fileName)
   if (fileName.includes('@')) {
     if (data === '保存模板') {
       if (!obj.$store.state.Edit.modelName) {
@@ -321,7 +321,7 @@ export function editBarEnter(obj, targetValue) {
       obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
       obj.$store.commit('SET_NOTICE', '编辑 -> 缓存 -> 选择文件 -> 保存');
     }
-  } else if (obj.$store.state.Edit.rightPanels.includes('病案编辑')) {
+  } else {
     message(obj, targetValue, obj.$store.state.System.user.username, 'message')
     obj.$store.commit('EDIT_SET_BAR_VALUE', '');
   }
