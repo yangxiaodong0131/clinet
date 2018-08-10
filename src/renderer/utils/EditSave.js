@@ -273,6 +273,8 @@ export function loadEditDoc(obj, index, type) {
 }
 
 export function editBarEnter(obj, targetValue) {
+  console.log(targetValue)
+  console.log(obj.$store.state.Edit.rightPanels)
   if (obj.$store.state.Edit.editType === '病案编辑') {
     if (obj.$store.state.Edit.helpType === '病案历史') {
       getCaseHistory(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Edit.doc, obj.$store.state.System.user.username)
@@ -302,7 +304,6 @@ export function editBarEnter(obj, targetValue) {
               obj.$store.commit('EDIT_ADD_DOC_CONTROL', v);
             }
             if (obj.$store.state.Edit.rightPanels.includes('专家提示')) {
-              console.log(v)
               getExpertHint(obj, [obj.$store.state.System.server, obj.$store.state.System.port], v)
             }
           });

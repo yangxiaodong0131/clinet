@@ -125,7 +125,7 @@ const mutations = {
     const x = message.map(m => m.split(' ').filter(i => i !== ''))
     state.doc = x;
     state.editBarValue = x[0]
-    if (global.hitbSections.includes(state.editBarValue)) {
+    if (global.hitbSections.length > 0 && global.hitbSections.includes(state.editBarValue)) {
       state.section = state.editBarValue[0]
     }
   },
