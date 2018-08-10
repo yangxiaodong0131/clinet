@@ -257,9 +257,13 @@ export function loadEditDoc(obj, index, type) {
       obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
     }
     obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
-    obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true]);
     document.getElementById('edit-editbar-input').focus()
     doc = obj.$store.state.Edit.doc
+    if (doc[0][0].includes('创建时间')) {
+      obj.$store.commit('EDIT_SET_DOC_INDEX', [1, true]);
+    } else {
+      obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true]);
+    }
     editDocState(obj, doc)
   }
   //  else {
@@ -274,6 +278,9 @@ export function loadEditDoc(obj, index, type) {
 
 export function editBarEnter(obj, targetValue) {
   if (obj.$store.state.Edit.editType === '病案编辑') {
+    if (obj.$store.state.Edit.section === '个人信息' && targetValue.includes('姓名')) {
+      obj.$store.commit('EDIT_SET_RIGHT_PANELS', '病案历史');
+    }
     getCaseHistory(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Edit.doc, obj.$store.state.System.user.username)
     editDocShow(obj, [obj.$store.state.System.server, obj.$store.state.System.port], targetValue)
     if (targetValue.includes('~')) {

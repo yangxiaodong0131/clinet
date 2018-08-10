@@ -212,7 +212,6 @@ export function getCaseHistory(obj, data, name, username) {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      console.log(res)
       obj.$store.commit('SET_NOTICE', '病案历史查询成功')
       obj.$store.commit('EDIT_SET_DOC_HIS', res.data.result)
     }
@@ -268,7 +267,6 @@ export function editDocShow(obj, data, value) {
     data: qs.stringify({ item: value, server_type: 'server' }),
     responseType: 'json'
   }).then((res) => {
-    console.log(res);
     obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda)
   }).catch((err) => {
     console.log(err);

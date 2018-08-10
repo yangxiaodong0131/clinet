@@ -165,7 +165,7 @@ const mutations = {
   },
   EDIT_SET_DOC_INDEX(state, m) {
     if (m[1] === true) {
-      state.docIndex = 0;
+      state.docIndex = m[0];
     } else if (m[1] === 'set') {
       state.docIndex = m[0];
     } else {
