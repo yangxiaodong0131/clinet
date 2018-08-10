@@ -52,7 +52,8 @@ const state = {
   cdhFilePage: 0,
   secton: '',
   docControl: [],
-  expertHint: []
+  expertHint: [],
+  expertSection: null
 };
 
 const mutations = {
@@ -437,6 +438,7 @@ const mutations = {
   },
   EDIT_SET_EXPERT_HINT(state, value) {
     state.expertHint = value
+    state.expertSection = value.section
   },
 };
 
