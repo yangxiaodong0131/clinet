@@ -212,7 +212,6 @@ export function getCaseHistory(obj, data, name, username) {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      console.log(res)
       obj.$store.commit('SET_NOTICE', '病案历史查询成功')
       obj.$store.commit('EDIT_SET_DOC_HIS', res.data.result)
     }
@@ -268,7 +267,6 @@ export function editDocShow(obj, data, value) {
     data: qs.stringify({ item: value, server_type: 'server' }),
     responseType: 'json'
   }).then((res) => {
-    console.log(res);
     obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda)
   }).catch((err) => {
     console.log(err);
@@ -295,29 +293,25 @@ export function addDocControl(obj, data, value, username) {
   })
 }
 
-export function getExpertHint(obj, data, value) {
-  // const [hd, ...values] = value
-  // console.log(hd)
-  console.log(value)
+export function getExpertHint(obj, data, value, section) {
   const arr = []
   arr.push(value[0])
+  arr.join(',')
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/library/symptom_serach`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    data: qs.stringify({ symptom: arr }),
+    data: qs.stringify({ symptom: `["${arr}"]`, section }),
     responseType: 'json'
   }).then((res) => {
     // console.log(res.data.result)
-    if (res.data.result.length === 0) {
+    if (Object.keys(res.data.result).length === 0) {
       obj.$store.commit('SET_NOTICE', '当前内容无专家提示')
     } else {
       obj.$store.commit('EDIT_SET_EXPERT_HINT', res.data.result)
     }
-    // obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda)
   }).catch((err) => {
     console.log(err);
     obj.$store.commit('SET_NOTICE', '专家提示查询失败')
   })
-  // console.log(values)
 }

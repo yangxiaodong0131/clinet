@@ -118,7 +118,6 @@
           const doc = this.$store.state.Edit.doc
           const systemSection = this.$store.state.System.systemSection
           const doc1 = editDoc(doc, systemSection)
-          console.log(doc1)
           return doc1
         }
       },
