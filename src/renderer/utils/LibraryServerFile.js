@@ -150,7 +150,7 @@ export function getLibrarySerach(obj, url, fileName, value, servertype) {
 export function saveLibrary(obj, data, content) {
   const user = obj.$store.state.System.user;
   const tableName = obj.$store.state.Library.libraryTableInfo.tableName;
-  const pageNum = obj.$store.state.libraryTableInfo.tablePage;
+  const pageNum = obj.$store.state.Library.libraryTableInfo.tablePage;
   const serverType = 'server'
   const sort = obj.$store.state.Library.serverSort;
   // 去除文件名中的.csv
