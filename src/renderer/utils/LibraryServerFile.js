@@ -1,6 +1,7 @@
 
 import saveFile from './SaveFile';
 const axios = require('axios');
+const qs = require('qs');
 // const fs = require('fs');
 // this, [url, port, serverType]
 export function getLibraryFiles(obj, data, serverType = 'server') {
@@ -99,6 +100,7 @@ export function getList(obj, url, tableName, type, username, serverType = 'serve
     obj.$store.commit('LIBRARY_SET_LEFT_PANEL', ['dimension', type, []])
   })
 }
+
 export function librarDown(obj, url, fileName) {
   const filename = fileName.split('.csv')[0]
   axios({
@@ -123,6 +125,7 @@ export function librarDown(obj, url, fileName) {
     obj.$store.commit('SET_NOTICE', '下载失败')
   })
 }
+
 export function getLibrarySerach(obj, url, fileName, value, servertype) {
   const filename = fileName.split('.csv')[0]
   axios({
@@ -141,5 +144,37 @@ export function getLibrarySerach(obj, url, fileName, value, servertype) {
   }).catch((err) => {
     console.log(err);
     obj.$store.commit('SET_NOTICE', '下载失败')
+  })
+}
+
+export function saveLibrary(obj, data, content) {
+  const user = obj.$store.state.System.user;
+  const tableName = obj.$store.state.Library.libraryTableInfo.tableName;
+  const pageNum = obj.$store.state.libraryTableInfo.tablePage;
+  const serverType = 'server'
+  const sort = obj.$store.state.Library.serverSort;
+  // 去除文件名中的.csv
+  const type = tableName.split('.csv')[0]
+  let sorts = ''
+  if (sort.field !== '') {
+    sorts = `&sort_type=${sort.type}&sort_value=${sort.field}`
+  } else {
+    sorts = ''
+  }
+  axios({
+    method: 'post',
+    url: `http://${data[0]}:${data[1]}/library/client_save`,
+    data: qs.stringify({ data: JSON.stringify(content), username: user.username, tab_type: type, rows: 30, page: pageNum, sorts: sorts, server_type: serverType }),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    if (res.status === 200) {
+      obj.$store.commit('SET_NOTICE', `保存字典     ${tableName}     成功!`);
+    } else {
+      obj.$store.commit('SET_NOTICE', `保存字典     ${tableName}     失败,文件已经存在!`);
+    }
+  }).catch((err) => {
+    console.log(err)
+    obj.$store.commit('SET_NOTICE', '保存字典失败!');
   })
 }
