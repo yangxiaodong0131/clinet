@@ -44,7 +44,7 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   }
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
+    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&username=${obj.$store.state.System.user.username}&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -62,6 +62,11 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
       obj.$store.commit('LIBRARY_SET_LIBRARY_LIST', res.data.list);
       obj.$store.commit('LIBRARY_SET_COUNT_PAGE', res.data.count);
       obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Library.libraryTableInfo.page}页,共${obj.$store.state.Library.libraryTableInfo.countPage}页`);
+      if (type1) {
+        // console.log(res.data.library.filter(x => x !== undefined).map(x => x.join(',')));
+        obj.$store.commit('EDIT_LOAD_FILE', res.data.library.filter(x => x !== undefined).map(x => x.join(',')))
+        // obj.$store.commit('EDIT_LOAD_FILE', res.data.library.filter(x => x !== undefined).map(x => x.join(','))).map(x => x.join(','))
+      }
       // obj.$store.commit('EDIT_LOAD_FILE', res.data.library.filter(x => x !== undefined).map(x => x.join(',')))
       // .map(x => x.join(','))
     } else {
