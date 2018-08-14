@@ -39,7 +39,7 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   }
   let sorts = ''
   if (sort.field !== '') {
-    sorts = `&sort_type=${sort.type}&sort_value=${sort.field}`
+    sorts = `&order_type=${sort.type}&order=${sort.field}`
   } else {
     sorts = ''
   }
@@ -59,7 +59,7 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
       const opt = { page: page, countPage: res.data.count, pageList: res.data.page_list, tableName: tableName };
       obj.$store.commit('LIBRARY_SET_SERVER_TABLE', library.slice(1));
       obj.$store.commit('LIBRARY_SET_TABLE_INFO', opt)
-      obj.$store.commit('LIBRARY_SET_SERVER_SORT', [res.data.sort_value, res.data.sort_type])
+      obj.$store.commit('LIBRARY_SET_SERVER_SORT', [res.data.order, res.data.order_type])
       obj.$store.commit('LIBRARY_SET_LIBRARY_LIST', res.data.list);
       obj.$store.commit('LIBRARY_SET_COUNT_PAGE', res.data.count);
       obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Library.libraryTableInfo.page}页,共${obj.$store.state.Library.libraryTableInfo.countPage}页`);
