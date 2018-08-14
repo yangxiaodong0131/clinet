@@ -155,16 +155,10 @@ export function saveLibrary(obj, data, content) {
   const sort = obj.$store.state.Library.serverSort;
   // 去除文件名中的.csv
   const type = tableName.split('.csv')[0]
-  let sorts = ''
-  if (sort.field !== '') {
-    sorts = `&sort_type=${sort.type}&sort_value=${sort.field}`
-  } else {
-    sorts = ''
-  }
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/library/client_save`,
-    data: qs.stringify({ data: JSON.stringify(content), username: user.username, tab_type: type, rows: 30, page: pageNum, sorts: sorts, server_type: serverType }),
+    data: qs.stringify({ data: JSON.stringify(content), username: user.username, tab_type: type, rows: 30, page: pageNum, order: sort.field, order_type: sort.type, server_type: serverType }),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
