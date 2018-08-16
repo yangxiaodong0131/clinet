@@ -19,6 +19,9 @@ export function socketConnect(obj, data, user) {
     .receive('error', (err) => {
       obj.$store.commit('SET_NOTICE', err.reason)
     })
+  socket.onError(() => {
+    obj.$store.commit('SET_NOTICE', '网络故障,您已离线,当网络恢复后您将自动登陆')
+  })
   channel2.push('用户信息', {})
   channel2.on('用户信息', (res) => {
     if (obj.$store.state.System.user.login === false) {
