@@ -123,30 +123,30 @@ export function cacheEditDoc(obj) {
   obj.$store.commit('EDIT_UPDATE_DOC_HEADER', ['缓存时间', currentdate]);
   obj.$store.commit('EDIT_SET_DOC_STATE');
   const fileIndex = obj.$store.state.Edit.fileIndex
+  let doc = obj.$store.state.Edit.doc
   if (fileIndex >= 0) {
-    let doc = obj.$store.state.Edit.doc
-    doc = doc.filter(x => x !== '')
-    doc = doc.map(x => x.join(' '))
-    const docHeader = obj.$store.state.Edit.docHeader
-    const keys = Object.keys(docHeader)
-    const values = Object.values(docHeader)
-    let string = ''
-    keys.forEach((x, key) => {
-      let a = ''
-      if (values[key] && values[key].includes(' ')) {
-        a = values[key].replace(/ /g, '　')
-      } else {
-        a = values[key]
-      }
-      if (string === '') {
-        string = `${x}:${a}`
-      } else {
-        string = `${string};${x}:${a}`
-      }
-    })
-    const summary = []
-    const diag = []
     if (obj.$store.state.Edit.lastNav === '/edit') {
+      doc = doc.filter(x => x !== '')
+      doc = doc.map(x => x.join(' '))
+      const docHeader = obj.$store.state.Edit.docHeader
+      const keys = Object.keys(docHeader)
+      const values = Object.values(docHeader)
+      let string = ''
+      keys.forEach((x, key) => {
+        let a = ''
+        if (values[key] && values[key].includes(' ')) {
+          a = values[key].replace(/ /g, '　')
+        } else {
+          a = values[key]
+        }
+        if (string === '') {
+          string = `${x}:${a}`
+        } else {
+          string = `${string};${x}:${a}`
+        }
+      })
+      const summary = []
+      const diag = []
       if (doc[0] && doc[0].includes('创建时间')) {
         doc.splice(0, 1, string);
       } else {
@@ -172,14 +172,17 @@ export function cacheEditDoc(obj) {
         }
       })
       obj.$store.commit('EDIT_ADD_DOC_SUMMARY', summary);
+      obj.$store.commit('EDIT_SET_IS_SAVE_LOCAL', fileIndex);
     }
-    obj.$store.commit('EDIT_SET_IS_SAVE_LOCAL', fileIndex);
+    console.log(doc)
     if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Library.tableType === 'local') {
       obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc]);
     } else {
+      console.log('asdf')
       obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc.toString()]);
     }
     // saveFile(obj, '未保存病案.cda', '/edit')
+    obj.$store.commit('EDIT_SET_DOC');
   } else {
     obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
     obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
@@ -222,7 +225,6 @@ export function newEditDoc(obj, n) {
     console.log('asdf')
     obj.$store.commit('EDIT_ADD_DOC', '');
     cacheEditDoc(obj);
-    obj.$store.commit('EDIT_SET_DOC');
     document.getElementById('edit-editbar-input').focus()
   }
 }
