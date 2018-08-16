@@ -26,6 +26,7 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
     }
   }).catch((err) => {
     console.log(err);
+    obj.$store.commit('SET_NOTICE', '连接服务器错误')
     obj.$store.commit('EDIT_SERVER_FILES', [])
   })
 }
@@ -61,6 +62,7 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
     }
   }).catch((err) => {
     console.log(err);
+    obj.$store.commit('SET_NOTICE', '连接服务器错误')
     obj.$store.commit('EDIT_LOAD_FILE', [])
   })
 }
