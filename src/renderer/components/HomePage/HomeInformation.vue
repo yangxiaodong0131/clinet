@@ -82,6 +82,48 @@
         </div>
       </div>
       <div class="col-md-6" style="height:90rem;background-color:white">
+        <div class="row" style="background-color:white;padding:1rem;height:40rem">
+          <!-- <div class="col-md-7" id="homechart" style="height:28rem">
+          </div> -->
+          <div class="col-md-12" style="padding-top:2rem;">
+            <table class="table table-bordered" style="min-height:10px;" >
+              <thead>
+                <tr>
+                  <th>数据表</th>
+                  <th>个人数据</th>
+                  <th>上传数据</th>
+                  <th>发布数据</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="alert alert-danger">
+                  <td>CDA文档</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="alert alert-danger">
+                  <td>输入框提示</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="alert alert-danger">
+                  <td>病案质控</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="alert alert-danger">
+                  <td>专家提示</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>        
         <div role="alert">
           <h3 class="alert-heading">住院病历</h3>
           <nav aria-label="breadcrumb">

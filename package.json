@@ -1,8 +1,8 @@
 {
   "name": "clinet",
-  "version": "0.1.5-180518",
+  "version": "1.0.0",
   "author": "dingyun <dingyun@hitb.com.cn>",
-  "description": "asch-client-emr-hl7",
+  "description": "client-emr-hl7",
   "license": "HITB",
   "main": "./dist/electron/main.js",
   "scripts": {
