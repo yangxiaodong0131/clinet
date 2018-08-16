@@ -174,7 +174,11 @@ export function cacheEditDoc(obj) {
       obj.$store.commit('EDIT_ADD_DOC_SUMMARY', summary);
     }
     obj.$store.commit('EDIT_SET_IS_SAVE_LOCAL', fileIndex);
-    obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc.toString()]);
+    if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Library.tableType === 'local') {
+      obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc]);
+    } else {
+      obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc.toString()]);
+    }
     // saveFile(obj, '未保存病案.cda', '/edit')
   } else {
     obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
@@ -184,35 +188,43 @@ export function cacheEditDoc(obj) {
 
 export function newEditDoc(obj, n) {
   // obj.$store.commit('EDIT_SET_CHAT_TYPE', false);
-  obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true])
-  obj.$store.commit('EDIT_SET_FILE_INDEX', obj.$store.state.Edit.file.length)
   obj.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
   obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
   obj.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案')
-  if (n) {
-    obj.$store.commit('EDIT_SET_DOC_TYPE', n)
-  } else { n = obj.$store.state.Edit.docType }
-  obj.$store.commit('SET_NOTICE', n);
-  obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-  if (obj.$store.state.Edit.rightPanel === 'server') {
-    getDocContent(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username, n)
-  } else if (global.hitbmodel[n] !== undefined) {
-    obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
+  obj.$store.commit('EDIT_SET_FILE_INDEX', obj.$store.state.Edit.file.length)
+  if (obj.$store.state.Edit.lastNav === '/edit') {
+    obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true])
+    if (n) {
+      obj.$store.commit('EDIT_SET_DOC_TYPE', n)
+    } else { n = obj.$store.state.Edit.docType }
+    obj.$store.commit('SET_NOTICE', n);
+    obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+    if (obj.$store.state.Edit.rightPanel === 'server') {
+      getDocContent(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username, n)
+    } else if (global.hitbmodel[n] !== undefined) {
+      obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
+      obj.$store.commit('EDIT_ADD_DOC', '');
+    } else { obj.$store.commit('EDIT_SET_DOC'); }
+    // if (fileName.includes('@')) {
+    //   saveEdit(obj, [obj.$store.state.System.server, obj.$store.state.System.port, obj.$store.state.Edit.files[obj.$store.state.Edit.filesIndex], [''], obj.$store.state.System.user.username, 2])
+    // }
+    const currentdate = getDate()
+    obj.$store.commit('EDIT_UPDATE_DOC_HEADER', ['创建时间', currentdate]);
+    obj.$store.commit('EDIT_SET_DOC_STATE');
+    obj.docType = n
+    cacheEditDoc(obj);
+    document.getElementById('edit-editbar-input').focus()
+    // } else {
+    // obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice')
+    // obj.$store.commit('SET_NOTICE', '请选择保存病案的文件！')
+    // }
+  } else if (obj.$store.state.Edit.lastNav === '/library') {
+    console.log('asdf')
     obj.$store.commit('EDIT_ADD_DOC', '');
-  } else { obj.$store.commit('EDIT_SET_DOC'); }
-  // if (fileName.includes('@')) {
-  //   saveEdit(obj, [obj.$store.state.System.server, obj.$store.state.System.port, obj.$store.state.Edit.files[obj.$store.state.Edit.filesIndex], [''], obj.$store.state.System.user.username, 2])
-  // }
-  const currentdate = getDate()
-  obj.$store.commit('EDIT_UPDATE_DOC_HEADER', ['创建时间', currentdate]);
-  obj.$store.commit('EDIT_SET_DOC_STATE');
-  obj.docType = n
-  cacheEditDoc(obj);
-  document.getElementById('edit-editbar-input').focus()
-  // } else {
-  // obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice')
-  // obj.$store.commit('SET_NOTICE', '请选择保存病案的文件！')
-  // }
+    cacheEditDoc(obj);
+    obj.$store.commit('EDIT_SET_DOC');
+    document.getElementById('edit-editbar-input').focus()
+  }
 }
 
 // 读取文件
@@ -242,7 +254,10 @@ export function loadEditDoc(obj, index, type) {
       // });
     }
     obj.$store.commit('EDIT_LOAD_DOC', r)
-    const header = r[0]
+    let header = []
+    if (r.length > 0) {
+      header = r[0]
+    }
     if (header.length > 0 && header.includes('创建时间')) {
       const a = header.split(';')
       const d = a.map((x) => {
@@ -274,10 +289,12 @@ export function loadEditDoc(obj, index, type) {
     obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
     document.getElementById('edit-editbar-input').focus()
     doc = obj.$store.state.Edit.doc
-    if (doc && doc[0][0].includes('创建时间')) {
-      obj.$store.commit('EDIT_SET_DOC_INDEX', [1, true]);
-    } else {
-      obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true]);
+    if (doc.length > 0) {
+      if (doc[0] !== undefined && doc[0][0].includes('创建时间')) {
+        obj.$store.commit('EDIT_SET_DOC_INDEX', [1, true]);
+      } else {
+        obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true]);
+      }
     }
     editDocState(obj, doc)
   }
@@ -296,8 +313,10 @@ export function editBarEnter(obj, targetValue) {
     if (obj.$store.state.Edit.section === '个人信息' && targetValue.includes('姓名')) {
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', '病案历史');
     }
-    getCaseHistory(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Edit.doc, obj.$store.state.System.user.username)
-    editDocShow(obj, [obj.$store.state.System.server, obj.$store.state.System.port], targetValue)
+    if (obj.$store.state.Edit.rightPanel === 'server') {
+      getCaseHistory(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Edit.doc, obj.$store.state.System.user.username)
+      editDocShow(obj, [obj.$store.state.System.server, obj.$store.state.System.port], targetValue)
+    }
     if (targetValue.includes('~')) {
       obj.$store.commit('EDIT_SET_MODEL_NAME', targetValue.replace('~', ''));
       obj.$store.commit('EDIT_SET_BAR_VALUE', '');
@@ -319,7 +338,7 @@ export function editBarEnter(obj, targetValue) {
             if (!global.hitbdata.cdhHeader.includes(v[0]) && obj.$store.state.Edit.rightPanels.includes('病案质控')) {
               obj.$store.commit('EDIT_ADD_DOC_CONTROL', v);
             }
-            if (obj.$store.state.Edit.lastNav === '/edit') {
+            if (obj.$store.state.Edit.lastNav === '/edit' && obj.$store.state.Edit.rightPanel === 'server') {
               getExpertHint(obj, [obj.$store.state.System.server, obj.$store.state.System.port], v, obj.$store.state.Edit.section)
             }
           });
