@@ -19,6 +19,9 @@ export function socketConnect(obj, data, user) {
     .receive('error', (err) => {
       obj.$store.commit('SET_NOTICE', err.reason)
     })
+  socket.onError(() => {
+    obj.$store.commit('SET_NOTICE', '网络故障,您已离线,当网络恢复后您将自动登陆')
+  })
   channel2.push('用户信息', {})
   channel2.on('用户信息', (res) => {
     if (obj.$store.state.System.user.login === false) {
@@ -34,6 +37,7 @@ export function socketConnect(obj, data, user) {
     if (r.invite === username) {
       obj.$store.commit('EDIT_SET_CHAT_TYPE', true);
       obj.$store.commit('SET_NOTICE', `${r.message}`)
+      obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
       obj.$store.commit('EDIT_SET_SOCKET_RECORD', { message: r.message, type: 'info', time: r.time, room: r.room, create_room_time: r.create_room_time });
       createRoomTime = r.create_room_time;
       roomOwner = r.room_owner;
@@ -76,11 +80,13 @@ export function join(obj, filename, username) {
 export function invite(obj, filename, username = '') {
   channel2.push('邀请加入', { body: '', room: obj.$store.state.System.user.username, username: username, create_room_time: createRoomTime, invite: username, room_owner: obj.$store.state.System.user.username })
   obj.$store.commit('SET_NOTICE', '邀请成功')
+  obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
 }
 
 export function message(obj, message, username = '', type = 'message') {
   channel.push('新消息', { body: message, username: username, type: type, create_room_time: createRoomTime })
   obj.$store.commit('SET_NOTICE', '消息发送成功')
+  obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
 }
 
 export function leave(obj, username = '') {

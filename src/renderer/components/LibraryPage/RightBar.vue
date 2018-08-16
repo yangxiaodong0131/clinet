@@ -36,7 +36,7 @@
         <li class="nav-item active" v-on:click='page(1)' id="library-down">
           <a class="nav-link text-light" href="#" title="向后翻页"> 后页 <span class="sr-only">(current)</span></a>
         </li>
-        <li v-if="this.$store.state.Library.tableType === 'server'" class="nav-item active" v-on:click='docDown()' id="library-doc-down">
+        <li v-if="this.$store.state.Library.tableType === 'server' && server.length > 1" class="nav-item active" v-on:click='docDown()' id="library-doc-down">
           <a class="nav-link text-light" href="#" title="下载该文件到本地"> 下载 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click='edit()' id="library-edit">
@@ -106,7 +106,13 @@
         get() {
           return this.$store.state.Library.libraryList
         }
-      }
+      },
+      server: {
+        get() {
+          const table = this.$store.state.Library.libraryTable.data
+          return table
+        }
+      },
     },
     methods: {
       libraryFile: function (n) {

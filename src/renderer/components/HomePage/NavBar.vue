@@ -70,7 +70,7 @@
       </ul>
     </div>
     <a class="navbar-brand" href="#" id="navbar-username" v-on:click="onClick(userName)">&nbsp;&nbsp;&nbsp;&nbsp;{{userName}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-    <a v-on:click="test()">测试按钮</a>
+    <!-- <a v-on:click="test()">测试按钮</a> -->
   </nav>
 </template>
 
