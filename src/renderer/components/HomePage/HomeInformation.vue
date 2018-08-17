@@ -1,42 +1,38 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-md-6" style="paddingRight: 0">
-        <div class="row" style="background-color:white;padding:1rem;height:40rem">
-          <!-- <div class="col-md-7" id="homechart" style="height:28rem">
-          </div> -->
-          <div class="col-md-12" style="padding-top:2rem;">
-            <table class="table table-bordered" style="min-height:10px;" >
-              <thead>
-                <tr>
-                  <th>待办事项</th>
-                  <th>待办时间</th>
-                  <th>紧急程度</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="alert alert-danger">
-                  <td>待办事项1</td>
-                  <td>2018-7-17 16:41:09</td>
-                  <td>紧急待办</td>
-                </tr>
-                <tr class="alert alert-warning">
-                  <td>待办事项2</td>
-                  <td>2018-7-16 16:40:37</td>
-                  <td>优先待办</td>
-                </tr>
-                <tr class="alert alert-success">
-                  <td>待办事项3</td>
-                  <td>2018-7-16 16:40:45</td>
-                  <td>普通待办</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+  <div class="row">
+    <!-- <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>待办事项</th>
+                <th>待办时间</th>
+                <th>紧急程度</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alert alert-danger">
+                <td>待办事项1</td>
+                <td>2018-7-17 16:41:09</td>
+                <td>紧急待办</td>
+              </tr>
+              <tr class="alert alert-warning">
+                <td>待办事项2</td>
+                <td>2018-7-16 16:40:37</td>
+                <td>优先待办</td>
+              </tr>
+              <tr class="alert alert-success">
+                <td>待办事项3</td>
+                <td>2018-7-16 16:40:45</td>
+                <td>普通待办</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div style="background-color:white;padding:3rem;height:50rem">
+        <div style="">
           <p class="h3">使用流程</p>
-          <div style="height:5rem">
+          <div>
             <ul class="breadcrumb">
               <li>
                   <a href="#">数据采集</a> <span class="divider">></span>
@@ -47,7 +43,7 @@
               <li class="active">查询历史病历</li>
             </ul>
           </div>
-          <div style="height:5rem">
+          <div>
             <ul class="breadcrumb">
               <li>
                 <a href="#">数据分析</a> <span class="divider">></span>
@@ -58,7 +54,7 @@
               <li class="active">图表分析</li>
             </ul>
           </div>
-          <div style="height:5rem">
+          <div>
             <ul class="breadcrumb">
               <li>
                 <a href="#">术语字典</a> <span class="divider">></span>
@@ -69,7 +65,7 @@
               <li class="active"></li>
             </ul>
           </div>
-          <div style="height:5rem">
+          <div>
             <ul class="breadcrumb">
               <li>
                 <a href="#"></a>系统服务<span class="divider">></span>
@@ -81,12 +77,10 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6" style="height:90rem;background-color:white">
-        <div class="row" style="background-color:white;padding:1rem;height:40rem">
-          <!-- <div class="col-md-7" id="homechart" style="height:28rem">
-          </div> -->
-          <div class="col-md-12" style="padding-top:2rem;">
-            <table class="table table-bordered" style="min-height:10px;" >
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-bordered">
               <thead>
                 <tr>
                   <th>数据表</th>
@@ -175,7 +169,6 @@
           <h3 class="alert-heading">健康体检</h3>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <!-- <span></span> -->
               <li class="breadcrumb-item active" aria-current="page"><a href="#">体检报告</a></li>
             </ol>
           </nav>
@@ -190,10 +183,54 @@
           </nav>
         </div>
       </div>
+    </div> -->
+    <div class="col-md-6" style="margin-top: 10px">
+      <h3>待办事项</h3>
+      <hr />
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>待办事项</th>
+            <th>待办时间</th>
+            <th>紧急程度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="alert alert-danger">
+            <td>待办事项1</td>
+            <td>2018-7-17 16:41:09</td>
+            <td>紧急待办</td>
+          </tr>
+          <tr class="alert alert-warning">
+            <td>待办事项2</td>
+            <td>2018-7-16 16:40:37</td>
+            <td>优先待办</td>
+          </tr>
+          <tr class="alert alert-success">
+            <td>待办事项3</td>
+            <td>2018-7-16 16:40:45</td>
+            <td>普通待办</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-6" style="margin-top: 10px">
+      <h3>使用流程</h3>
+      <hr />
+      <div>
+        <ul class="breadcrumb" style>
+          <li>
+            <a href="#">数据采集</a> <span class="divider">></span>
+          </li>
+          <li>
+            <a href="#">新建自定义文档</a> <span class="divider">></span>
+          </li>
+          <li class="active">查询历史病历</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
-
 
 <script>
   // import LeftBar from '../EditPage/LeftBar';

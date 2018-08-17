@@ -182,7 +182,7 @@ export function cacheEditDoc(obj) {
       obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc.toString()]);
     }
     // saveFile(obj, '未保存病案.cda', '/edit')
-    obj.$store.commit('EDIT_SET_DOC');
+    // obj.$store.commit('EDIT_SET_DOC');
   } else {
     obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
     obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
