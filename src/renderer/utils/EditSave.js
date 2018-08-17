@@ -5,7 +5,6 @@ import { sCompDrg } from './Server'
 import { getLibrary, saveLibrary } from './LibraryServerFile'
 import { getStat } from './StatServerFile'
 
-
 export function getDate() {
   const date = new Date();
   let month = date.getMonth() + 1;
@@ -27,6 +26,7 @@ export function saveEditDoc(obj, data) {
   const fileName = obj.$store.state.Edit.fileName
   let doc = obj.$store.state.Edit.doc
   doc = doc.filter(x => x !== '')
+  console.log(doc)
   doc = doc.map(x => x.join(' '))
   let x = ''
   let p = ''
@@ -222,8 +222,8 @@ export function newEditDoc(obj, n) {
     // obj.$store.commit('SET_NOTICE', '请选择保存病案的文件！')
     // }
   } else if (obj.$store.state.Edit.lastNav === '/library') {
-    console.log('asdf')
     obj.$store.commit('EDIT_ADD_DOC', '');
+    obj.$store.commit('EDIT_SET_DOC');
     cacheEditDoc(obj);
     document.getElementById('edit-editbar-input').focus()
   }
@@ -328,11 +328,19 @@ export function editBarEnter(obj, targetValue) {
       obj.$store.commit('EDIT_SET_MODEL_NAME', targetValue.replace('~', ''));
       obj.$store.commit('EDIT_SET_BAR_VALUE', '');
     } else {
+      let value = targetValue
       let n = obj.$store.state.Edit.docIndex
-      if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Edit.idIndex - 2 === n) {
+      if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Edit.idIndex === n) {
+        if (obj.$store.state.Edit.file[obj.$store.state.Edit.file.length - 1] === '') {
+          value = '-'
+        } else {
+          obj.$store.commit('SET_NOTICE', '禁止编辑当前项！');
+        }
+      }
+      // const value = targetValue
+      if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Edit.idIndex === n && obj.$store.state.Edit.file[obj.$store.state.Edit.file.length - 1] !== '') {
         obj.$store.commit('SET_NOTICE', '禁止编辑当前项！');
       } else {
-        const value = targetValue
         if (obj.$store.state.Edit.selectedType !== 'col') {
           const vs = value.split(',').filter(i => i !== '');
           if (vs.length > 0) {

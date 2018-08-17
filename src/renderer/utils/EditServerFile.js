@@ -255,7 +255,6 @@ export function editDocState(obj, doc) {
 }
 
 export function editDocShow(obj, data, value) {
-  console.log(value)
   // const value2 = value.join(' ')
   // const value2 = value[1].split(',').map(x => x.split(' ')[1])
   axios({
