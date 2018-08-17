@@ -27,6 +27,9 @@
             case 'blockChainInfo':
               x = '区块链服务介绍'
               break;
+            case 'blockChainPeer':
+              x = '区块链节点列表'
+              break;
             case 'blockChainFunction':
               x = '区块链服务功能列表'
               break;
@@ -50,6 +53,9 @@
               break;
             case 'blockInfo':
               x = '区块内容明细'
+              break;
+            case 'blockListList':
+              x = '区块链列表'
               break;
             case 'localData':
               x = '本地病案数据'

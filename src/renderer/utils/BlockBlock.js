@@ -2,12 +2,11 @@ const axios = require('axios');
 
 // 获取区块数据
 export function bcBlockchain(obj, data) {
-  console.log(data);
   axios.get(`http://${data[0]}:${data[1]}/api/blocks`)
     .then((res) => {
       if (res.status === 200) {
-        console.log(res.data);
         obj.$store.commit('BLOCK_SET_BLOCKBLOCK', res.data.blocks)
+        obj.$store.commit('BLOCK_GET_BLOCK_INFO', obj.$store.state.Block.blockBlock[0])
         // obj.$store.commit('BLOCK_SET_PEERS', res.data.data.blocks)
       }
     })

@@ -31,6 +31,7 @@
 
 <script>
   import loadFile from '../../utils/LoadFile';
+  import { peers } from '../../utils/BlockPeer';
   export default {
     methods: {
       getServers: function () {
@@ -47,7 +48,9 @@
         this.$store.commit('SET_NOTICE', '区块链服务介绍');
       },
       blockChainPeer: function () {
-
+        this.$store.commit('BLOCK_SET_TOOLBAR', 'blockChainPeer');
+        this.$store.commit('SET_NOTICE', '区块链节点列表');
+        peers(this, [this.$store.state.System.server, this.$store.state.System.port])
       },
       blockChainFunction: function () {
         this.$store.commit('BLOCK_SET_TOOLBAR', 'blockChainFunction');
