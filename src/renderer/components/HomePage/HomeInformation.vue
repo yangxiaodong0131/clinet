@@ -86,27 +86,27 @@
           <tbody>
             <tr class="alert alert-danger">
               <td>CDA文档</td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{this.$store.state.Home.count.cda.user}}</td>
+              <td>{{this.$store.state.Home.count.cda.server}}</td>
+              <td>{{this.$store.state.Home.count.cda.block}}</td>
             </tr>
             <tr class="alert alert-danger">
               <td>输入框提示</td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{this.$store.state.Home.count.help.user}}</td>
+              <td>{{this.$store.state.Home.count.help.server}}</td>
+              <td>{{this.$store.state.Home.count.help.block}}</td>
             </tr>
             <tr class="alert alert-danger">
               <td>病案质控</td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{this.$store.state.Home.count.cdh.user}}</td>
+              <td>{{this.$store.state.Home.count.cdh.server}}</td>
+              <td>{{this.$store.state.Home.count.cdh.block}}</td>
             </tr>
             <tr class="alert alert-danger">
               <td>专家提示</td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{this.$store.state.Home.count.symptom.user}}</td>
+              <td>{{this.$store.state.Home.count.symptom.server}}</td>
+              <td>{{this.$store.state.Home.count.symptom.block}}</td>
             </tr>
           </tbody>
         </table>
@@ -276,4 +276,3 @@
     margin-right: 10px
   }
 </style>
-
