@@ -103,8 +103,10 @@
         if (this.$store.state.Edit.editType === '病案编辑') {
           if (e.target.value.includes('~')) {
             this.$store.commit('EDIT_SET_MODEL_NAME', e.target.value.replace('~', ''));
-          } else {
+          } else if (this.$store.state.Edit.lastNav === '/library' && this.$store.state.Edit.idIndex === this.$store.state.Edit.docIndex) {
           // const value = document.getElementById('edit-editbar-input').value
+            this.$store.commit('SET_NOTICE', '禁止编辑当前项！');
+          } else {
             const value = e.target.value
             this.$store.commit('EDIT_SET_BAR_VALUE', value);
             let n = this.$store.state.Edit.docIndex

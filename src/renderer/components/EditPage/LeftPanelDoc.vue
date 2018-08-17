@@ -3,8 +3,22 @@
     <div class="card">
       <table><tr class="table-warning">当前病案状态：{{docState}}</tr></table>
       <div class="card-body" v-for="(section, key) of doc" v-bind:key='key'>
+        <div v-if="lastNav === '/library'">
+          <table>
+            <tr>
+              <td class="table-info" v-for="(item, index) in libraryHead" v-bind:key='index'>
+                <span v-if="item === 'ID'" class="disabled">{{item}}</span>
+                <span v-if="item !== 'ID'">{{item}}</span>
+              </td>
+            </tr>
+            <td v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item)">
+              <span class="disabled" v-if="index === idIndex" >{{item[1]}}</span>
+              <span v-if="index !== idIndex">{{item[1]}}</span>
+            </td>
+          </table>
+        </div>
         <!-- 个人信息 -->
-        <div v-if="lastNav === '/stat' || lastNav === '/library' || lastNav === '/system'">
+        <div v-if="lastNav === '/stat' || lastNav === '/system'">
           <table>
             <tr class="table-warning"><td>{{key}}</td><td></td></tr>
             <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item)">
@@ -129,6 +143,17 @@
       docState: {
         get() {
           return this.$store.state.Edit.docState
+        }
+      },
+      libraryHead: {
+        get() {
+          const file = this.$store.state.Edit.file
+          return file[1].split(',')
+        }
+      },
+      idIndex: {
+        get() {
+          return this.$store.state.Edit.idIndex - 2
         }
       }
     },

@@ -15,12 +15,14 @@ export function socketConnect(obj, data, user) {
       username = user.username
       obj.$store.commit('SET_NOTICE', '远程服务用户登录成功')
       obj.$store.commit('EDIT_SET_RIGHT_PANEL', 'server')
+      obj.$store.commit('SYSTEM_SET_SERVER', ['', data[0], data[1]])
+      obj.$store.commit('SYSTEM_SET_CONNECT_INFO', true)
     })
     .receive('error', (err) => {
       obj.$store.commit('SET_NOTICE', err.reason)
     })
   socket.onError(() => {
-    obj.$store.commit('SET_NOTICE', '网络故障,您已离线,当网络恢复后您将自动登陆')
+    obj.$store.commit('SET_NOTICE', '网络故障,连接失败')
   })
   channel2.push('用户信息', {})
   channel2.on('用户信息', (res) => {
@@ -29,6 +31,10 @@ export function socketConnect(obj, data, user) {
       obj.$store.commit('SYSTEM_SET_SERVER', ['', data[0], data[1]])
       obj.$store.commit('SYSTEM_SET_CONNECT_INFO', true)
     }
+  })
+  channel2.push('首页信息', {})
+  channel2.on('首页信息', (res) => {
+    obj.$store.commit('SET_COUNT', res);
   })
   channel2.on('ping', (r) => {
     obj.$store.commit('EDIT_SET_CHAT_USERS', r.users);

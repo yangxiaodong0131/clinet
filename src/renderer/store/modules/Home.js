@@ -6,7 +6,8 @@ const state = {
   // 页面工具栏选择
   // toolbar: '',
   // 初始化数据加载状态
-  hasData: false
+  hasData: false,
+  count: { cda: { user: '-', server: '-', block: '-' }, help: { user: '-', server: '-', block: '-' }, cdh: { user: '-', server: '-', block: '-' }, symptom: { user: '-', server: '-', block: '-' } }
 };
 
 const mutations = {
@@ -25,6 +26,9 @@ const mutations = {
   HAS_DATA(state) {
     state.hasData = true;
   },
+  SET_COUNT(state, data) {
+    state.count = data
+  },
 };
 
 const actions = {
@@ -35,6 +39,7 @@ const actions = {
     commit('SET_NAVBAR');
     // commit('SET_TOOLBAR');
     commit('HAS_DATA');
+    commit('SET_COUNT')
   },
 };
 
