@@ -173,6 +173,7 @@
           this.$store.commit('EDIT_SERVER_FILES', f);
           this.$store.commit('EDIT_SET_FILES_INDEX', 0);
           this.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
+          getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, this.$store.state.Library.libraryTableInfo.page, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'edit', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
         } else {
           if (this.$store.state.Library.fileIndex !== null) {
             this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
