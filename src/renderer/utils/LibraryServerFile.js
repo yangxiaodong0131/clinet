@@ -44,9 +44,13 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   } else {
     sorts = ''
   }
+  let username = ''
+  if (type1 === 'edit') {
+    username = obj.$store.state.System.user.username
+  }
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&username=${obj.$store.state.System.user.username}&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
+    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&username=${username}&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
