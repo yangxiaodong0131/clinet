@@ -3,11 +3,11 @@
     <div v-if="this.toolbar === 'getUsers'">
       <form>
         <div class="form-group">
-          <label class="">用户名（远程服务用户是电子邮箱，区块链服务用户是12个单词组成的口令）</label>
+          <label class="">用户名（电子邮箱）</label>
           <input type="text" class="form-control" placeholder="用户名(邮箱)" v-model="emailorname" id="server-username" @input="userLogins()">
         </div>
         <div class="form-group">
-          <label for="exampleInputPassword1">用户密码（区块链服务用户没有密码，或者使用二级密码）</label>
+          <label for="exampleInputPassword1">用户密码</label>
           <input type="password" class="form-control" placeholder="密码" v-model="loginpassword" id="server-password" @input="userLogins()">
         </div>
         <div class="form-group" v-if="this.secondPassword">
@@ -15,7 +15,7 @@
           <input type="password" class="form-control" placeholder="密码" v-model="confirmPassword" id="server-password" @input="userLogins()">
         </div>
       </form>
-      <button id="server-login" type="button" class="btn btn-outline-primary" v-on:click="sysytemlogin()"  v-if="!this.secondPassword">登录(可使用用户账号登录和区块链账号登录)</button>
+      <button id="server-login" type="button" class="btn btn-outline-primary" v-on:click="sysytemlogin()"  v-if="!this.secondPassword">登录</button>
       <button id="server-regiest" type="button" class="btn btn-outline-primary" v-on:click="sysytemRegisters()"  v-if="!this.secondPassword">注册</button>
       <button id="server-again-regiest" type="button" class="btn btn-outline-primary" v-on:click="sysytemRegister()"  v-if="this.secondPassword">确认注册</button>
       <button id="server-login-return" type="button" class="btn btn-outline-primary" v-on:click="sysytemRegisters()"  v-if="this.secondPassword">返回</button>

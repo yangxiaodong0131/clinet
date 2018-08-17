@@ -2,31 +2,21 @@
   <div class="row">
     <div class="col-md-6" style="marginTop: 10px">
       <div>
-        <h3>待办事项</h3>
+        <h3>操作日志</h3>
         <hr />
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th>待办事项</th>
-              <th>待办时间</th>
-              <th>紧急程度</th>
+              <th>操作时间</th>
+              <th>功能模块</th>
+              <th>操作内容</th>
             </tr>
           </thead>
           <tbody>
             <tr class="alert alert-danger">
-              <td>待办事项1</td>
               <td>2018-7-17 16:41:09</td>
-              <td>紧急待办</td>
-            </tr>
-            <tr class="alert alert-warning">
-              <td>待办事项2</td>
-              <td>2018-7-16 16:40:37</td>
-              <td>优先待办</td>
-            </tr>
-            <tr class="alert alert-success">
-              <td>待办事项3</td>
-              <td>2018-7-16 16:40:45</td>
-              <td>普通待办</td>
+              <td>login</td>
+              <td>test3用户登陆成功</td>
             </tr>
           </tbody>
         </table>
