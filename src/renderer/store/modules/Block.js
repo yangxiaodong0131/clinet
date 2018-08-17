@@ -28,7 +28,8 @@ const state = {
   blockBlock: { data: { blocks: [] } },
   publicKeys: [],
   blockShare: [],
-  blockShareInsert: {}
+  blockShareInsert: {},
+  blockListList: []
 };
 
 const mutations = {
