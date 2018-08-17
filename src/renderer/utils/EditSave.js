@@ -231,83 +231,88 @@ export function newEditDoc(obj, n) {
 
 // 读取文件
 export function loadEditDoc(obj, index, type) {
-  let doc = []
-  obj.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案');
-  if (type === 'edit') {
-    obj.$store.commit('EDIT_SET_FILE_INDEX', index)
-    const r = []
-    const file = obj.$store.state.Edit.file
-    const type = typeof obj.$store.state.Edit.file[0]
-    let h = []
-    h = file[index]
-    if (type === 'string') {
-      h.split(',').forEach((key) => {
-        const value = key.split(' ')
-        // r.push(`${key} ${data[i]}`)
-        if (value[1] === undefined) {
-          r.push(`${value[0]}`)
-        } else {
-          r.push(`${value[0]} ${value[1]}`)
-        }
-      });
-    } else {
-      // h.forEach((key) => {
-      //   r.push(`${key} ${data[i]}`)
-      // });
-    }
-    obj.$store.commit('EDIT_LOAD_DOC', r)
-    let header = []
-    if (r.length > 0) {
-      header = r[0]
-    }
-    if (header.length > 0 && header.includes('创建时间')) {
-      const a = header.split(';')
-      const d = a.map((x) => {
-        const b = x.split(':')
-        if (b[0] && b[0].includes('时间')) {
-          const c = `${b[1]}:${b[2]}:${b[3]}`
-          b[1] = c
-          b.splice(2, 2)
-        }
-        return b
-      })
-      const obj1 = {}
-      d.forEach((x) => {
-        if (x[1].includes('undefined')) {
-          x[1] = null
-        }
-        obj1[x[0]] = x[1]
-      })
-      obj.$store.commit('EDIT_SET_DOC_HEADER', obj1)
-    }
-    if (obj.$store.state.Edit.helpType === '在线交流') {
-      obj.$store.commit('EDIT_SET_CHAT_TYPE', true)
-      join(obj, obj.$store.state.Edit.fileName, obj.$store.state.System.user.username)
-      obj.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
-    } else if (obj.$store.state.Edit.selectedType === 'row') {
-      obj.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
-      obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
-    }
-    obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
-    document.getElementById('edit-editbar-input').focus()
-    doc = obj.$store.state.Edit.doc
-    if (doc.length > 0) {
-      if (doc[0] !== undefined && doc[0][0].includes('创建时间')) {
-        obj.$store.commit('EDIT_SET_DOC_INDEX', [1, true]);
+  if (obj.$store.state.Edit.lastNav === '/library' && (index !== 0 && index !== 1)) {
+    let doc = []
+    obj.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案');
+    if (type === 'edit') {
+      obj.$store.commit('EDIT_SET_FILE_INDEX', index)
+      const r = []
+      const file = obj.$store.state.Edit.file
+      const type = typeof obj.$store.state.Edit.file[0]
+      let h = []
+      h = file[index]
+      if (type === 'string') {
+        h.split(',').forEach((key) => {
+          const value = key.split(' ')
+          // r.push(`${key} ${data[i]}`)
+          if (value[1] === undefined) {
+            r.push(`${value[0]}`)
+          } else {
+            r.push(`${value[0]} ${value[1]}`)
+          }
+        });
       } else {
-        obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true]);
+        // h.forEach((key) => {
+        //   r.push(`${key} ${data[i]}`)
+        // });
       }
+      obj.$store.commit('EDIT_LOAD_DOC', r)
+      let header = []
+      if (r.length > 0) {
+        header = r[0]
+      }
+      if (header.length > 0 && header.includes('创建时间')) {
+        const a = header.split(';')
+        const d = a.map((x) => {
+          const b = x.split(':')
+          if (b[0] && b[0].includes('时间')) {
+            const c = `${b[1]}:${b[2]}:${b[3]}`
+            b[1] = c
+            b.splice(2, 2)
+          }
+          return b
+        })
+        const obj1 = {}
+        d.forEach((x) => {
+          if (x[1].includes('undefined')) {
+            x[1] = null
+          }
+          obj1[x[0]] = x[1]
+        })
+        obj.$store.commit('EDIT_SET_DOC_HEADER', obj1)
+      }
+      if (obj.$store.state.Edit.helpType === '在线交流') {
+        obj.$store.commit('EDIT_SET_CHAT_TYPE', true)
+        join(obj, obj.$store.state.Edit.fileName, obj.$store.state.System.user.username)
+        obj.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
+      } else if (obj.$store.state.Edit.selectedType === 'row') {
+        obj.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
+        obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
+      }
+      obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
+      document.getElementById('edit-editbar-input').focus()
+      doc = obj.$store.state.Edit.doc
+      if (doc.length > 0) {
+        if (doc[0] !== undefined && doc[0][0].includes('创建时间')) {
+          obj.$store.commit('EDIT_SET_DOC_INDEX', [1, true]);
+        } else {
+          obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true]);
+        }
+      }
+      editDocState(obj, doc)
     }
-    editDocState(obj, doc)
+    //  else {
+    //   obj.$store.commit('EDIT_SET_RIGHT_PANELS', '病案参考');
+    //   obj.$store.commit('EDIT_SET_FILE_INDEX', index)
+    //   obj.$store.commit('EDIT_SET_HELP_TYPE', '病案参考');
+    //   doc = obj.$store.state.Edit.docShow
+    //   editDocShow(obj, [obj.$store.state.System.server, obj.$store.state.System.port], data)
+    // }
+    obj.$store.commit('EDIT_SET_DOC_STATE')
+  } else {
+    obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+    obj.$store.commit('SET_NOTICE', '当前项禁止编辑！');
   }
-  //  else {
-  //   obj.$store.commit('EDIT_SET_RIGHT_PANELS', '病案参考');
-  //   obj.$store.commit('EDIT_SET_FILE_INDEX', index)
-  //   obj.$store.commit('EDIT_SET_HELP_TYPE', '病案参考');
-  //   doc = obj.$store.state.Edit.docShow
-  //   editDocShow(obj, [obj.$store.state.System.server, obj.$store.state.System.port], data)
-  // }
-  obj.$store.commit('EDIT_SET_DOC_STATE')
 }
 
 export function editBarEnter(obj, targetValue) {
@@ -324,40 +329,44 @@ export function editBarEnter(obj, targetValue) {
       obj.$store.commit('EDIT_SET_BAR_VALUE', '');
     } else {
       let n = obj.$store.state.Edit.docIndex
-      const value = targetValue
-      if (obj.$store.state.Edit.selectedType !== 'col') {
-        const vs = value.split(',').filter(i => i !== '');
-        if (vs.length > 0) {
-          vs.forEach((element, index) => {
-            const v = element.split(' ').filter(i => i !== '');
-            if (index > 0) {
-              obj.$store.commit('EDIT_UPDATE_DOC', [n, v, true]);
-            } else {
-              obj.$store.commit('EDIT_UPDATE_DOC', [n, v]);
-            }
-            obj.$store.commit('EDIT_SET_DOC_INDEX', [1]);
-            n += 1
-            if (!global.hitbdata.cdhHeader.includes(v[0]) && obj.$store.state.Edit.rightPanels.includes('病案质控')) {
-              obj.$store.commit('EDIT_ADD_DOC_CONTROL', v);
-            }
-            if (obj.$store.state.Edit.lastNav === '/edit' && obj.$store.state.Edit.rightPanel === 'server') {
-              getExpertHint(obj, [obj.$store.state.System.server, obj.$store.state.System.port], v, obj.$store.state.Edit.section)
-            }
-          });
-        } else {
-          obj.$store.commit('EDIT_DELETE_ITEM', n);
-        }
-        if (obj.$store.state.Edit.helpType === '在线交流') {
-          message(obj, targetValue, obj.$store.state.System.user.username, 'doc')
-        }
+      if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Edit.idIndex - 2 === n) {
+        obj.$store.commit('SET_NOTICE', '禁止编辑当前项！');
       } else {
-        // value = value.replace(/,/g, '，')
-        const cv = value.split(' ').filter(i => i !== '');
-        const col = obj.$store.state.Edit.selectedCol[0]
-        obj.$store.commit('EDIT_UPDATE_FILE', [col, cv[1]]);
+        const value = targetValue
+        if (obj.$store.state.Edit.selectedType !== 'col') {
+          const vs = value.split(',').filter(i => i !== '');
+          if (vs.length > 0) {
+            vs.forEach((element, index) => {
+              const v = element.split(' ').filter(i => i !== '');
+              if (index > 0) {
+                obj.$store.commit('EDIT_UPDATE_DOC', [n, v, true]);
+              } else {
+                obj.$store.commit('EDIT_UPDATE_DOC', [n, v]);
+              }
+              obj.$store.commit('EDIT_SET_DOC_INDEX', [1]);
+              n += 1
+              if (!global.hitbdata.cdhHeader.includes(v[0]) && obj.$store.state.Edit.rightPanels.includes('病案质控')) {
+                obj.$store.commit('EDIT_ADD_DOC_CONTROL', v);
+              }
+              if (obj.$store.state.Edit.lastNav === '/edit' && obj.$store.state.Edit.rightPanel === 'server') {
+                getExpertHint(obj, [obj.$store.state.System.server, obj.$store.state.System.port], v, obj.$store.state.Edit.section)
+              }
+            });
+          } else {
+            obj.$store.commit('EDIT_DELETE_ITEM', n);
+          }
+          if (obj.$store.state.Edit.helpType === '在线交流') {
+            message(obj, targetValue, obj.$store.state.System.user.username, 'doc')
+          }
+        } else {
+          // value = value.replace(/,/g, '，')
+          const cv = value.split(' ').filter(i => i !== '');
+          const col = obj.$store.state.Edit.selectedCol[0]
+          obj.$store.commit('EDIT_UPDATE_FILE', [col, cv[1]]);
+        }
+        obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+        obj.$store.commit('SET_NOTICE', '编辑 -> 缓存 -> 选择文件 -> 保存');
       }
-      obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-      obj.$store.commit('SET_NOTICE', '编辑 -> 缓存 -> 选择文件 -> 保存');
     }
   } else {
     message(obj, targetValue, obj.$store.state.System.user.username, 'message')
