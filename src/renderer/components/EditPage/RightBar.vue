@@ -14,21 +14,38 @@
             <a class="dropdown-item" href="#" v-on:click="help('编辑器使用帮助')">编辑器使用帮助</a>
             <div class="dropdown-divider"></div>
             <a v-for="(data, index) in helpTypes" v-bind:key='index' class="dropdown-item" href="#" v-on:click='help(data)' v-bind:id="'edit-rightbar-'+data">{{data}}</a>
-            <!-- <a class="dropdown-item" href="#" v-on:click='help("输入框提示")' id="edit-rightbar-inputPrompt">输入框提示</a>
-            <a class="dropdown-item" href="#" v-on:click='help("病案参考")' id="edit-rightbar-medicalRefer">病案参考</a>
-            <a class="dropdown-item" href="#" v-on:click='help("病案历史")' id="edit-rightbar-medicalHistory">病案历史</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" v-on:click='help("在线交流")' id="edit-rightbar-onlineSay">在线交流</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" v-on:click='help("DRG分析")' id="edit-rightbar-drgStat">DRG分析</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" v-on:click='help("HIS接口")' id="edit-rightbar-hisInterface">HIS接口</a> -->
           </div>
         </li>
-        <li class="nav-item active" v-on:click='help(null)' id="edit-rightbar-help">
-          <a class="nav-link text-light" href="#"> 辅助 <span class="sr-only">(current)</span></a>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="edit-rightbar-choice" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{navType}}
+          </a>
+          <div class="dropdown-menu" id="edit-rightbar-sel" aria-labelledby="edit-rightbar-choice">
+            <a class="dropdown-item" href="#" v-on:click="navBar('病案文档')">病案文档</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" v-on:click="navBar('数据分析')">数据分析</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" v-on:click="navBar('数据字典')">数据字典</a>
+          </div>
         </li>
-        <li class="nav-item active" v-on:click='localData()' id="edit-rightbar-local">
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" id="edit-rightbar-choice" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{dataType}}
+          </a>
+          <div class="dropdown-menu" id="edit-rightbar-sel" aria-labelledby="edit-rightbar-choice">
+            <a class="dropdown-item" href="#" v-on:click="localData()">本地-文件</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" v-on:click="serverData('远程-用户')">远程-用户</a>
+            <a class="dropdown-item" href="#" v-on:click="serverData('远程-文档')">远程-文档</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" v-on:click="blockData('区块链-用户')">区块链-用户</a>
+            <a class="dropdown-item" href="#" v-on:click="blockData('区块链-文档')">区块链-文档</a>
+          </div>
+        </li>
+
+        <!-- <li class="nav-item active" v-on:click='localData()' id="edit-rightbar-local">
           <a class="nav-link text-light" href="#"> 本地 <span class="sr-only">(current)</span>
             <span style="color: red"><b>{{isSaveLocal}}</b></span>
           </a>
@@ -46,7 +63,7 @@
         </li>
         <li class="nav-item active">
           <a class="nav-link text-light" href="#" v-on:click='page(1)' id="edit-rightbar-downpage"> 后页 <span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
         <input class="form-control mr-sm-2" type="search" placeholder="模糊查询" aria-label="Search" v-on:keyup.enter="rightEnter" v-model="rightItem">
@@ -96,10 +113,25 @@
           return this.$store.state.Edit.helpTypes
         }
       },
+      dataType: {
+        get() {
+          return this.$store.state.Edit.dataType
+        },
+        set() {}
+      },
+      navType: {
+        get() {
+          return this.$store.state.Edit.navType
+        },
+        set() {}
+      },
     },
     methods: {
       help: function (n) {
         rightBarHelp(this, n)
+      },
+      navBar: function (n) {
+        console.log(n)
       },
       localData: function () {
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
@@ -125,7 +157,8 @@
         this.$store.commit('SET_NOTICE', '读取本地文件');
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
       },
-      serverData: function () {
+      serverData: function (x) {
+        console.log(x)
         // this.$store.commit('EDIT_SET_DOC_TYPES',)
         getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
         getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
@@ -144,7 +177,8 @@
           // this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
         }
       },
-      blockData: function () {
+      blockData: function (x) {
+        console.log(x)
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '区块链文件');
         this.$store.commit('SET_NOTICE', '读取区块链文件');
         this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');

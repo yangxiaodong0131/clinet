@@ -162,8 +162,9 @@
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
-        <input id="stat-right-search" class="mr-sm-2 form-control" type="search" placeholder="Search" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
+        <input id="stat-right-search" class="mr-sm-2 form-control" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
       </form>
+      <button>页面上查询</button>&nbsp;&nbsp;<button>服务器查询</button>
     </div>
   </nav>
 </template>
