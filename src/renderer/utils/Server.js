@@ -385,3 +385,23 @@ export function share(obj, data, type, fileName, username, content) {
     obj.$store.commit('STAT_SET_TABLE_TYPE', 'server')
   }
 }
+
+// 获取操作记录
+export function sGetRecord(obj, data, page) {
+  axios({
+    method: 'get',
+    url: `http://${data[0]}:${data[1]}/servers/record?page=${page}&rows=5`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    if (res.status === 200) {
+      obj.$store.commit('SET_RECORD', res.data.data)
+      obj.$store.commit('SET_RECORD_PAGE', res.data.page_num)
+      obj.$store.commit('SET_RECORD_PAGE_LIST', res.data.page_list)
+    }
+  }).catch((err) => {
+    console.log(err)
+    obj.$store.commit('SET_NOTICE', '连接服务器错误')
+    // obj.$store.commit('SYSTEM_PROVINCE', [])
+  })
+}

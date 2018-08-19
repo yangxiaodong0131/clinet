@@ -74,7 +74,8 @@
         </li>
       </ul>
       <div class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" v-on:keyup.13="librarySearch()" v-model="library">
+        <input class="form-control mr-sm-2" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="librarySearch()" v-model="library">
+        <button>页面上查询</button>&nbsp;&nbsp;<button>服务器查询</button>
       </div>
     </div>
   </nav>
