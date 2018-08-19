@@ -13,13 +13,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="alert alert-danger">
-              <td>2018-7-17 16:41:09</td>
-              <td>login</td>
-              <td>test3用户登陆成功</td>
+            <tr class="table-active" v-for="record in records">
+              <td>{{record.datetime}}</td>
+              <td>{{record.type}}-{{record.mode}}</td>
+              <td>{{record.value}}</td>
             </tr>
           </tbody>
         </table>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li v-bind:class="{'disabled':value.page == page}" v-for= "(value, index) in pageList" v-bind:key="index" v-on:click="serverPage(value.page)"><a class="page-link" href="#">
+              {{value.num}}
+            </a></li>
+          </ul>
+        </nav>
       </div>
       <div style="marginTop: 20px">
         <h3>使用流程</h3>
@@ -74,29 +81,29 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="alert alert-danger">
+            <tr class="table-active">
               <td>CDA文档</td>
-              <td>{{this.$store.state.Home.count.cda.user}}</td>
-              <td>{{this.$store.state.Home.count.cda.server}}</td>
-              <td>{{this.$store.state.Home.count.cda.block}}</td>
+              <td>{{count.cda.user}}</td>
+              <td>{{count.cda.server}}</td>
+              <td>{{count.cda.block}}</td>
             </tr>
-            <tr class="alert alert-danger">
+            <tr class="table-active">
               <td>输入框提示</td>
-              <td>{{this.$store.state.Home.count.help.user}}</td>
-              <td>{{this.$store.state.Home.count.help.server}}</td>
-              <td>{{this.$store.state.Home.count.help.block}}</td>
+              <td>{{count.help.user}}</td>
+              <td>{{count.help.server}}</td>
+              <td>{{count.help.block}}</td>
             </tr>
-            <tr class="alert alert-danger">
+            <tr class="table-active">
               <td>病案质控</td>
-              <td>{{this.$store.state.Home.count.cdh.user}}</td>
-              <td>{{this.$store.state.Home.count.cdh.server}}</td>
-              <td>{{this.$store.state.Home.count.cdh.block}}</td>
+              <td>{{count.cdh.user}}</td>
+              <td>{{count.cdh.server}}</td>
+              <td>{{count.cdh.block}}</td>
             </tr>
-            <tr class="alert alert-danger">
+            <tr class="table-active">
               <td>专家提示</td>
-              <td>{{this.$store.state.Home.count.symptom.user}}</td>
-              <td>{{this.$store.state.Home.count.symptom.server}}</td>
-              <td>{{this.$store.state.Home.count.symptom.block}}</td>
+              <td>{{count.symptom.user}}</td>
+              <td>{{count.symptom.server}}</td>
+              <td>{{count.symptom.block}}</td>
             </tr>
           </tbody>
         </table>
@@ -164,6 +171,7 @@
 </template>
 
 <script>
+  import { sGetRecord } from '../../utils/Server'
   // import LeftBar from '../EditPage/LeftBar';
   // export default {
   //   data() {
@@ -249,10 +257,35 @@
         tsRecord: ['新生儿病历', '产科病历', '儿科病历']
       };
     },
+    computed: {
+      records: {
+        get() {
+          return this.$store.state.Home.record
+        }
+      },
+      count: {
+        get() {
+          return this.$store.state.Home.count
+        }
+      },
+      pageList: {
+        get() {
+          return this.$store.state.Home.recordPageList
+        }
+      },
+      page: {
+        get() {
+          return this.$store.state.Home.recordPage
+        }
+      },
+    },
     // mounted: function () {
     //   hoemchart('homechart')
     // },
     methods: {
+      serverPage: function (page) {
+        sGetRecord(this, [this.$store.state.System.server, this.$store.state.System.port], page)
+      },
     },
   };
 </script>

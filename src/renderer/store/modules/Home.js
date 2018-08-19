@@ -7,7 +7,10 @@ const state = {
   // toolbar: '',
   // 初始化数据加载状态
   hasData: false,
-  count: { cda: { user: '-', server: '-', block: '-' }, help: { user: '-', server: '-', block: '-' }, cdh: { user: '-', server: '-', block: '-' }, symptom: { user: '-', server: '-', block: '-' } }
+  count: { cda: { user: '-', server: '-', block: '-' }, help: { user: '-', server: '-', block: '-' }, cdh: { user: '-', server: '-', block: '-' }, symptom: { user: '-', server: '-', block: '-' } },
+  record: [],
+  recordPage: 1,
+  recordPageList: [],
 };
 
 const mutations = {
@@ -29,6 +32,15 @@ const mutations = {
   SET_COUNT(state, data) {
     state.count = data
   },
+  SET_RECORD(state, data) {
+    state.record = data
+  },
+  SET_RECORD_PAGE(state, data) {
+    state.recordPage = data
+  },
+  SET_RECORD_PAGE_LIST(state, data) {
+    state.recordPageList = data
+  },
 };
 
 const actions = {
@@ -39,7 +51,10 @@ const actions = {
     commit('SET_NAVBAR');
     // commit('SET_TOOLBAR');
     commit('HAS_DATA');
-    commit('SET_COUNT')
+    commit('SET_COUNT');
+    commit('SET_RECORD');
+    commit('SET_RECORD_PAGE');
+    commit('SET_RECORD_PAGE_LIST');
   },
 };
 

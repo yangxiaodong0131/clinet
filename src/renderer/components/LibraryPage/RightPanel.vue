@@ -2,7 +2,6 @@
   <div>
     <right-bar></right-bar>
     <div v-bind:style="{ height: height + 'px', overflow: 'auto' }">
-      <h3 v-if="xs.length === 1" class="text-center">术语字典暂无数据</h3>
       <table>
         <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index" class="library-rightpanel">
           <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex" v-if="tableType === 'local' || tableType === 'block'">
@@ -20,6 +19,7 @@
           <td v-for="(field, index) in data"  v-bind:key='index' class="library-right-table-td"  v-if="index < 11">{{data[index]}}</td>
         </tr>
       </table>
+      <h3 v-if="xs.length === 1" class="text-center">该术语字典暂无数据</h3>
       <nav aria-label="Page navigation example" v-if="this.$store.state.Library.tableType === 'server'">
         <ul class="pagination">
           <li class="page-item" v-for= "(value, index) in page.pageList" v-bind:key="index" v-bind:class="{'disabled':value.page == page.page}" v-on:click="serverPage(value.page)"><a class="page-link" href="#">
