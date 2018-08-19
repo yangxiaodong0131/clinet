@@ -6,9 +6,9 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active" v-on:click='blockListList()' id="block-list-List">
+        <!-- <li class="nav-item active" v-on:click='blockListList()' id="block-list-List">
           <a class="nav-link text-light" href="#"> 区块链列表 <span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
         <li class="nav-item active" v-on:click='blockList()' id="block-list">
           <a class="nav-link text-light" href="#"> 区块列表 <span class="sr-only">(current)</span></a>
         </li>
@@ -42,7 +42,8 @@
     },
     methods: {
       blockListList: function () {
-
+        this.$store.commit('BLOCK_SET_TOOLBAR', 'blockListList');
+        this.$store.commit('SET_NOTICE', '区块链列表');
       },
       blockList: function () {
         const ip = this.$store.state.System.server

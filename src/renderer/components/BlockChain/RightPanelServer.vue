@@ -5,7 +5,7 @@
         <td class="block-rightpanel-server-td" v-for="(data, index) in line" v-bind:key='index'>{{line[index]}}</td>
       </tr> -->
     </table>
-    <table v-if="toolbar == 'setNodes'">
+    <table v-if="toolbar == 'blockChainPeer'">
       <tr>
         <td>服务器IP</td>
         <td>服务器PORT</td>

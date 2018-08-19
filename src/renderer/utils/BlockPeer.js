@@ -3,10 +3,11 @@ const axios = require('axios');
 
 // 获取全部节点
 export function peers(obj, data) {
-  axios.get(`http://${data[0]}:${data[1]}/api/peers?limit=2`)
+  axios.get(`http://${data[0]}:${data[1]}/block/api/peers`)
     .then((res) => {
       if (res.status === 200) {
         obj.$store.commit('BLOCK_SET_PEERS', res.data.peers)
+        obj.$store.commit('SET_NOTICE', '区块链节点列表查询成功');
       }
     })
     .catch((err) => {
