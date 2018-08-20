@@ -231,7 +231,8 @@ export function newEditDoc(obj, n) {
 
 // 读取文件
 export function loadEditDoc(obj, index, type) {
-  if (obj.$store.state.Edit.lastNav === '/library' && (index !== 0 && index !== 1)) {
+  // if (obj.$store.state.Edit.lastNav !== '/library' && (index !== 0 && index !== 1)) {
+  if (obj.$store.state.Edit.lastNav !== '/library' || (obj.$store.state.Edit.lastNav === '/library' && (index !== 0 && index !== 1))) {
     let doc = []
     obj.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案');
     if (type === 'edit') {
