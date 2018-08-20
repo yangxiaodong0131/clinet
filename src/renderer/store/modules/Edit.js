@@ -442,10 +442,18 @@ const mutations = {
     state.expertHint = value
     state.expertSection = value.section
   },
+  EDIT_SET_DATA_TYPE(state, value) {
+    state.dataType = value
+  },
+  EDIT_SET_NAV_TYPE(state, value) {
+    state.navType = value
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_SET_NAV_TYPE');
+    commit('EDIT_SET_DATA_TYPE');
     commit('EDIT_SET_EXPERT_HINT');
     commit('EDIT_SET_DOC_CONTROL');
     commit('EDIT_UPDATE_DOC_SUMMARY');

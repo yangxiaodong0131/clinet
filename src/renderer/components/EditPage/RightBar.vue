@@ -131,9 +131,24 @@
         rightBarHelp(this, n)
       },
       navBar: function (n) {
-        console.log(n)
+        this.$store.commit('EDIT_SET_NAV_TYPE', n);
+        if (n === '病案文档') {
+          console.log(this.$store.state.Edit.dataType)
+          if (this.$store.state.Edit.dataType === '本地-文件') {
+            this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+            this.localData()
+          } else if (this.$store.state.Edit.dataType === '远程-用户') {
+            console.log('病案文档')
+          }
+        } else if (n === '数据分析') {
+          this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+          console.log('数据分析')
+        } else if (n === '数据字典') {
+          console.log('数据字典')
+        }
       },
       localData: function () {
+        this.$store.commit('EDIT_SET_DATA_TYPE', '本地-文件');
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
         this.$store.commit('EDIT_SET_DOC_TYPES', ['自定义文档', '病案首页（卫统四CSV）', '入院申请', '首次病程', '病程记录', '病案首页', '门诊病案', '健康体检']);
         this.$store.commit('EDIT_SET_HELP_TYPES', ['输入框提示', '病案参考', '病案历史', '在线交流', '病案质控', '专家提示', 'DRG分析', 'HIS接口'])
@@ -157,7 +172,7 @@
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
       },
       serverData: function (x) {
-        console.log(x)
+        this.$store.commit('EDIT_SET_DATA_TYPE', x);
         // this.$store.commit('EDIT_SET_DOC_TYPES',)
         getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
         getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
@@ -176,7 +191,7 @@
         }
       },
       blockData: function (x) {
-        console.log(x)
+        this.$store.commit('EDIT_SET_DATA_TYPE', x);
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '区块链文件');
         this.$store.commit('SET_NOTICE', '读取区块链文件');
         this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');
