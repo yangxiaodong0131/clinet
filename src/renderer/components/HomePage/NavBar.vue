@@ -58,7 +58,7 @@
             <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-服务器节点设置')" id="navbar-block-server">区块链服务介绍</a>
             <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-账户设置')" id="navbar-block-account">账户设置</a>
             <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-区块查询')" id="navbar-block-block">区块查询</a>
-            <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-共享查询')" id="navbar-block-block">共享查询</a>
+            <!-- <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-共享查询')" id="navbar-block-block">共享查询</a>-->
             <div class="dropdown-divider"></div>
             <!-- <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-DRG分组服务')" id="navbar-block-compdrg">DRG分组服务</a>
             <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-DRG分析计算')" id="navbar-block-statdrg">DRG分析计算</a> -->
@@ -78,12 +78,15 @@
   import loadFile from '../../utils/LoadFile';
   import saveFile from '../../utils/SaveFile'
   import { offline } from '../../utils/Socket';
+  import { open } from '../../utils/BlockAccount'
   import { cacheEditDoc } from '../../utils/EditSave'
+  import { bcBlockchain } from '../../utils/BlockBlock'
   import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
   export default {
     data() {
       return {
-        currentTime: new Date().toLocaleString()
+        currentTime: new Date().toLocaleString(),
+        blockUsername: 'someone manual strong movie roof episode eight spatial brown soldier soup motor'
       };
     },
     computed: {
@@ -206,9 +209,14 @@
           case '区块链服务-账户设置':
             this.$router.push('/blockChain');
             this.$store.commit('BLOCK_SET_TOOLBAR', 'setUser');
+            this.$store.commit('SET_NOTICE', '账户设置');
+            open(this, [this.$store.state.System.server, 4000, this.blockUsername, 1, this.$store.state.System.user.username]);
             break;
           case '区块链服务-区块查询':
             this.$router.push('/blockChain');
+            bcBlockchain(this, [this.$store.state.System.server, 4000, 1]);
+            this.$store.commit('SET_NOTICE', '区块列表');
+            this.$store.commit('BLOCK_SET_TOOLBAR', 'blockList');
             // this.$store.commit('BLOCK_SET_TOOLBAR', 'blockList');
             break;
           case '区块链服务-共享查询':

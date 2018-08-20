@@ -624,28 +624,28 @@
 // }
 // foo(2, 3, 4, 5);
 
-console.log((function () {
-  return [
-    (() => this.x)()
-  ];
-}).call({ x: 'outer' }));
+// console.log((function () {
+//   return [
+//     (() => this.x)()
+//   ];
+// }).call({ x: 'outer' }));
 
-const insert = value => ({ into: array => ({ after: (afterValue) => {
-  array.splice(array.indexOf(afterValue) + 1, 0, value);
-  return array;
-} }) });
+// const insert = value => ({ into: array => ({ after: (afterValue) => {
+//   array.splice(array.indexOf(afterValue) + 1, 0, value);
+//   return array;
+// } }) });
 
-console.log(insert(2).into([1, 3]).after(3));
+// console.log(insert(2).into([1, 3]).after(3));
 
-const pipeline = (...funcs) =>
-  val => funcs.reduce((a, b) => b(a), val);
+// const pipeline = (...funcs) =>
+//   val => funcs.reduce((a, b) => b(a), val);
 
-const plus1 = a => a + 1;
-const mult2 = a => a * 2;
-const addThenMult = pipeline(plus1, mult2);
+// const plus1 = a => a + 1;
+// const mult2 = a => a * 2;
+// const addThenMult = pipeline(plus1, mult2);
 
-console.log(addThenMult(5));
-console.log(mult2(plus1(4)));
+// console.log(addThenMult(5));
+// console.log(mult2(plus1(4)));
 
 // foo::bar;
 // // 等同于
@@ -660,47 +660,47 @@ console.log(mult2(plus1(4)));
 //   return obj::hasOwnProperty(key);
 // }
 
-function factorial(n) {
-  if (n === 1) return 1;
-  return n * factorial(n - 1);
-}
+// function factorial(n) {
+//   if (n === 1) return 1;
+//   return n * factorial(n - 1);
+// }
 
-console.log(factorial(10));
+// console.log(factorial(10));
 
-function app(n, total) {
-  if (n === 1) return total;
-  return app(n - 1, n * total)
+// function app(n, total) {
+//   if (n === 1) return total;
+//   return app(n - 1, n * total)
 
-}
+// }
 
-function factorialt(n) {
-  return factorial(n, 1);
-}
-
-
-console.log(app(5, 1));
-
-function Fibonacci(n) {
-  if (n <= 1) { return 1 }
-
-  return Fibonacci(n - 1) + Fibonacci(n - 2);
-}
-console.log(Fibonacci(10));
-
-function fn(n, ac1 = 1, ac2 = 2) {
-
-  if (n === 1) { return ac2 }
-
-  return fn(n - 1, ac2, ac1 + ac2);
-}
-
-console.log(fn(3));
+// function factorialt(n) {
+//   return factorial(n, 1);
+// }
 
 
-function fooo(n, ac1 = 1, ac2 = 2) {
-  if (n === 1) { return ac2 }
-  return fooo(n - 1, ac2, ac1 + ac2)
-}
+// console.log(app(5, 1));
+
+// function Fibonacci(n) {
+//   if (n <= 1) { return 1 }
+
+//   return Fibonacci(n - 1) + Fibonacci(n - 2);
+// }
+// console.log(Fibonacci(10));
+
+// function fn(n, ac1 = 1, ac2 = 2) {
+
+//   if (n === 1) { return ac2 }
+
+//   return fn(n - 1, ac2, ac1 + ac2);
+// }
+
+// console.log(fn(3));
+
+
+// function fooo(n, ac1 = 1, ac2 = 2) {
+//   if (n === 1) { return ac2 }
+//   return fooo(n - 1, ac2, ac1 + ac2)
+// }
 
 // console.log(fooo(1000));
 
@@ -731,44 +731,44 @@ function fooo(n, ac1 = 1, ac2 = 2) {
 
 // trampoline(sum(1, 100))
 
-function tco(f) {
-  let value;
-  let active = false;
-  const accumulated = [];
+// function tco(f) {
+//   let value;
+//   let active = false;
+//   const accumulated = [];
 
-  return function accumulator() {
-    accumulated.push(arguments);
-    if (!active) {
-      active = true;
-      while (accumulated.length) {
-        value = f.apply(this, accumulated.shift());
-      }
-      active = false;
-      return value;
-    }
-  }
-}
+//   return function accumulator() {
+//     accumulated.push(arguments);
+//     if (!active) {
+//       active = true;
+//       while (accumulated.length) {
+//         value = f.apply(this, accumulated.shift());
+//       }
+//       active = false;
+//       return value;
+//     }
+//   }
+// }
 
-const sum = tco((x, y) => {
-  if (y > 0) {
-    return sum(x + 1, y - 1)
-  }
-  return x;
+// const sum = tco((x, y) => {
+//   if (y > 0) {
+//     return sum(x + 1, y - 1)
+//   }
+//   return x;
 
-});
+// });
 
-console.log(sum(1, 10000))
+// console.log(sum(1, 10000))
 
 // es6处理以此输出0到9
 
-const funcs = [];
-for (let i = 0; i < 10; i++) {
-  funcs.push(() => {
-    console.log(i);
-  })
-}
+// const funcs = [];
+// for (let i = 0; i < 10; i++) {
+//   funcs.push(() => {
+//     console.log(i);
+//   })
+// }
 
-funcs.forEach(func => func())
+// funcs.forEach(func => func())
 // console.log(funcs)
 
 // const name = 'lux'
@@ -777,27 +777,27 @@ funcs.forEach(func => func())
 // const str = 'happy';
 // console.log(str.includes('y'));
 
-const str1 = 'yang xiao dong!';
-console.log(str1.startsWith('yang'));
-console.log(str1.endsWith('!'));
+// const str1 = 'yang xiao dong!';
+// console.log(str1.startsWith('yang'));
+// console.log(str1.endsWith('!'));
 
-const address = '北京市海淀区'
-const name = 'lisa'
-const skr = `${name}在${address}上班`
+// const address = '北京市海淀区'
+// const name = 'lisa'
+// const skr = `${name}在${address}上班`
 
-function foo(skr) {
-  console.log(skr);
-}
-foo(skr)
+// function foo(skr) {
+//   console.log(skr);
+// }
+// foo(skr)
 
-const a1 = [{ foo: 1 }];
-const a2 = [{ bar: 2 }];
-const a3 = a1.concat(a2);
-const a4 = [...a1, ...a2];
+// const a1 = [{ foo: 1 }];
+// const a2 = [{ bar: 2 }];
+// const a3 = a1.concat(a2);
+// const a4 = [...a1, ...a2];
 
-console.log(a3[0] = a1[0]);
+// console.log(a3[0] = a1[0]);
 
-// [a, ...rest] = list;
+// // [a, ...rest] = list;
 
 // const [first, ...rest] = [1, 2, 3, 4, 5];
 // console.log(first);
@@ -815,28 +815,106 @@ console.log(a3[0] = a1[0]);
 
 // const [first, ...middle, last] = [1, 2, 3, 4, 5]
 
-function length(str) {
-  console.log([...str].length);
+// function length(str) {
+//   console.log([...str].length);
+// }
+
+// length('x\uD83D\uDE80y');
+
+// const map = new Map([
+//   [1, 'one'],
+//   [2, 'two'],
+//   [3, 'three'],
+// ]);
+
+// const arr = [...map.values()];
+// console.log(arr);
+
+// const go = function* () {
+//   yield 1;
+//   yield 2;
+//   yield 3;
+// };
+
+// console.log([...go()]);
+
+// 2, Array.from方法用于将两类对象转为真正的数组
+
+// const arrayLike = {
+//   0: 'a',
+//   1: 'b',
+//   2: 'c',
+//   length: 3
+// };
+
+// const arr2 = Array.form(arrayLike)
+
+// const cart = {
+//   _wheels: 4,
+
+//   get _wheels() {
+//     return this._wheels;
+//   },
+//   set _wheels(value) {
+//     if (value < this._wheels) {
+//       throw new Error('数值太小了！');
+//     }
+//     return this._wheels = value;
+//   }
+// }
+// console.log(cart)
+
+// const obj = {
+//   class() {}
+// };
+// var obj = {
+//   'class' : function() {}
+// };
+
+function fib(max) {
+  let
+    a = 1,
+    b = 1,
+    arr = [1, 1];
+  while (arr.length < max) {
+    [a, b] = [b, a + b]
+    arr.push(b);
+  }
+  console.log(arr);
+}
+fib(10);
+// function fib(max) {
+//   let
+//     t,
+//     a = 0,
+//     b = 1,
+//     arr = [0, 1];
+//   while (arr.length < max) {
+//     [a, b] = [b, a + b];
+//     arr.push(b);
+//   }
+//   return arr;
+// }
+// console.log(fib(10))
+
+function fib2(max) {
+  var
+    t,
+    a = 1,
+    a = 1,
+    arr = [1, 1];
+  while (max < arr.length) {
+    [a, b] = [b, a + b];
+    arr.push[b];
+  }
+  return arr;
 }
 
-length('x\uD83D\uDE80y');
+function* fib3(max) {
+  let
+    t,
+    a = 0,
+    b = 1,
+    arr = [0, 1];
 
-const map = new Map([
-  [1, 'one'],
-  [2, 'two'],
-  [3, 'three'],
-]);
-
-const arr = [...map.values()];
-console.log(arr);
-
-const go = function* () {
-  yield 1;
-  yield 2;
-  yield 3;
-};
-
-console.log([...go()]);
-
-const obj = { a: 1, b: 2 };
-const ajj = [...obj];
+}
