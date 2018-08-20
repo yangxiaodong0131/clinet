@@ -157,7 +157,7 @@ export function getLibrarySerach(obj, url, fileName, value, servertype) {
 export function saveLibrary(obj, data, content) {
   const user = obj.$store.state.System.user;
   const tableName = obj.$store.state.Library.libraryTableInfo.tableName;
-  const pageNum = obj.$store.state.Library.libraryTableInfo.tablePage;
+  const pageNum = obj.$store.state.Library.libraryTableInfo.page;
   const serverType = 'server'
   const sort = obj.$store.state.Library.serverSort;
   // 去除文件名中的.csv
@@ -173,6 +173,45 @@ export function saveLibrary(obj, data, content) {
       obj.$store.commit('SET_NOTICE', `保存字典     ${tableName}     成功!`);
     } else {
       obj.$store.commit('SET_NOTICE', `保存字典     ${tableName}     失败,文件已经存在!`);
+    }
+  }).catch((err) => {
+    console.log(err)
+    obj.$store.commit('SET_NOTICE', '保存字典失败!');
+  })
+}
+
+export function saveLibraryPage(obj, data, content, type) {
+  const user = obj.$store.state.System.user;
+  const tableName = obj.$store.state.Library.libraryTableInfo.tableName;
+  const pageNum = obj.$store.state.Library.libraryTableInfo.page;
+  const serverType = 'server'
+  const sort = obj.$store.state.Library.serverSort;
+  // 去除文件名中的.csv
+  const tabType = tableName.split('.csv')[0]
+  obj.$store.commit('LIBRARY_SET_SERVER_TABLE', []);
+  console.log(pageNum);
+  axios({
+    method: 'post',
+    url: `http://${data[0]}:${data[1]}/library/client_save2`,
+    data: qs.stringify({ data: JSON.stringify(content), page: pageNum, username: user.username, tab_type: tabType, rows: 30, order: sort.field, order_type: sort.type, server_type: serverType, type: type }),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    if (res.status === 200) {
+      const library = res.data.library
+      const countPage = res.data.count
+      let page = parseInt(res.data.page, 10)
+      if (countPage === 0) {
+        page = 0
+      }
+      const opt = { page: page, countPage: res.data.count, pageList: res.data.page_list, tableName: tableName };
+      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', library.slice(1));
+      obj.$store.commit('LIBRARY_SET_TABLE_INFO', opt)
+      obj.$store.commit('LIBRARY_SET_SERVER_SORT', [res.data.order, res.data.order_type])
+      obj.$store.commit('LIBRARY_SET_COUNT_PAGE', res.data.count);
+      obj.$store.commit('SET_NOTICE', res.data.info);
+    } else {
+      obj.$store.commit('SET_NOTICE', '保存字典失败!');
     }
   }).catch((err) => {
     console.log(err)
