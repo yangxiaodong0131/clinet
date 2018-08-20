@@ -92,7 +92,6 @@
         this.$store.commit('EDIT_SET_FILE');
       },
       show() {
-        this.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
         document.getElementById('edit-editbar-input').focus()
       },
       newDoc: function (n) {

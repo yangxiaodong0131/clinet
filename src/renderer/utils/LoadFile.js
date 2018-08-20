@@ -44,12 +44,10 @@ export default function loadFile(obj, x, p, e = null) {
           switch (p) {
             case 'user':
               obj.$store.commit('EDIT_LOAD_FILE', f);
-              obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
               break
             case 'stat':
               if (e) {
                 obj.$store.commit('EDIT_LOAD_FILE', f);
-                obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
               } else {
                 // obj.$store.commit('STAT_SET_COL_NUM', f[0].split(',').length);
                 obj.$store.commit('STAT_SET_TABLE', ['local', f]);
@@ -58,7 +56,6 @@ export default function loadFile(obj, x, p, e = null) {
             case 'library':
               if (e) {
                 obj.$store.commit('EDIT_LOAD_FILE', f);
-                obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
               } else {
                 obj.$store.commit('LIBRARY_LOAD_FILE', f);
               }
@@ -66,7 +63,6 @@ export default function loadFile(obj, x, p, e = null) {
             case 'system':
               if (e) {
                 obj.$store.commit('EDIT_LOAD_FILE', f);
-                obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
               } else {
                 obj.$store.commit('SYSTEM_LOAD_FILE', f);
               }
@@ -74,7 +70,6 @@ export default function loadFile(obj, x, p, e = null) {
             case 'system-home':
               if (e) {
                 obj.$store.commit('EDIT_LOAD_FILE', f);
-                obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
               } else {
                 obj.$store.commit('SYSTEM_LOAD_FILE', f);
               }
@@ -82,7 +77,6 @@ export default function loadFile(obj, x, p, e = null) {
             case 'block':
               if (e) {
                 obj.$store.commit('EDIT_LOAD_FILE', f);
-                obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
               } else {
                 obj.$store.commit('BLOCK_LOAD_FILE', f);
               }
@@ -90,7 +84,6 @@ export default function loadFile(obj, x, p, e = null) {
             case 'wt4':
               if (e) {
                 obj.$store.commit('EDIT_LOAD_FILE', f);
-                obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
               } else {
                 obj.$store.commit('SYSTEM_LOAD_WT4_FILE', f);
                 obj.$store.commit('SYSTEM_SET_LOCAL_PAGE')
@@ -131,7 +124,6 @@ export default function loadFile(obj, x, p, e = null) {
           }
           obj.$store.commit('EDIT_LOAD_FILE', f);
           obj.$store.commit('EDIT_LOAD_FILE_DOWN', f);
-          // obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
           obj.$store.commit('EDIT_SET_FILE_TYPE', 'cda')
           obj.$store.commit('SET_NOTICE', 'CDA文件读取成功！');
           const summary = []

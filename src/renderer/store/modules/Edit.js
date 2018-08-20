@@ -9,7 +9,6 @@ const state = {
   docShowIndex: 0,
   filesIndex: 0,
   fileIndex: null,
-  leftPanel: 'table',
   rightPanel: 'local',
   lastNav: '/edit',
   fileName: '',
@@ -142,9 +141,6 @@ const mutations = {
   },
   EDIT_SET_DOC(state) {
     state.doc = [];
-  },
-  EDIT_SET_LEFT_PANEL(state, message) {
-    state.leftPanel = message;
   },
   EDIT_SET_RIGHT_PANEL(state, message) {
     state.rightPanel = message;
@@ -482,7 +478,6 @@ const actions = {
     commit('EDIT_LOAD_DOC_SHOW');
     commit('EDIT_SET_DOC');
     commit('EDIT_SERVER_FILES');
-    commit('EDIT_SET_LEFT_PANEL');
     commit('EDIT_SET_RIGHT_PANEL');
     commit('EDIT_SET_FILES_INDEX');
     commit('EDIT_SET_FILE_INDEX');

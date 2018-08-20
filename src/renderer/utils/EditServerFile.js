@@ -56,7 +56,6 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
       obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
       obj.$store.commit('EDIT_LOAD_FILE', [res.data.cda.content])
       obj.$store.commit('SET_NOTICE', res.data.info);
-      obj.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
     } else {
       obj.$store.commit('EDIT_LOAD_FILE', [])
     }

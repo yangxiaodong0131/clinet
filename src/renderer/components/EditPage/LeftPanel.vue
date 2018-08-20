@@ -1,17 +1,15 @@
 <template>
   <div id="edit-leftpanel">
     <left-bar></left-bar>
-    <left-panel-doc v-if="leftPanel == 'doc'"></left-panel-doc>
-    <left-panel-table v-if="leftPanel == 'table'"></left-panel-table>
+    <left-panel-doc></left-panel-doc>
   </div>
 </template>
 
 <script>
   import LeftBar from './LeftBar';
   import LeftPanelDoc from './LeftPanelDoc';
-  import LeftPanelTable from './LeftPanelTable';
   export default {
-    components: { LeftBar, LeftPanelDoc, LeftPanelTable },
+    components: { LeftBar, LeftPanelDoc },
     data() {
       return {
         flag: ''
