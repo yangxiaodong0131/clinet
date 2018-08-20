@@ -139,7 +139,6 @@
         this.$store.commit('EDIT_SET_HELP_TYPES', ['输入框提示', '病案参考', '病案历史', '在线交流', '病案质控', '专家提示', 'DRG分析', 'HIS接口'])
         this.$store.commit('EDIT_SET_CHAT_TYPE', false);
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-        this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
         switch (this.$store.state.Edit.lastNav) {
           case '/stat':
             this.$store.commit('STAT_LOAD_FILES');
@@ -164,7 +163,6 @@
         getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
         this.$store.commit('EDIT_SET_CHAT_TYPE', false);
         this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');
-        this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
         if (!this.$store.state.System.user.login) {
           this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');

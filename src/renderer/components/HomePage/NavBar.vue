@@ -139,7 +139,6 @@
           n = '已登录'
         }
         if (n !== '数据采集-数据采集' && n !== '未登录...' && this.$store.state.Edit.doc.length > 0) {
-          console.log(this.$store.state.Edit.doc)
           cacheEditDoc(this)
         }
         switch (n) {
@@ -155,7 +154,6 @@
             //   this.$store.commit('EDIT_LOAD_FILES');
             //   this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
             //   const index = this.$store.state.Edit.files.indexOf('未保存病案.cda')
-            //   this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
             //   this.$store.commit('EDIT_LOAD_FILE', global.hitbDoc)
             //   this.$store.commit('EDIT_SET_FILES_INDEX', index)
             //   loadFile(this, '未保存病案.cda', 'user', 'edit')
@@ -167,6 +165,10 @@
               getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
               getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
             } else {
+              this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+              this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+              this.$store.commit('EDIT_LOAD_FILES');
+              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
               loadFile(this, '2018年度病案.cda', 'user', 'edit')
               this.$store.commit('EDIT_SET_FILES_INDEX', 0)
             }
