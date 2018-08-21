@@ -10,7 +10,7 @@ export function open(obj, data) {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      console.log(res)
+      // console.log(res)
       obj.$store.commit('SET_NOTICE', '区块链服务登录成功!');
       obj.$store.commit('BLOCK_SET_ACCOUNT', res.data.user);
       // obj.$store.commit('BLOCK_SET_TRANS', res.data.transactions)
@@ -35,7 +35,7 @@ export function open3(obj, data) {
     headers: { 'Content-Type': 'application/json' },
     responseType: 'json'
   }).then((res) => {
-    console.log(res)
+    // console.log(res)
     if (res.status === 200) {
       obj.$store.commit('SET_NOTICE', '区块链服务登录成功!')
       obj.$store.commit('BLOCK_SET_ACCOUNT', res.data.account)
@@ -245,7 +245,7 @@ export function getAccountsPublicKey(obj, data) {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      console.log(res.data.publicKeys)
+      // console.log(res.data.publicKeys)
       obj.$store.commit('BLOCK_GET_PUBLICKEYS', res.data.publicKeys)
     } else {
       obj.$store.commit('SET_NOTICE', '未注册用户登陆！');
