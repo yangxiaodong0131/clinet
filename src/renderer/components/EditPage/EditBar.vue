@@ -43,7 +43,7 @@
 
 <script>
   import { join } from '../../utils/Socket'
-  import { editBarEnter } from '../../utils/EditSave'
+  import { editBarEnter } from '../../utils/EditOperation'
   export default {
     // mounted: function () {
     //   this.$nextTick(() => {

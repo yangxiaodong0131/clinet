@@ -36,7 +36,7 @@
   import { getLibrary } from '../../utils/LibraryServerFile'
   import { getStat } from '../../utils/StatServerFile';
   import { getEditFiles, getEdit } from '../../utils/EditServerFile'
-  import { getDate } from '../../utils/EditSave';
+  import { getDate } from '../../utils/EditOperation';
   export default {
     data() {
       return {
@@ -94,18 +94,27 @@
       xs: {
         get() {
           let x = this.$store.state.Edit.files
-          switch (this.$store.state.Edit.lastNav) {
-            case '/stat':
-              x = this.$store.state.Stat.files
-              break;
-            case '/library':
-              x = this.$store.state.Library.files
-              break;
-            case '/system':
-              x = this.$store.state.System.files
-              break;
-            default:
-              break
+          // switch (this.$store.state.Edit.lastNav) {
+          //   case '/stat':
+          //     x = this.$store.state.Stat.files
+          //     break;
+          //   case '/library':
+          //     x = this.$store.state.Library.files
+          //     break;
+          //   case '/system':
+          //     x = this.$store.state.System.files
+          //     break;
+          //   default:
+          //     break
+          // }
+          if (this.$store.state.Edit.lastNav === '/stat') {
+            x = this.$store.state.Stat.files
+          } else if (this.$store.state.Edit.navType === '数据分析') {
+            x = this.$store.state.Edit.files
+          } else if (this.$store.state.Edit.lastNav === '/library') {
+            x = this.$store.state.Library.files
+          } else if (this.$store.state.Edit.lastNav === '/system') {
+            x = this.$store.state.System.files
           }
           return x
         },
@@ -121,6 +130,10 @@
         // document.getElementById('aaa').scrollIntoView(true)
       },
       loadFile: function (data, index) {
+        // console.log(this.$store.state.Edit.navType)
+        // if (this.$store.state.Edit.navType === '数据分析') {
+        //   loadFile(this, data, 'stat');
+        // }
         this.$store.commit('EDIT_SET_FILES_INDEX', index)
         if (data.endsWith('.cda')) {
           this.$store.commit('EDIT_SET_FILE_TYPE', 'cda')
@@ -128,15 +141,20 @@
           this.$store.commit('EDIT_SET_FILE_TYPE', 'csv')
         }
         let x = 'user'
-        switch (this.$store.state.Edit.lastNav) {
-          case '/stat':
-            x = 'stat'
-            break;
-          case '/library':
-            x = 'library'
-            break;
-          default:
-            break
+        // switch (this.$store.state.Edit.lastNav) {
+        //   case '/stat':
+        //     x = 'stat'
+        //     break;
+        //   case '/library':
+        //     x = 'library'
+        //     break;
+        //   default:
+        //     break
+        // }
+        if (this.$store.state.Edit.lastNav === '/stat' || this.$store.state.Edit.navType === '数据分析') {
+          x = 'stat'
+        } else if (this.$store.state.Edit.lastNav === '/library') {
+          x = 'library'
         }
         if (this.$store.state.Edit.rightPanel === 'server' || this.$store.state.Edit.rightPanel === 'block') {
           this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');

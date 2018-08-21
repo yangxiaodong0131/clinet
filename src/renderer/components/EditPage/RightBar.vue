@@ -74,7 +74,8 @@
 
 <script>
   import { getEditFiles, getEdit, getDocTypes, getHelpTypes } from '../../utils/EditServerFile'
-  import { rightBarHelp, editPage } from '../../utils/EditSave'
+  import { rightBarHelp, editPage } from '../../utils/EditOperation'
+  import getStatFile from '../../utils/StatOperation';
   export default {
     data() {
       return {
@@ -136,13 +137,24 @@
           console.log(this.$store.state.Edit.dataType)
           if (this.$store.state.Edit.dataType === '本地-文件') {
             this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
             this.localData()
           } else if (this.$store.state.Edit.dataType === '远程-用户') {
-            console.log('病案文档')
+            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
+            this.serverData('远程-用户')
+          } else if (this.$store.state.Edit.dataType === '远程-文件') {
+            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
+            this.serverData('远程-文件')
           }
         } else if (n === '数据分析') {
           this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-          console.log('数据分析')
+          switch (this.$store.state.Edit.dataType) {
+            case '本地-文件':
+              getStatFile(this, '本地', 'edit')
+              break;
+            default:
+              break;
+          }
         } else if (n === '数据字典') {
           console.log('数据字典')
         }

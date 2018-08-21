@@ -60,7 +60,7 @@
 </template>
 
 <script>
-  import { saveEditDoc, newEditDoc, cacheEditDoc } from '../../utils/EditSave'
+  import { saveEditDoc, newEditDoc, cacheEditDoc } from '../../utils/EditOperation'
   // import { unSaveFile } from '../../utils/SaveFile'
   // import { getDocContent } from '../../utils/EditServerFile'
   import { getStat } from '../../utils/StatServerFile'
