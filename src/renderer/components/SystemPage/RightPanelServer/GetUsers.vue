@@ -68,15 +68,42 @@
         </tr>
       </tbody>
     </table>
+    <ul class="navbar-nav mr-auto">
+      <li v-if="toolbar === 'getUsers' && user.login === true" v-on:click="updateUserPage()" id="server-user-change">
+        <a class="nav-link text-light" href="#">修改</a>
+      </li>
+      <li class="nav-item active" v-on:click="docUser()" v-if="toolbar === 'getUsers' && user.login === true" id = "server-user-changepower">
+        <a class="nav-link text-light" href="#"> 文件权限修改 <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
   </div>
 </template>
 <script>
+  import { sUpdateUser } from '../../../utils/ServerUser';
   export default {
     data() {
       return {
         userinfo: { name: false, pass: false },
         userinfoName: '',
         userinfoPass: ''
+      }
+    },
+    computed: {
+      updateUserPage: function () {
+        this.$store.commit('SYSTEM_SET_TOOLBAR', 'createUsers')
+      },
+      docUser: function () {
+        sUpdateUser(this, [this.server, this.port], this.$store.state.System.user.id, { is_show: !this.$store.state.System.user.is_show })
+      },
+      user: {
+        get() {
+          return this.$store.state.System.user
+        }
+      },
+      toolbar: {
+        get() {
+          return this.$store.state.System.toolbar
+        }
       }
     },
     methods: {
