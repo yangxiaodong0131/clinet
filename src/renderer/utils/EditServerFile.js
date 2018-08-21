@@ -35,6 +35,7 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
   // 去除文件名中的.csv
   const file = filename.split('-')
   let url = ''
+  const docSummary = []
   if (type === 'upload') {
     url = '&type=create'
   }
@@ -45,13 +46,23 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      const docSummary = []
       res.data.cda.header.split(';').forEach((x, index) => {
         if (x.includes('创建时间')) {
           docSummary.push([index, x])
         }
       })
-      // obj.$store.commit('EDIT_LOAD_FILE', res.data)
+      // const arr = []
+      if (docSummary.length === 0) {
+        const value = res.data.cda.content.split(',')
+        const arr = []
+        value.map((x, index) => {
+          if (index < 10) {
+            arr.push(x)
+          }
+          return arr
+        })
+        docSummary.push(arr)
+      }
       obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
       obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
       obj.$store.commit('EDIT_LOAD_FILE', [res.data.cda.content])

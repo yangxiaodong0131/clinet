@@ -129,7 +129,9 @@ const mutations = {
   EDIT_LOAD_DOC(state, message) {
     const x = message.map(m => m.split(' ').filter(i => i !== ''))
     state.doc = x;
-    state.idIndex = state.file[1].split(',').indexOf('ID')
+    if (state.lastNav !== '/edit') {
+      state.idIndex = state.file[1].split(',').indexOf('ID')
+    }
     state.editBarValue = x[0]
     if (global.hitbSections.length > 0 && global.hitbSections.includes(state.editBarValue)) {
       state.section = state.editBarValue[0]

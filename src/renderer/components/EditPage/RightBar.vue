@@ -152,6 +152,9 @@
             case '本地-文件':
               getStatFile(this, '本地', 'edit')
               break;
+            case '远程-文件':
+              getStatFile(this, '本地', 'edit')
+              break;
             default:
               break;
           }
