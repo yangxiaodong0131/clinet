@@ -74,52 +74,55 @@ export function getStat(obj, data, opt, tableType, serverType = 'server') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
+      console.log(res.data);
       obj.$store.commit('SET_NOTICE', `当前${opt.page}页,共${res.data.count}页`)
       const resObj = { page: parseInt(res.data.page, 10), countPage: res.data.count, pageList: res.data.page_list, tableName: tableName, tableSel: res.data.num, dimensionOrg: res.data.org_num, dimensionTime: res.data.time_num, dimensionDrg: res.data.drg_num }
       obj.$store.commit('STAT_SET_STAT_LIST', res.data.list)
       obj.$store.commit('STAT_SET_COUNT_PAGE', res.data.count)
       obj.$store.commit('STAT_SET_TABLE', ['server', res.data.stat])
       obj.$store.commit('STAT_SET_TABLE_INFO', resObj)
+      console.log(tableType);
       if (tableType === 'edit') {
         obj.$store.commit('EDIT_LOAD_FILE', res.data.stat.filter(x => x !== undefined).map(x => x.join(',')))
-      }
-      ChartData.default(obj, res.data.stat, obj.$store.state.Stat.selectedRow, obj.$store.state.Stat.selectedCol)
-      if (res.data.count > 0) {
-        switch (obj.$store.state.Stat.chartLeft) {
-          case '柱状图':
-            ChartBar.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          case '折线图':
-            ChartLine.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          case '雷达图':
-            ChartRadar.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          case '散点图':
-            ChartScatter.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          case '饼图':
-            ChartPie.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          default: break;
-        }
-        switch (obj.$store.state.Stat.chartRight) {
-          case '柱状图':
-            ChartBar.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          case '折线图':
-            ChartLine.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          case '雷达图':
-            ChartRadar.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          case '散点图':
-            ChartScatter.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          case '饼图':
-            ChartPie.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          default: break;
+      } else {
+        ChartData.default(obj, res.data.stat, obj.$store.state.Stat.selectedRow, obj.$store.state.Stat.selectedCol)
+        if (res.data.count > 0) {
+          switch (obj.$store.state.Stat.chartLeft) {
+            case '柱状图':
+              ChartBar.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            case '折线图':
+              ChartLine.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            case '雷达图':
+              ChartRadar.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            case '散点图':
+              ChartScatter.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            case '饼图':
+              ChartPie.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            default: break;
+          }
+          switch (obj.$store.state.Stat.chartRight) {
+            case '柱状图':
+              ChartBar.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            case '折线图':
+              ChartLine.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            case '雷达图':
+              ChartRadar.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            case '散点图':
+              ChartScatter.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            case '饼图':
+              ChartPie.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            default: break;
+          }
         }
       }
     }
