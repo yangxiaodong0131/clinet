@@ -15,12 +15,6 @@
         <li class="nav-item active" v-on:click='test()' id="server-user-setup">
           <a class="nav-link text-light" href="#"> statCdaTest <span class="sr-only">(current)</span></a>
         </li>
-        <li v-if="toolbar === 'getUsers' && user.login === true" v-on:click="updateUserPage()" id="server-user-change">
-          <a class="nav-link text-light" href="#">修改</a>
-        </li>
-        <li class="nav-item active" v-on:click="docUser()" v-if="toolbar === 'getUsers' && user.login === true" id = "server-user-changepower">
-          <a class="nav-link text-light" href="#"> 文件权限修改 <span class="sr-only">(current)</span></a>
-        </li>
         <li class="nav-item dropdown" v-on:click='getOrgs()' id="server-org-setup">
           <a class="nav-link text-light dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> 机构设置 <span class="sr-only">(current)</span></a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -211,12 +205,6 @@
             default:
           }
         }
-      },
-      updateUserPage: function () {
-        this.$store.commit('SYSTEM_SET_TOOLBAR', 'createUsers')
-      },
-      docUser: function () {
-        sUpdateUser(this, [this.server, this.port], this.$store.state.System.user.id, { is_show: !this.$store.state.System.user.is_show })
       },
       updatePerson: function () {
         sUpdateUser(this, [this.$store.state.System.server], this.$store.state.System.port, this.personId, this.personUpdate)
