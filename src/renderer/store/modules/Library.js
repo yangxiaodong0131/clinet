@@ -30,6 +30,7 @@ const state = {
   compRule: {},
   changeVal: '',
   change: {},
+  changIndex: [],
 };
 
 const mutations = {
@@ -258,10 +259,14 @@ const mutations = {
   LIBRARY_SET_CHANGE(state, val) {
     state.change = val
   },
+  LIBRARY_SET_CHANGE_INDEX(state, val) {
+    state.changIndex = val
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('LIBRARY_SET_CHANGE_INDEX');
     commit('LIBRARY_SET_CHANGE');
     commit('LIBRARY_SET_CHANGE_VAL');
     commit('LIBRARY_LOAD_FILES');
