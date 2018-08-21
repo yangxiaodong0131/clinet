@@ -24,28 +24,28 @@
       <div>
         <form>
           <div class="form-group">
-            <label for="InputEmail">用户注册的Email地址</label>
-            <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" placeholder="Enter email" v-model="email" @input="register()">
+            <label for="InputEmail">Email</label>
+            <input  type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" placeholder="Enter email" :value="user.username" @input="register()">
           </div>
           <div class="form-group">
-            <label for="InputPassword">新用户密码</label>
-            <input type="password" class="form-control" id="InputPassword" placeholder="Password" v-model="password" @input="register()">
+            <label for="InputPassword">密码</label>
+            <input type="password" class="form-control" id="InputPassword" placeholder="Password" :value="user.password" @input="register()">
           </div>
           <div class="form-group">
             <label for="InputOrg">机构</label>
-            <input type="text" class="form-control" id="InputOrg" placeholder="InputOrg" v-model="org" @input="register()">
+            <input type="text" class="form-control" id="InputOrg" placeholder="InputOrg" :value="user.org" @input="register()">
           </div>
           <div class="form-group">
             <label for="InputAge">年龄</label>
-            <input type="number" class="form-control" id="InputAge" placeholder="Age" v-model="age" @input="register()">
+            <input type="number" class="form-control" id="InputAge" placeholder="Age" :value="user.age" @input="register()">
           </div>
           <div class="form-group">
             <label for="InputTel">电话</label>
-            <input type="text" class="form-control" id="InputTel" placeholder="Tel" v-model="tel" @input="register()">
+            <input type="text" class="form-control" id="InputTel" placeholder="Tel" :value="user.tel" @input="register()">
           </div>
           <div class="form-group">
             <label for="InputPersonname">姓名</label>
-            <input type="text" class="form-control" id="InputPersonname" placeholder="Personname" v-model="personname" @input="register()">
+            <input type="text" class="form-control" id="InputPersonname" placeholder="Personname" :value="user.personname" @input="register()">
           </div>
         </form>
         <button id="server-login-1" type="button" class="btn btn-outline-primary" v-on:click="sysytemUpdate()">确认修改</button>
@@ -79,6 +79,11 @@
       toolbar: {
         get() {
           return this.$store.state.System.toolbar
+        }
+      },
+      user: {
+        get() {
+          return this.$store.state.System.user
         }
       },
       server: {

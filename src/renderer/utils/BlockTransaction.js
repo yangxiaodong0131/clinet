@@ -83,7 +83,7 @@ export function transactionsUnconfirmed(obj, data) {
 export function transactionsUnconfirmedAll(obj, data) {
   axios.get(`http://${data[0]}:${data[1]}/api/getTransactions`)
     .then((res) => {
-      console.log(res)
+      // console.log(res)
       if (res.status === 200) {
         obj.$store.commit('BLOCK_SET_TRANSUN', res.data.data)
       }
