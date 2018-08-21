@@ -64,7 +64,7 @@ const mutations = {
     state.trans = trans;
   },
   BLOCK_SET_TRANSUN(state, transUn) {
-    console.log(transUn);
+    // console.log(transUn);
     state.transUn = transUn;
   },
   BLOCK_SET_SERVER_STATUS(state, m) {

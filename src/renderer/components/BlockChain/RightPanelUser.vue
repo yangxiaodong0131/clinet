@@ -8,12 +8,12 @@
         </div>
       </form>
       <button v-if="account.address === ''" id="block-rightpanel-login" class="btn btn-outline-primary" v-on:click="login">登陆</button> -->
-      <div v-if="account.address !== ''">
+      <div>
         <table>
           <tr v-for="(line, index) in Object.entries(account)" v-bind:key='index'>
             <td v-for="(filed, index) in line" v-bind:key='index'>{{line[index]}}</td>
           </tr>
-        </table>
+        </table> 
       </div>
     </div>
     <div v-if="toolbar == 'account'">
