@@ -45,6 +45,7 @@
     },
     methods: {
       loadFile: function (data, index) {
+        console.log(data)
         // 设置文件高亮
         this.$store.commit('STAT_SET_FILE_INDEX', ['first', index]);
         // 判断读取文件
@@ -55,12 +56,13 @@
           // 判断是否是病案
           if (data.endsWith('.csv')) {
             this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
           } else {
             if (this.$store.state.Stat.serverMenu.type === '二级菜单') {
               this.$store.commit('STAT_SET_SERVER_MENU', ['三级菜单', []]);
             }
             this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
+            console.log(data)
             getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, this.$store.state.Stat.tableType)
           }
         }

@@ -34,7 +34,7 @@
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
   import { getLibrary } from '../../utils/LibraryServerFile'
-  import { getStat } from '../../utils/StatServerFile';
+  import { getStat, getStatFiles } from '../../utils/StatServerFile';
   import { getEditFiles, getEdit } from '../../utils/EditServerFile'
   import { getDate } from '../../utils/EditOperation';
   export default {
@@ -160,10 +160,23 @@
           this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
           switch (this.$store.state.Edit.lastNav) {
             case '/edit':
+              console.log(this.$store.state.Edit.serverType)
               if (this.$store.state.Edit.serverType === 'file') {
+                console.log('111')
                 // getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port, this.$store.state.Edit.serverType, data, this.$store.state.System.user.username])
                 getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, data, this.$store.state.Edit.rightPanel)
+              } else if (!data.endsWith('.csv') && !data.endsWith('.cda')) {
+                console.log('222')
+                getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, this.$store.state.Stat.tableType, 'edit')
+              } else if (data.endsWith('.csv')) {
+                console.log('333')
+                console.log(this.$store.state.Stat.serverSort)
+                console.log(this.$store.state.Stat.dimension)
+                console.log(data)
+                this.$store.commit('STAT_CLEAR_SERVER_SORT');
+                getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
               } else {
+                console.log('444')
                 getEdit(this, [this.$store.state.System.server, this.$store.state.System.port], data)
               }
               break;
@@ -174,6 +187,7 @@
               break;
             case '/stat':
               this.$store.commit('STAT_SET_TABLE_PAGE', 1)
+              console.log(data)
               getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.$store.state.Stat.dimensionServer }, 'edit')
               break;
             default:

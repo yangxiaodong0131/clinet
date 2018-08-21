@@ -17,11 +17,15 @@ export default function getStatFile(obj, n, show = null) {
     if (!obj.$store.state.System.user.login) {
       obj.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
     } else {
+      if (show) {
+        getStatFiles(obj, [obj.$store.state.System.server, obj.$store.state.System.port], '', obj.$store.state.System.user.username, obj.$store.state.Stat.tableType, show)
+      } else {
+        obj.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
+        obj.$store.commit('STAT_SET_TABLE_TYPE', 'server')
+        obj.$store.commit('STAT_SET_BAR_TYPE', 'server')
+        getStatFiles(obj, [obj.$store.state.System.server, obj.$store.state.System.port], '', obj.$store.state.System.user.username, obj.$store.state.Stat.tableType)
+      }
       obj.$store.commit('SET_NOTICE', '选择远程文件')
-      obj.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-      obj.$store.commit('STAT_SET_TABLE_TYPE', 'server')
-      obj.$store.commit('STAT_SET_BAR_TYPE', 'server')
-      getStatFiles(obj, [obj.$store.state.System.server, obj.$store.state.System.port], '', obj.$store.state.System.user.usernamee, obj.$store.state.Stat.tableType)
     }
   } else if (n === '区块链') {
     if (!obj.$store.state.System.user.login) {

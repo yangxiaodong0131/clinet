@@ -142,9 +142,9 @@
           } else if (this.$store.state.Edit.dataType === '远程-用户') {
             this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
             this.serverData('远程-用户')
-          } else if (this.$store.state.Edit.dataType === '远程-文件') {
+          } else if (this.$store.state.Edit.dataType === '远程-文档') {
             this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
-            this.serverData('远程-文件')
+            this.serverData('远程-文档')
           }
         } else if (n === '数据分析') {
           this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
@@ -152,8 +152,11 @@
             case '本地-文件':
               getStatFile(this, '本地', 'edit')
               break;
-            case '远程-文件':
-              getStatFile(this, '本地', 'edit')
+            case '远程-文档':
+              this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
+              getStatFile(this, '远程', 'edit')
+              // getStatFile(this, '本地', 'edit')
+              // getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
               break;
             default:
               break;

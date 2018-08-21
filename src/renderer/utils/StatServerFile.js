@@ -8,7 +8,8 @@ const ChartLine = require('./ChartLine');
 const ChartPie = require('./ChartPie');
 const ChartData = require('./ChartData');
 // this, [url, port], filename, username, serverType
-export function getStatFiles(obj, data, filename, username, serverType = 'server') {
+export function getStatFiles(obj, data, filename, username, serverType = 'server', show = null) {
+  console.log('===')
   obj.$store.commit('STAT_SET_TABLE_TYPE', serverType)
   let url = ''
   if (filename !== '') {
@@ -24,7 +25,11 @@ export function getStatFiles(obj, data, filename, username, serverType = 'server
   }).then((res) => {
     if (res.status === 200) {
       // 菜单层级
-      obj.$store.commit('STAT_SET_SERVER_MENU', [res.data.menu, res.data.data])
+      if (show) {
+        obj.$store.commit('EDIT_SERVER_FILES', res.data.data);
+      } else {
+        obj.$store.commit('STAT_SET_SERVER_MENU', [res.data.menu, res.data.data])
+      }
       // obj.$store.commit('STAT_SERVER_FILES', res.data)
     } else {
       obj.$store.commit('STAT_SERVER_FILES', [])
