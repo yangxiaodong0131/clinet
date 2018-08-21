@@ -139,7 +139,6 @@
         this.$store.commit('EDIT_SET_LAST_NAV', '/system');
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
         this.$store.commit('EDIT_SET_FILES_INDEX', this.$store.state.System.loadTable);
-        this.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
         this.$router.push('/edit');
       },
       loadTable: function () {

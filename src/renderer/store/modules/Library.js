@@ -28,6 +28,8 @@ const state = {
   serverSort: { field: '编码', type: 'asc' },
   libraryTableInfo: { page: 1, countPage: 0, pageList: [], tableName: '', header: [], title: [] },
   compRule: {},
+  changeVal: '',
+  change: {},
 };
 
 const mutations = {
@@ -250,10 +252,18 @@ const mutations = {
   LIBRARY_SET_COMP_RULE(state, value) {
     state.compRule = value
   },
+  LIBRARY_SET_CHANGE_VAL(state, val) {
+    state.changeVal = val
+  },
+  LIBRARY_SET_CHANGE(state, val) {
+    state.change = val
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('LIBRARY_SET_CHANGE');
+    commit('LIBRARY_SET_CHANGE_VAL');
     commit('LIBRARY_LOAD_FILES');
     commit('LIBRARY_LOAD_FILE');
     commit('LIBRARY_SERVER_FILES');

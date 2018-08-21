@@ -22,7 +22,6 @@
       </div>
       <input id="edit-editbar-input" style="line-height: 3" type="text" class="form-control"
       placeholder="请输入……" aria-label="Username" aria-describedby="basic-addon1" v-model="item"
-      v-on:click="show()"
       v-on:input="change" v-on:keydown.enter="enter" v-on:keyup.ctrl.delete="del()" v-on:keyup.ctrl.enter="addItem()"
       v-on:keyup.up="up()" v-on:keyup.down="down()"
       v-on:keydown.ctrl.up="itemUp()" v-on:keydown.ctrl.down="itemDown()"
@@ -95,9 +94,6 @@
         if (data.includes('邀请您进入')) {
           join(this, this.$store.state.Edit.fileName, this.$store.state.Edit.socketRecord[this.$store.state.Edit.socketRecord.length - 1].room)
         }
-      },
-      show() {
-        this.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
       },
       change(e) {
         if (this.$store.state.Edit.editType === '病案编辑') {

@@ -191,8 +191,6 @@ export function cacheEditDoc(obj) {
 
 export function newEditDoc(obj, n) {
   // obj.$store.commit('EDIT_SET_CHAT_TYPE', false);
-  obj.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
-  obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
   obj.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案')
   obj.$store.commit('EDIT_SET_FILE_INDEX', obj.$store.state.Edit.file.length)
   if (obj.$store.state.Edit.lastNav === '/edit') {
@@ -231,7 +229,8 @@ export function newEditDoc(obj, n) {
 
 // 读取文件
 export function loadEditDoc(obj, index, type) {
-  if (obj.$store.state.Edit.lastNav === '/library' && (index !== 0 && index !== 1)) {
+  // if (obj.$store.state.Edit.lastNav !== '/library' && (index !== 0 && index !== 1)) {
+  if (obj.$store.state.Edit.lastNav !== '/library' || (obj.$store.state.Edit.lastNav === '/library' && (index !== 0 && index !== 1))) {
     let doc = []
     obj.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案');
     if (type === 'edit') {
@@ -284,12 +283,9 @@ export function loadEditDoc(obj, index, type) {
       if (obj.$store.state.Edit.helpType === '在线交流') {
         obj.$store.commit('EDIT_SET_CHAT_TYPE', true)
         join(obj, obj.$store.state.Edit.fileName, obj.$store.state.System.user.username)
-        obj.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
       } else if (obj.$store.state.Edit.selectedType === 'row') {
-        obj.$store.commit('EDIT_SET_LEFT_PANEL', 'doc')
-        obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
+        obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'table')
       }
-      obj.$store.commit('EDIT_SET_RIGHT_TYPE', 'left')
       document.getElementById('edit-editbar-input').focus()
       doc = obj.$store.state.Edit.doc
       if (doc.length > 0) {

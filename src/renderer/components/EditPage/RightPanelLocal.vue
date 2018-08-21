@@ -139,7 +139,7 @@
             break
         }
         if (this.$store.state.Edit.rightPanel === 'server' || this.$store.state.Edit.rightPanel === 'block') {
-          this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
+          this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
           switch (this.$store.state.Edit.lastNav) {
             case '/edit':
               if (this.$store.state.Edit.serverType === 'file') {
@@ -169,7 +169,7 @@
             this.$store.commit('EDIT_DELETE_RIGHT_PANELS', '编辑病案');
           }
           this.$store.commit('EDIT_SET_LOAD_FILENAME', data);
-          this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
+          this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
           loadFile(this, data, x, 'edit')
         }
       },

@@ -346,14 +346,12 @@
         switch (this.$store.state.Stat.tableType) {
           case 'local':
             if (this.$store.state.Stat.fileIndex !== null) {
-              this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
               this.$store.commit('EDIT_LOAD_FILE', this.$store.state.Stat.statTable.data);
             }
             this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
             this.$store.commit('EDIT_SET_FILES_INDEX', this.$store.state.Stat.fileIndex);
             break;
           case 'server':
-            this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
             this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
             this.$store.commit('EDIT_SET_FILES_INDEX', 0);
             this.$store.commit('EDIT_LOAD_FILE', this.$store.state.Stat.statTable.data);

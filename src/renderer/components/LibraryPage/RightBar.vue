@@ -12,21 +12,8 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="library-dropdown">
             <a v-for="(data, index) in fileTypes" v-bind:key='index' class="nav-link" href="#" v-on:click='libraryFile(data)' v-bind:id="'library-file-'+data">{{data}}</a>
-            <!-- <a class="nav-link" href="#" title="显示本地文件" v-on:click='loadData()'> 本地 <span class="sr-only">(current)</span></a>
-            <a class="nav-link" href="#" title="显示远程文件" v-on:click='serverData()'> 远程 <span class="sr-only">(current)</span></a>
-            <a class="nav-link" href="#" title="显示区块链文件" v-on:click='blockData()'> 区块链 <span class="sr-only">(current)</span></a> -->
           </div>
         </li>
-        <!-- <li class="nav-item active" v-on:click='loadData()' id="library-local-file">
-          <a class="nav-link text-light" href="#" title="显示本地文件"> 本地 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" v-on:click='serverData()' id="library-remote-file">
-          <a class="nav-link text-light" href="#" title="显示远程文件"> 远程 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" v-on:click='blockData()' id="library-block-file">
-          <a class="nav-link text-light" href="#" title="显示区块链文件"> 区块链 <span class="sr-only">(current)</span></a>
-        </li> -->
-
         <li class="nav-item active" v-if ="this.$store.state.Library.tableType === 'server'" v-on:click='blockShare()' id="library-block-file">
           <a class="nav-link text-light" href="#" title="分享选中记录"> 分享 <span class="sr-only">(current)</span></a>
         </li>
@@ -64,25 +51,28 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="library-dropdown1">
             <a v-for="(data, index) in dropdownTypes" v-bind:key='index' class="nav-link" href="#" v-on:click='selX(data, "local")' v-bind:id="'library-dropdown-'+data">{{data}}</a>
-            <!-- <a class="nav-link" href="#" v-on:click='selX("机构")' id="library-dropdown-org"> 机构 <span class="sr-only">(current)</span></a> -->
-            <!-- <a class="nav-link" href="#" v-on:click='selX("year")' id="library-dropdown-time"> 年份 <span class="sr-only">(current)</span></a>
-            <a class="nav-link" href="#" v-on:click='selX("version")' id="library-dropdown-version"> 版本 <span class="sr-only">(current)</span></a>
-            <a class="nav-link" href="#" v-on:click='selX("all")' id="library-dropdown-version"> 全部 <span class="sr-only">(current)</span></a> -->
             <div class="dropdown-divider"></div>
-            <!-- <a class="nav-link" href="#" v-on:click='selX(null)'> 添加列维度 <span class="sr-only">(current)</span></a> -->
           </div>
         </li>
       </ul>
-      <div class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="librarySearch()" v-model="library">
-        <button>页面上查询</button>&nbsp;&nbsp;<button>服务器查询</button>
+      <!-- <div class="form-inline my-2 my-lg-0"> -->
+      <div class="form-inline my-4 my-lg-0">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="编辑数据" aria-label="Recipient's username" aria-describedby="basic-addon2" :value="changeVal"  @input="updateMessage" @keyup.13="submitChange()">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" style="color:#fff">页面上查询</button>
+            <button class="btn btn-outline-secondary" type="button" style="color:#fff">服务器查询</button>
+          </div>
+        </div>
+        <!-- <input class="form-control mr-sm-2" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="librarySearch()" v-model="library">
+        <button>页面上查询</button>&nbsp;&nbsp;<button>服务器查询</button> -->
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-  import { getLibraryFiles, getLibrary, librarDown, getLibrarySerach } from '../../utils/LibraryServerFile';
+  import { getLibraryFiles, getLibrary, librarDown, getLibrarySerach, saveLibraryPage } from '../../utils/LibraryServerFile';
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
   export default {
@@ -112,6 +102,12 @@
         get() {
           const table = this.$store.state.Library.libraryTable.data
           return table
+        }
+      },
+      changeVal: {
+        get() {
+          const val = this.$store.state.Library.changeVal
+          return val
         }
       },
     },
@@ -169,15 +165,12 @@
         if (this.$store.state.Library.tableType === 'server') {
           this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
           this.$store.commit('EDIT_SET_RIGHT_FOLDS', '远程文件');
-          this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
           this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
           this.$store.commit('EDIT_SERVER_FILES', f);
           this.$store.commit('EDIT_SET_FILES_INDEX', 0);
-          this.$store.commit('EDIT_SET_LEFT_PANEL', 'table')
           getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, this.$store.state.Library.libraryTableInfo.page, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'edit', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
         } else {
           if (this.$store.state.Library.fileIndex !== null) {
-            this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
             this.$store.commit('EDIT_LOAD_FILE', f);
           }
           this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
@@ -251,7 +244,16 @@
           const filename = this.$store.state.System.shareFileName
           librarDown(this, [this.$store.state.System.server, this.$store.state.System.port], filename);
         }
-      }
+      },
+      submitChange: function () {
+        const change = this.$store.state.Library.change
+        const data = [this.$store.state.Library.libraryTable.data[0], this.$store.state.Library.libraryTable.data[change.dataIndex]]
+        data[1][change.trIndex] = this.$store.state.Library.changeVal
+        saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, 'change')
+      },
+      updateMessage: function (e) {
+        this.$store.commit('LIBRARY_SET_CHANGE_VAL', e.target.value)
+      },
     },
   };
 </script>
