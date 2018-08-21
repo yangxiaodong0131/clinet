@@ -54,6 +54,9 @@
             <div class="dropdown-divider"></div>
           </div>
         </li>
+        <li class="nav-item active" v-on:click='add()' id="library-down">
+          <a class="nav-link text-light" href="#" title="新建"> 新建 <span class="sr-only">(current)</span></a>
+        </li>
       </ul>
       <!-- <div class="form-inline my-2 my-lg-0"> -->
       <div class="form-inline my-4 my-lg-0">
@@ -246,13 +249,49 @@
         }
       },
       submitChange: function () {
+        // 定义要传给后台的数据
         const change = this.$store.state.Library.change
-        const data = [this.$store.state.Library.libraryTable.data[0], this.$store.state.Library.libraryTable.data[change.dataIndex]]
-        data[1][change.trIndex] = this.$store.state.Library.changeVal
-        saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, 'change')
+        const table = this.$store.state.Library.libraryTable.data
+        const data = [table[0], table[change.dataIndex]]
+        // 判断下一个高亮是那个
+        let dataIndex = this.$store.state.Library.changIndex[0]
+        let trIndex = this.$store.state.Library.changIndex[1]
+        if (table[0][trIndex] === 'ID') {
+          this.$store.commit('SET_NOTICE', 'ID不允许修改')
+        } else {
+          data[1][change.trIndex] = this.$store.state.Library.changeVal
+          if (trIndex === data[0].length - 1) {
+            dataIndex += 1
+            trIndex = 0
+          } else {
+            trIndex += 1
+          }
+          // 存储修改
+          table[dataIndex] = data[1]
+          // 修改输出框值
+          this.$store.commit('LIBRARY_SET_CHANGE_VAL', table[dataIndex][trIndex])
+          // 变化下一个高亮
+          this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [dataIndex, trIndex]);
+          this.$store.commit('LIBRARY_SET_CHANGE', { val: table[dataIndex][trIndex], dataIndex: dataIndex, trIndex: trIndex })
+          // console.log(data[]);
+          saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, 'change')
+        }
       },
       updateMessage: function (e) {
         this.$store.commit('LIBRARY_SET_CHANGE_VAL', e.target.value)
+      },
+      add: function () {
+        const table = this.$store.state.Library.libraryTable.data
+        const index = table.length + 1
+        const data = table[0].map(() => '-')
+        table[index] = data
+        this.$store.commit('LIBRARY_SET_SERVER_TABLE', []);
+        this.$store.commit('LIBRARY_SET_SERVER_TABLE', table);
+        // 修改输出框值
+        this.$store.commit('LIBRARY_SET_CHANGE_VAL', '-')
+        // 变化下一个高亮
+        this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [index, 0]);
+        this.$store.commit('LIBRARY_SET_CHANGE', { val: '-', dataIndex: index, trIndex: 0 })
       },
     },
   };

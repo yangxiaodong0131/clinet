@@ -16,7 +16,7 @@
           </th>
         </tr>
         <tr v-for="(data, index) in xs" v-bind:key='index' class="library-right-table-tr" v-if="index > 0">
-          <td v-for="(field, index2) in data"  v-bind:key='index2' class="library-right-table-td"  v-if="index2 < 11" v-on:dblclick="change(index, index2, data[index2])" title="双击以修改">{{data[index2]}}</td>
+          <td v-for="(field, index2) in data"  v-bind:key='index2' v-bind:class="{'table-danger': changIndexDataIndex === index && changIndexTrIndex === index2}"  v-if="index2 < 11" v-on:dblclick="change(index, index2, data[index2])" title="双击以修改">{{data[index2]}}</td>
         </tr>
       </table>
       <h3 v-if="xs.length === 1" class="text-center">该术语字典暂无数据</h3>
@@ -76,7 +76,17 @@
         get() {
           return this.$store.state.Library.tableType
         }
-      }
+      },
+      changIndexDataIndex: {
+        get() {
+          return this.$store.state.Library.changIndex[0]
+        }
+      },
+      changIndexTrIndex: {
+        get() {
+          return this.$store.state.Library.changIndex[1]
+        }
+      },
     },
     methods: {
       onClick: function (data, index) {
@@ -100,6 +110,7 @@
         getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'library', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
       },
       change: function (dataIndex, trIndex, value) {
+        this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [dataIndex, trIndex]);
         this.$store.commit('LIBRARY_SET_CHANGE_VAL', value)
         this.$store.commit('LIBRARY_SET_CHANGE', { val: value, dataIndex: dataIndex, trIndex: trIndex })
       }

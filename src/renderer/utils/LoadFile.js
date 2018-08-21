@@ -47,7 +47,7 @@ export default function loadFile(obj, x, p, e = null) {
               break
             case 'stat':
               if (e) {
-                obj.$store.commit('EDIT_LOAD_FILE', f);
+                obj.$store.commit('EDIT_LOAD_FILE', f.slice(0, 100));
               } else {
                 // obj.$store.commit('STAT_SET_COL_NUM', f[0].split(',').length);
                 obj.$store.commit('STAT_SET_TABLE', ['local', f]);

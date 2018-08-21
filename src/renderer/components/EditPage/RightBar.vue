@@ -74,7 +74,8 @@
 
 <script>
   import { getEditFiles, getEdit, getDocTypes, getHelpTypes } from '../../utils/EditServerFile'
-  import { rightBarHelp, editPage } from '../../utils/EditSave'
+  import { rightBarHelp, editPage } from '../../utils/EditOperation'
+  import getStatFile from '../../utils/StatOperation';
   export default {
     data() {
       return {
@@ -136,13 +137,30 @@
           console.log(this.$store.state.Edit.dataType)
           if (this.$store.state.Edit.dataType === '本地-文件') {
             this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
             this.localData()
           } else if (this.$store.state.Edit.dataType === '远程-用户') {
-            console.log('病案文档')
+            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
+            this.serverData('远程-用户')
+          } else if (this.$store.state.Edit.dataType === '远程-文档') {
+            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
+            this.serverData('远程-文档')
           }
         } else if (n === '数据分析') {
           this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-          console.log('数据分析')
+          switch (this.$store.state.Edit.dataType) {
+            case '本地-文件':
+              getStatFile(this, '本地', 'edit')
+              break;
+            case '远程-文档':
+              this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
+              getStatFile(this, '远程', 'edit')
+              // getStatFile(this, '本地', 'edit')
+              // getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+              break;
+            default:
+              break;
+          }
         } else if (n === '数据字典') {
           console.log('数据字典')
         }

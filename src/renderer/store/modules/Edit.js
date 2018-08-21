@@ -55,7 +55,7 @@ const state = {
   docControl: [],
   expertHint: [],
   expertSection: null,
-  idIndex: null
+  idIndex: null,
 };
 
 const mutations = {
@@ -129,7 +129,9 @@ const mutations = {
   EDIT_LOAD_DOC(state, message) {
     const x = message.map(m => m.split(' ').filter(i => i !== ''))
     state.doc = x;
-    state.idIndex = state.file[1].split(',').indexOf('ID')
+    if (state.lastNav !== '/edit') {
+      state.idIndex = state.file[1].split(',').indexOf('ID')
+    }
     state.editBarValue = x[0]
     if (global.hitbSections.length > 0 && global.hitbSections.includes(state.editBarValue)) {
       state.section = state.editBarValue[0]
@@ -448,10 +450,14 @@ const mutations = {
   EDIT_SET_NAV_TYPE(state, value) {
     state.navType = value
   },
+  EDIT_STAT_LOAD_FILES() {
+    state.files = fs.readdirSync(global.hitbdata.path.stat).filter(x => x.endsWith('.csv')).filter(x => !x.startsWith('wt4'))
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_STAT_LOAD_FILES');
     commit('EDIT_SET_NAV_TYPE');
     commit('EDIT_SET_DATA_TYPE');
     commit('EDIT_SET_EXPERT_HINT');

@@ -87,7 +87,6 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
 // this, url, tableName, type, username, serverType
 export function getList(obj, url, tableName, type, username, serverType = 'server') {
   let file = tableName
-  console.log(file)
   // 去除文件名中的.csv
   file = tableName.split('.csv')[0]
   axios({
@@ -180,7 +179,7 @@ export function saveLibrary(obj, data, content) {
   })
 }
 
-export function saveLibraryPage(obj, data, content, type) {
+export function saveLibraryPage(obj, data, content, table, type) {
   const user = obj.$store.state.System.user;
   const tableName = obj.$store.state.Library.libraryTableInfo.tableName;
   const pageNum = obj.$store.state.Library.libraryTableInfo.page;
@@ -189,7 +188,6 @@ export function saveLibraryPage(obj, data, content, type) {
   // 去除文件名中的.csv
   const tabType = tableName.split('.csv')[0]
   obj.$store.commit('LIBRARY_SET_SERVER_TABLE', []);
-  console.log(pageNum);
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/library/client_save2`,
@@ -198,17 +196,19 @@ export function saveLibraryPage(obj, data, content, type) {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      const library = res.data.library
-      const countPage = res.data.count
-      let page = parseInt(res.data.page, 10)
-      if (countPage === 0) {
-        page = 0
-      }
-      const opt = { page: page, countPage: res.data.count, pageList: res.data.page_list, tableName: tableName };
-      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', library.slice(1));
-      obj.$store.commit('LIBRARY_SET_TABLE_INFO', opt)
-      obj.$store.commit('LIBRARY_SET_SERVER_SORT', [res.data.order, res.data.order_type])
-      obj.$store.commit('LIBRARY_SET_COUNT_PAGE', res.data.count);
+      // const library = res.data.library
+      // console.log(library.slice(1));
+      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', table);
+      // const countPage = res.data.count
+      // let page = parseInt(res.data.page, 10)
+      // if (countPage === 0) {
+      //   page = 0
+      // }
+      // const opt = { page: page, countPage: res.data.count, pageList: res.data.page_list, tableName: tableName };
+      // obj.$store.commit('LIBRARY_SET_SERVER_TABLE', library.slice(1));
+      // obj.$store.commit('LIBRARY_SET_TABLE_INFO', opt)
+      // obj.$store.commit('LIBRARY_SET_SERVER_SORT', [res.data.order, res.data.order_type])
+      // obj.$store.commit('LIBRARY_SET_COUNT_PAGE', res.data.count);
       obj.$store.commit('SET_NOTICE', res.data.info);
     } else {
       obj.$store.commit('SET_NOTICE', '保存字典失败!');

@@ -8,7 +8,8 @@ const ChartLine = require('./ChartLine');
 const ChartPie = require('./ChartPie');
 const ChartData = require('./ChartData');
 // this, [url, port], filename, username, serverType
-export function getStatFiles(obj, data, filename, username, serverType = 'server') {
+export function getStatFiles(obj, data, filename, username, serverType = 'server', show = null) {
+  console.log('===')
   obj.$store.commit('STAT_SET_TABLE_TYPE', serverType)
   let url = ''
   if (filename !== '') {
@@ -24,7 +25,11 @@ export function getStatFiles(obj, data, filename, username, serverType = 'server
   }).then((res) => {
     if (res.status === 200) {
       // 菜单层级
-      obj.$store.commit('STAT_SET_SERVER_MENU', [res.data.menu, res.data.data])
+      if (show) {
+        obj.$store.commit('EDIT_SERVER_FILES', res.data.data);
+      } else {
+        obj.$store.commit('STAT_SET_SERVER_MENU', [res.data.menu, res.data.data])
+      }
       // obj.$store.commit('STAT_SERVER_FILES', res.data)
     } else {
       obj.$store.commit('STAT_SERVER_FILES', [])
@@ -75,46 +80,47 @@ export function getStat(obj, data, opt, tableType, serverType = 'server') {
       obj.$store.commit('STAT_SET_COUNT_PAGE', res.data.count)
       obj.$store.commit('STAT_SET_TABLE', ['server', res.data.stat])
       obj.$store.commit('STAT_SET_TABLE_INFO', resObj)
-      if (tableType === 'edit') {
+      if (['edit', 'show'].includes(tableType)) {
         obj.$store.commit('EDIT_LOAD_FILE', res.data.stat.filter(x => x !== undefined).map(x => x.join(',')))
-      }
-      ChartData.default(obj, res.data.stat, obj.$store.state.Stat.selectedRow, obj.$store.state.Stat.selectedCol)
-      if (res.data.count > 0) {
-        switch (obj.$store.state.Stat.chartLeft) {
-          case '柱状图':
-            ChartBar.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          case '折线图':
-            ChartLine.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          case '雷达图':
-            ChartRadar.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          case '散点图':
-            ChartScatter.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          case '饼图':
-            ChartPie.default('chartLeft', obj.$store.state.Stat.chartData)
-            break;
-          default: break;
-        }
-        switch (obj.$store.state.Stat.chartRight) {
-          case '柱状图':
-            ChartBar.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          case '折线图':
-            ChartLine.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          case '雷达图':
-            ChartRadar.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          case '散点图':
-            ChartScatter.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          case '饼图':
-            ChartPie.default('chartRight', obj.$store.state.Stat.chartData)
-            break;
-          default: break;
+      } else {
+        ChartData.default(obj, res.data.stat, obj.$store.state.Stat.selectedRow, obj.$store.state.Stat.selectedCol)
+        if (res.data.count > 0) {
+          switch (obj.$store.state.Stat.chartLeft) {
+            case '柱状图':
+              ChartBar.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            case '折线图':
+              ChartLine.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            case '雷达图':
+              ChartRadar.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            case '散点图':
+              ChartScatter.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            case '饼图':
+              ChartPie.default('chartLeft', obj.$store.state.Stat.chartData)
+              break;
+            default: break;
+          }
+          switch (obj.$store.state.Stat.chartRight) {
+            case '柱状图':
+              ChartBar.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            case '折线图':
+              ChartLine.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            case '雷达图':
+              ChartRadar.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            case '散点图':
+              ChartScatter.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            case '饼图':
+              ChartPie.default('chartRight', obj.$store.state.Stat.chartData)
+              break;
+            default: break;
+          }
         }
       }
     }

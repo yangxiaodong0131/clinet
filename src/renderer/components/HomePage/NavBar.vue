@@ -78,10 +78,10 @@
   import loadFile from '../../utils/LoadFile';
   import saveFile from '../../utils/SaveFile'
   import { offline } from '../../utils/Socket';
+  import { cacheEditDoc } from '../../utils/EditOperation'
+  // import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
   import { open } from '../../utils/BlockAccount'
-  import { cacheEditDoc } from '../../utils/EditSave'
   import { bcBlockchain } from '../../utils/BlockBlock'
-  import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
   export default {
     data() {
       return {
@@ -142,7 +142,6 @@
           n = '已登录'
         }
         if (n !== '数据采集-数据采集' && n !== '未登录...' && this.$store.state.Edit.doc.length > 0) {
-          console.log(this.$store.state.Edit.doc)
           cacheEditDoc(this)
         }
         switch (n) {
@@ -164,19 +163,20 @@
             //   loadFile(this, '未保存病案.cda', 'user', 'edit')
             // } else if (!this.$store.state.Edit.fileName) {
             // }
-            if (this.$store.state.Edit.rightPanel === 'server') {
-              this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
-              getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
-              getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
-              getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
-            } else {
-              this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-              this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
-              this.$store.commit('EDIT_LOAD_FILES');
-              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-              loadFile(this, '2018年度病案.cda', 'user', 'edit')
-              this.$store.commit('EDIT_SET_FILES_INDEX', 0)
-            }
+            // ----------------------------------------------------
+            // if (this.$store.state.Edit.rightPanel === 'server') {
+            //   this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
+            //   getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
+            //   getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
+            //   getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
+            // } else {
+            //   this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+            //   this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+            //   this.$store.commit('EDIT_LOAD_FILES');
+            //   this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
+            //   loadFile(this, '2018年度病案.cda', 'user', 'edit')
+            //   this.$store.commit('EDIT_SET_FILES_INDEX', 0)
+            // }
             break;
           case '数据分析-数据分析':
             this.$router.push('/stat');
