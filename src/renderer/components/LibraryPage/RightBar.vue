@@ -75,9 +75,10 @@
 </template>
 
 <script>
-  import { getLibraryFiles, getLibrary, librarDown, getLibrarySerach, saveLibraryPage } from '../../utils/LibraryServerFile';
+  import { getLibrary, librarDown, getLibrarySerach, saveLibraryPage } from '../../utils/LibraryServerFile';
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
+  import getLibraryFile from '../../utils/LibraryOperation';
   export default {
     data() {
       return {
@@ -116,30 +117,31 @@
     },
     methods: {
       libraryFile: function (n) {
-        if (n === '本地') {
-          this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
-          this.$store.commit('LIBRARY_LOAD_FILES');
-          this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'local');
-          this.$store.commit('SET_NOTICE', '本地文件');
-        } else if (n === '远程') {
-          if (!this.$store.state.System.user.login) {
-            this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-          } else {
-            this.$store.commit('SET_NOTICE', '远程文件');
-            this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server');
-            this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
-            getLibraryFiles(this, [this.$store.state.System.server, this.$store.state.System.port], 'server')
-          }
-        } else if (n === '区块链') {
-          if (!this.$store.state.System.user.login) {
-            this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-          } else {
-            this.$store.commit('SET_NOTICE', '区块链文件');
-            this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'block');
-            this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
-            getLibraryFiles(this, [this.$store.state.System.server, this.$store.state.System.port], 'block')
-          }
-        }
+        getLibraryFile(this, n)
+        // if (n === '本地') {
+        //   this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
+        //   this.$store.commit('LIBRARY_LOAD_FILES');
+        //   this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'local');
+        //   this.$store.commit('SET_NOTICE', '本地文件');
+        // } else if (n === '远程') {
+        //   if (!this.$store.state.System.user.login) {
+        //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
+        //   } else {
+        //     this.$store.commit('SET_NOTICE', '远程文件');
+        //     this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server');
+        //     this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
+        //     getLibraryFiles(this, [this.$store.state.System.server, this.$store.state.System.port], 'server')
+        //   }
+        // } else if (n === '区块链') {
+        //   if (!this.$store.state.System.user.login) {
+        //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
+        //   } else {
+        //     this.$store.commit('SET_NOTICE', '区块链文件');
+        //     this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'block');
+        //     this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
+        //     getLibraryFiles(this, [this.$store.state.System.server, this.$store.state.System.port], 'block')
+        //   }
+        // }
       },
       page: function (n) {
         if (this.$store.state.Library.libraryTableInfo.page === 1 && n === -1) {

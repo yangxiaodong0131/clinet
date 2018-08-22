@@ -4,7 +4,7 @@ const axios = require('axios');
 const qs = require('qs');
 // const fs = require('fs');
 // this, [url, port, serverType]
-export function getLibraryFiles(obj, data, serverType = 'server') {
+export function getLibraryFiles(obj, data, serverType = 'server', show = null) {
   axios({
     method: 'get',
     url: `http://${data[0]}:${data[1]}/library/rule_file?server_type=${serverType}`,
@@ -12,7 +12,11 @@ export function getLibraryFiles(obj, data, serverType = 'server') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      obj.$store.commit('LIBRARY_SERVER_FILES', res.data)
+      if (show) {
+        obj.$store.commit('EDIT_SERVER_FILES', res.data.data)
+      } else {
+        obj.$store.commit('LIBRARY_SERVER_FILES', res.data)
+      }
       // obj.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server');
     } else {
       obj.$store.commit('LIBRARY_SERVER_FILES', [])

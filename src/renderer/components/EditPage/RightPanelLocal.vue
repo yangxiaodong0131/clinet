@@ -109,7 +109,7 @@
           // }
           if (this.$store.state.Edit.lastNav === '/stat') {
             x = this.$store.state.Stat.files
-          } else if (this.$store.state.Edit.navType === '数据分析') {
+          } else if (this.$store.state.Edit.navType === '数据分析' || this.$store.state.Edit.navType === '数据字典') {
             x = this.$store.state.Edit.files
           } else if (this.$store.state.Edit.lastNav === '/library') {
             x = this.$store.state.Library.files
@@ -153,24 +153,25 @@
         // }
         if (this.$store.state.Edit.lastNav === '/stat' || this.$store.state.Edit.navType === '数据分析') {
           x = 'stat'
-        } else if (this.$store.state.Edit.lastNav === '/library') {
+        } else if (this.$store.state.Edit.lastNav === '/library' || this.$store.state.Edit.navType === '数据字典') {
           x = 'library'
         }
         if (this.$store.state.Edit.rightPanel === 'server' || this.$store.state.Edit.rightPanel === 'block') {
           this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
           switch (this.$store.state.Edit.lastNav) {
             case '/edit':
-              console.log(this.$store.state.Edit.serverType)
               if (this.$store.state.Edit.serverType === 'file') {
                 // getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port, this.$store.state.Edit.serverType, data, this.$store.state.System.user.username])
                 getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, data, this.$store.state.Edit.rightPanel)
               } else if (!data.endsWith('.csv') && !data.endsWith('.cda')) {
                 getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, this.$store.state.Stat.tableType, 'edit')
-              } else if (data.endsWith('.csv')) {
+              } else if (x === 'stat') {
                 this.$store.commit('STAT_CLEAR_SERVER_SORT');
                 getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'edit', 'server')
+              } else if (x === 'library') {
+                this.$store.commit('LIBRARY_CLEAR_SERVER_SORT');
+                getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], data, 1, null, null, 'library', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
               } else {
-                console.log('444')
                 getEdit(this, [this.$store.state.System.server, this.$store.state.System.port], data)
               }
               break;

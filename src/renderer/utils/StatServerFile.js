@@ -9,7 +9,6 @@ const ChartPie = require('./ChartPie');
 const ChartData = require('./ChartData');
 // this, [url, port], filename, username, serverType
 export function getStatFiles(obj, data, filename, username, serverType = 'server', show = null) {
-  console.log('===')
   obj.$store.commit('STAT_SET_TABLE_TYPE', serverType)
   let url = ''
   if (filename !== '') {

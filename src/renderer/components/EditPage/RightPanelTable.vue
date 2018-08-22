@@ -7,7 +7,7 @@
           <a href="#" v-on:click="fold('编辑病案')" style="float: right; marginRight: 3px">↗</a>
         </th>
       </tr>
-      <tr v-if="navType === '病案文档'" class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index, 'table-danger': isSave.includes(index)}">
+      <tr class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index, 'table-danger': isSave.includes(index)}">
         <td> {{index + 1}} </td>
         <td v-if="lastNav !== '/edit' && index < 10" v-for="(field, index) in data" v-bind:key='index' v-on:click="onClickTd(data, index)" v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}">{{data[index]}}</td>
         <td v-if="lastNav === '/edit'" v-for="(item, index) in data" v-bind:key='index'>{{item}}</td>
@@ -18,17 +18,6 @@
         <td v-if="data[2]" class="table-success"><a href="#" style="color: #000">已上传</a></td>
         <td v-if="(!fileName.includes('@') || rightPanel !== 'block') && !data[2]" class="table-warning"><a href="#" style="color: #000" v-on:click="uploadDoc(data, index)">未上传</a></td>
       </tr>
-      <!-- <tr v-else class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index, 'table-danger': isSave.includes(index)}">
-        <td> {{index + 1}} </td>
-        <td v-if="lastNav !== '/edit' && index < 10" v-for="(field, index) in data" v-bind:key='index' v-on:click="onClickTd(data, index)" v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}">{{data[index]}}</td>
-        <td v-if="lastNav === '/edit'" v-for="(item, index) in data" v-bind:key='index'>{{item}}</td>
-        <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-del'+index"><a href="#" v-on:click="delDoc(index)">删除</a></td>
-        <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-edit'+index"><a href="#" v-on:click="loadDoc(index, 'edit')">编辑</a></td>
-        <td v-if="lastNav !== '/library' && rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-ref'+index"><a href="#" v-on:click="loadDoc(data, index, 'show')">参考</a></td>
-        <td v-if="fileName.includes('@')" v-bind:id="'edit-leftpaneltable-dow'+index"><a href="#" v-on:click="downloadDoc(data, index)">下载</a></td>
-        <td v-if="data[2]" class="table-success"><a href="#" style="color: #000">已上传</a></td>
-        <td v-if="(!fileName.includes('@') || rightPanel !== 'block') && !data[2]" class="table-warning"><a href="#" style="color: #000" v-on:click="uploadDoc(data, index)">未上传</a></td>
-      </tr> -->
     </table>
     <table v-if="this.$store.state.Edit.rightFolds.includes('编辑病案')">
       <tr>
@@ -100,7 +89,6 @@
           // }
           if (this.$store.state.Edit.lastNav === '/edit' && this.$store.state.Edit.navType === '病案文档') {
             f = this.$store.state.Edit.docSummary
-            console.log(f)
           } else {
             const file = this.$store.state.Edit.file
             let start = 0
@@ -121,7 +109,6 @@
               f = f.map(n => n.split(','))
             }
           }
-          console.log(f)
           return f
         }
       },

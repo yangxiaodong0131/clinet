@@ -6,9 +6,9 @@
 
     <div class="collapse navbar-collapse" id="edit-leftbar-nav">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active" id="edit-leftbar-back" v-on:click="lastNav()" v-if="this.$store.state.Edit.lastNav !== '/edit'">
+        <!-- <li class="nav-item active" id="edit-leftbar-back" v-on:click="lastNav()" v-if="this.$store.state.Edit.lastNav !== '/edit'">
           <a class="nav-link text-light" href="#"> 返回 <span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
         <li class="nav-item dropdown" v-if="this.$store.state.Edit.lastNav === '/edit'">
           <a class="nav-link dropdown-toggle text-light" href="#" id="edit-leftbar-choice" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
             {{docType}}
