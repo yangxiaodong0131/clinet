@@ -189,7 +189,6 @@
         switch (this.$store.state.Library.tableType) {
           case 'local': {
             if (this.$store.state.Library.libraryTable.data.length > 0) {
-              console.log(value)
               switch (x) {
                 case '全部':
                   this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
@@ -276,7 +275,14 @@
           this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [dataIndex, trIndex]);
           this.$store.commit('LIBRARY_SET_CHANGE', { val: table[dataIndex][trIndex], dataIndex: dataIndex, trIndex: trIndex })
           // console.log(data[]);
-          saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, 'change')
+          const idIndex = data[0].indexOf('ID');
+          if (data[1][idIndex] === '-') {
+            saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'add')
+          } else if (parseInt(data[1][idIndex], 10) > 0) {
+            saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'change')
+          } else {
+            saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'change')
+          }
         }
       },
       updateMessage: function (e) {
