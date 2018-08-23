@@ -24,6 +24,8 @@ export default function getLibraryFile(obj, n, show = null) {
   } else if (n === '区块链') {
     if (!obj.$store.state.System.user.login) {
       obj.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
+    } else if (show) {
+      getLibraryFiles(obj, [obj.$store.state.System.server, obj.$store.state.System.port], 'block', show)
     } else {
       obj.$store.commit('SET_NOTICE', '区块链文件');
       obj.$store.commit('LIBRARY_SET_TABLE_TYPE', 'block');
