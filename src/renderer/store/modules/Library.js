@@ -262,10 +262,16 @@ const mutations = {
   LIBRARY_SET_CHANGE_INDEX(state, val) {
     state.changIndex = val
   },
+  LIBRARY_CLEAR_CHANGE(state) {
+    state.changIndex = []
+    state.change = {}
+    state.changeVal = ''
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('LIBRARY_CLEAR_CHANGE');
     commit('LIBRARY_SET_CHANGE_INDEX');
     commit('LIBRARY_SET_CHANGE');
     commit('LIBRARY_SET_CHANGE_VAL');

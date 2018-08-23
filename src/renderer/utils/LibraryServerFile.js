@@ -203,8 +203,13 @@ export function saveLibraryPage(obj, data, content, table, dataIndex, type) {
       if (type === 'add') {
         const idIndex = table[0].indexOf('ID');
         table[dataIndex][idIndex] = res.data.id
+        obj.$store.commit('LIBRARY_SET_SERVER_TABLE', table);
+      } else if (type === 'delete') {
+        const library = res.data.library
+        obj.$store.commit('LIBRARY_SET_SERVER_TABLE', library.slice(1));
+      } else {
+        obj.$store.commit('LIBRARY_SET_SERVER_TABLE', table);
       }
-      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', table);
       obj.$store.commit('SET_NOTICE', res.data.info);
     } else {
       obj.$store.commit('SET_NOTICE', '保存字典失败!');

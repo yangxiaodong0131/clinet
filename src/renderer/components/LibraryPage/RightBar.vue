@@ -57,6 +57,9 @@
         <li class="nav-item active" v-on:click='add()' id="library-down">
           <a class="nav-link text-light" href="#" title="新建"> 新建 <span class="sr-only">(current)</span></a>
         </li>
+        <li class="nav-item active" v-if="this.$store.state.Library.changIndex.length === 2" v-on:click='del()' id="library-down">
+          <a class="nav-link text-light" href="#" title="删除选中单元格所在的行"> 删除 <span class="sr-only">(current)</span></a>
+        </li>
       </ul>
       <!-- <div class="form-inline my-2 my-lg-0"> -->
       <div class="form-inline my-4 my-lg-0">
@@ -280,8 +283,6 @@
             saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'add')
           } else if (parseInt(data[1][idIndex], 10) > 0) {
             saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'change')
-          } else {
-            saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'change')
           }
         }
       },
@@ -300,6 +301,41 @@
         // 变化下一个高亮
         this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [index, 0]);
         this.$store.commit('LIBRARY_SET_CHANGE', { val: '-', dataIndex: index, trIndex: 0 })
+      },
+      del: function () {
+        // 定义要传给后台的数据
+        // const change = this.$store.state.Library.change
+        const table = this.$store.state.Library.libraryTable.data
+        const dataIndex = this.$store.state.Library.changIndex[0]
+        const data = [table[0], table[dataIndex]]
+        // 判断下一个高亮是那个
+        console.log('ssss');
+        saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'delete')
+        // if (table[0][trIndex] === 'ID') {
+        //   this.$store.commit('SET_NOTICE', 'ID不允许修改')
+        // } else {
+        //   data[1][change.trIndex] = this.$store.state.Library.changeVal
+        //   if (trIndex === data[0].length - 1) {
+        //     dataIndex += 1
+        //     trIndex = 0
+        //   } else {
+        //     trIndex += 1
+        //   }
+        //   // // 存储修改
+        //   // table[dataIndex] = data[1]
+        //   // // 修改输出框值
+        //   // this.$store.commit('LIBRARY_SET_CHANGE_VAL', table[dataIndex][trIndex])
+        //   // // 变化下一个高亮
+        //   // this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [dataIndex, trIndex]);
+        //   // this.$store.commit('LIBRARY_SET_CHANGE', { val: table[dataIndex][trIndex], dataIndex: dataIndex, trIndex: trIndex })
+        //   // console.log(data[]);
+        //   // const idIndex = data[0].indexOf('ID');
+        //   if (data[1][idIndex] === '-') {
+        //     saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'add')
+        //   } else if (parseInt(data[1][idIndex], 10) > 0) {
+        //     saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'change')
+        //   }
+        // }
       },
     },
   };
