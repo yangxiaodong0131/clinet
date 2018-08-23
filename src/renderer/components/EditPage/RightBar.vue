@@ -142,17 +142,18 @@
               this.localData()
               break;
             case '远程-用户':
-              console.log('用户')
+              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
+              this.serverData('远程-文档')
               break;
             case '远程-文档':
               this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
               this.serverData('远程-文档')
               break;
             case '区块链-用户':
-              console.log('区块链-用户')
+              this.blockData('区块链-用户')
               break;
             case '区块链-文档':
-              console.log('区块链-文档')
+              this.blockData('区块链-文档')
               break;
             default:
               break;
@@ -163,9 +164,12 @@
             case '本地-文件':
               getStatFile(this, '本地', 'edit')
               break;
-            case '远程-文档':
+            case '远程-文档': case '远程-用户':
               this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
               getStatFile(this, '远程', 'edit')
+              break;
+            case '区块链-用户': case '区块链-文档':
+              getStatFile(this, '区块链', 'edit')
               break;
             default:
               break;
@@ -175,9 +179,12 @@
             case '本地-文件':
               getLibraryFile(this, '本地', 'edit')
               break;
-            case '远程-文档':
+            case '远程-文档': case '远程-用户':
               this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server');
               getLibraryFile(this, '远程', 'edit')
+              break;
+            case '区块链-用户': case '区块链-文档':
+              getLibraryFile(this, '区块链', 'edit')
               break;
             default:
               break;
@@ -214,7 +221,11 @@
         getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
         getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
         this.$store.commit('EDIT_SET_CHAT_TYPE', false);
-        this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');
+        if (x === '远程-文档') {
+          this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
+        } else {
+          this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');
+        }
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
         if (!this.$store.state.System.user.login) {
           this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
@@ -231,7 +242,11 @@
         this.$store.commit('EDIT_SET_DATA_TYPE', x);
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '区块链文件');
         this.$store.commit('SET_NOTICE', '读取区块链文件');
-        this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');
+        if (x === '区块链-文档') {
+          this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
+        } else {
+          this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');
+        }
         getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'block')
         // this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'block');

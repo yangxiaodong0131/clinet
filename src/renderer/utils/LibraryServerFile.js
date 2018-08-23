@@ -137,6 +137,7 @@ export function librarDown(obj, url, fileName) {
 }
 
 export function getLibrarySerach(obj, url, fileName, value, servertype) {
+  console.log(value);
   const filename = fileName.split('.csv')[0]
   axios({
     method: 'get',
@@ -146,8 +147,8 @@ export function getLibrarySerach(obj, url, fileName, value, servertype) {
   }).then((res) => {
     if (res.status === 200) {
       const library = res.data.result
-      const opt = { page: 0, countPage: 0, data: library.slice(1), pageList: [], tableName: fileName };
-      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', opt);
+      obj.$store.commit('LIBRARY_SET_TABLE_TYPE', 'search')
+      obj.$store.commit('LIBRARY_SET_SEARCH_TABLE', library.slice(1));
     } else {
       obj.$store.commit('SET_NOTICE', '下载失败')
     }
@@ -183,7 +184,7 @@ export function saveLibrary(obj, data, content) {
   })
 }
 
-export function saveLibraryPage(obj, data, content, table, type) {
+export function saveLibraryPage(obj, data, content, table, dataIndex, type) {
   const user = obj.$store.state.System.user;
   const tableName = obj.$store.state.Library.libraryTableInfo.tableName;
   const pageNum = obj.$store.state.Library.libraryTableInfo.page;
@@ -200,19 +201,16 @@ export function saveLibraryPage(obj, data, content, table, type) {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      // const library = res.data.library
-      // console.log(library.slice(1));
-      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', table);
-      // const countPage = res.data.count
-      // let page = parseInt(res.data.page, 10)
-      // if (countPage === 0) {
-      //   page = 0
-      // }
-      // const opt = { page: page, countPage: res.data.count, pageList: res.data.page_list, tableName: tableName };
-      // obj.$store.commit('LIBRARY_SET_SERVER_TABLE', library.slice(1));
-      // obj.$store.commit('LIBRARY_SET_TABLE_INFO', opt)
-      // obj.$store.commit('LIBRARY_SET_SERVER_SORT', [res.data.order, res.data.order_type])
-      // obj.$store.commit('LIBRARY_SET_COUNT_PAGE', res.data.count);
+      if (type === 'add') {
+        const idIndex = table[0].indexOf('ID');
+        table[dataIndex][idIndex] = res.data.id
+        obj.$store.commit('LIBRARY_SET_SERVER_TABLE', table);
+      } else if (type === 'delete') {
+        const library = res.data.library
+        obj.$store.commit('LIBRARY_SET_SERVER_TABLE', library.slice(1));
+      } else {
+        obj.$store.commit('LIBRARY_SET_SERVER_TABLE', table);
+      }
       obj.$store.commit('SET_NOTICE', res.data.info);
     } else {
       obj.$store.commit('SET_NOTICE', '保存字典失败!');
