@@ -40,6 +40,9 @@
         this.$store.commit('LIBRARY_SET_FILE_INDEX', index);
         this.$store.commit('LIBRARY_CLEAR_SERVER_SORT');
         this.$store.commit('LIBRARY_CLEAR_CHANGE')
+        if (this.$store.state.Library.tableType === 'search') {
+          this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
+        }
         if (this.$store.state.Library.tableType === 'local') {
           loadFile(this, data, 'library')
           this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'local');

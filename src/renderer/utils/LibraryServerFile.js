@@ -137,6 +137,7 @@ export function librarDown(obj, url, fileName) {
 }
 
 export function getLibrarySerach(obj, url, fileName, value, servertype) {
+  console.log(value);
   const filename = fileName.split('.csv')[0]
   axios({
     method: 'get',
@@ -146,8 +147,8 @@ export function getLibrarySerach(obj, url, fileName, value, servertype) {
   }).then((res) => {
     if (res.status === 200) {
       const library = res.data.result
-      const opt = { page: 0, countPage: 0, data: library.slice(1), pageList: [], tableName: fileName };
-      obj.$store.commit('LIBRARY_SET_SERVER_TABLE', opt);
+      obj.$store.commit('LIBRARY_SET_TABLE_TYPE', 'search')
+      obj.$store.commit('LIBRARY_SET_SEARCH_TABLE', library.slice(1));
     } else {
       obj.$store.commit('SET_NOTICE', '下载失败')
     }

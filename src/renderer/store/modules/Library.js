@@ -24,7 +24,7 @@ const state = {
   dropdownTypes: ['年份', '版本', '全部'],
   libraryList: { org: [], time: [], version: [] },
   serverDimension: { org: '', time: '', version: '' },
-  libraryTable: { data: [], download: [] },
+  libraryTable: { data: [], download: [], search: [] },
   serverSort: { field: '编码', type: 'asc' },
   libraryTableInfo: { page: 1, countPage: 0, pageList: [], tableName: '', header: [], title: [] },
   compRule: {},
@@ -217,6 +217,9 @@ const mutations = {
   LIBRARY_SET_SERVER_TABLE(state, opt) {
     state.libraryTable.data = opt
   },
+  LIBRARY_SET_SEARCH_TABLE(state, opt) {
+    state.libraryTable.search = opt
+  },
   LIBRARY_GET_SEARCH_TABLE(state, data) {
     state.localTables = {}
     const a = state.tableSel.filter(n => n.includes(data));
@@ -275,6 +278,7 @@ const actions = {
     commit('LIBRARY_SET_CHANGE_INDEX');
     commit('LIBRARY_SET_CHANGE');
     commit('LIBRARY_SET_CHANGE_VAL');
+    commit('LIBRARY_SET_SEARCH_TABLE');
     commit('LIBRARY_LOAD_FILES');
     commit('LIBRARY_LOAD_FILE');
     commit('LIBRARY_SERVER_FILES');

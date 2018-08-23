@@ -58,7 +58,12 @@
       },
       xs: {
         get() {
-          const table = this.$store.state.Library.libraryTable.data
+          let table = []
+          if (this.$store.state.Library.tableType === 'search') {
+            table = this.$store.state.Library.libraryTable.search
+          } else {
+            table = this.$store.state.Library.libraryTable.data
+          }
           return table
         }
       },
@@ -101,9 +106,6 @@
         this.$store.commit('LIBRARY_SET_TABLE_PAGE', page);
         getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, page, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
         // getLibrary(obj, data, tableName, pageNum, dimensionType, dimensionServer, type1, serverType = 'server'
-      },
-      sort: function (type, value) {
-        getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'library', this.$store.state.Library.tableType, [type, value])
       },
       onClickSort: function (field, type) {
         this.$store.commit('LIBRARY_SET_SERVER_SORT', [field, type])
