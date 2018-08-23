@@ -8,7 +8,7 @@ export default function getStatFile(obj, n, show = null) {
     obj.$store.commit('SET_NOTICE', '选择本地文件')
     obj.$store.commit('STAT_SET_TABLE_TYPE', 'local');
     if (show) {
-      obj.$store.commit('EDIT_STAT_LOAD_FILES');
+      obj.$store.commit('EDIT_OTHER_LOAD_FILES', 'stat');
     } else {
       obj.$store.commit('STAT_LOAD_FILES');
     }

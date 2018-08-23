@@ -840,3 +840,65 @@ console.log([...go()]);
 
 const obj = { a: 1, b: 2 };
 const ajj = [...obj];
+
+const obj = {
+  class() {}
+}
+
+const abc = {
+  abc: 123,
+  foo: true
+}
+
+const propKey = 'foo';
+
+let obj = {
+  [propKey]: true,
+  ['a' + 'bc']: 123
+};
+
+const lastWord = 'last word';
+
+const a = {
+  [lastWord]: 'world',
+  'first word': 'hello'
+}
+console.log(a[lastWord]);
+console.log(a['last word']);
+console.log(a['first word']);
+
+let obj = {
+  ['h' + 'ello']() {
+    return 'hi';
+  }
+}
+
+console.log(obj.hello());
+
+const foo = 'var';
+const baz = { [foo]: 'abc' }
+
+const keyA = { a: 1 };
+const keyB = { b: 2 };
+
+const myObject = {
+  [keyA]: 'valueA',
+  [keyB]: 'valueB'
+};
+
+console.log(myObject)
+
+const person = {
+  sayName() {
+    console.log('hello!');
+  },
+};
+
+console.log(person.sayName.name)
+
+const target = { a: 1 };
+const source1 = { b: 2 };
+const source2 = { c: 3 };
+Object.assign(target, source1, source2);
+
+console.log(target)

@@ -68,14 +68,8 @@
         </tr>
       </tbody>
     </table>
-    <ul class="navbar-nav mr-auto">
-      <li v-if="toolbar === 'getUsers' && user.login === true" v-on:click="updateUserPage()" id="server-user-change">
-        <a class="nav-link text-light" href="#">修改</a>
-      </li>
-      <li class="nav-item active" v-on:click="docUser()" v-if="toolbar === 'getUsers' && user.login === true" id = "server-user-changepower">
-        <a class="nav-link text-light" href="#"> 文件权限修改 <span class="sr-only">(current)</span></a>
-      </li>
-    </ul>
+    <button type="button" class="btn btn-primary btn-lg" v-if="toolbar === 'getUsers' && user.login === true" v-on:click="updateUserPage()" id="server-user-change">修改</button>
+    <button type="button" class="btn btn-primary btn-lg" v-on:click="docUser()" v-if="toolbar === 'getUsers' && user.login === true" id = "server-user-changepower">文件权限修改</button>
   </div>
 </template>
 <script>
@@ -89,12 +83,6 @@
       }
     },
     computed: {
-      updateUserPage: function () {
-        this.$store.commit('SYSTEM_SET_TOOLBAR', 'createUsers')
-      },
-      docUser: function () {
-        sUpdateUser(this, [this.server, this.port], this.$store.state.System.user.id, { is_show: !this.$store.state.System.user.is_show })
-      },
       user: {
         get() {
           return this.$store.state.System.user
@@ -107,6 +95,12 @@
       }
     },
     methods: {
+      updateUserPage: function () {
+        this.$store.commit('SYSTEM_SET_TOOLBAR', 'createUsers')
+      },
+      docUser: function () {
+        sUpdateUser(this, [this.server, this.port], this.$store.state.System.user.id, { is_show: !this.$store.state.System.user.is_show })
+      },
       createUserinfo: function (value) {
         if (value === 'name') {
           this.userinfo.name = true

@@ -88,7 +88,9 @@ const mutations = {
   },
   EDIT_ADD_DOC(state, message) {
     state.docIndex = 0
-    state.idIndex = state.file[1].split(',').indexOf('ID')
+    if (state.lastNav !== '/edit') {
+      state.idIndex = state.file[1].split(',').indexOf('ID')
+    }
     state.file.push(message);
   },
   EDIT_SERVER_ID(state, id) {
@@ -450,14 +452,20 @@ const mutations = {
   EDIT_SET_NAV_TYPE(state, value) {
     state.navType = value
   },
-  EDIT_STAT_LOAD_FILES() {
-    state.files = fs.readdirSync(global.hitbdata.path.stat).filter(x => x.endsWith('.csv')).filter(x => !x.startsWith('wt4'))
+  EDIT_OTHER_LOAD_FILES(state, value) {
+    if (value === 'stat') {
+      state.files = fs.readdirSync(global.hitbdata.path.stat).filter(x => x.endsWith('.csv')).filter(x => !x.startsWith('wt4'))
+    } else if (value === 'library') {
+      state.files = fs.readdirSync(global.hitbdata.path.library).filter(x => x.endsWith('.csv'))
+    } else {
+      state.files = fs.readdirSync(global.hitbdata.path.user).filter(x => x.endsWith('.cda'))
+    }
   },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
-    commit('EDIT_STAT_LOAD_FILES');
+    commit('EDIT_OTHER_LOAD_FILES');
     commit('EDIT_SET_NAV_TYPE');
     commit('EDIT_SET_DATA_TYPE');
     commit('EDIT_SET_EXPERT_HINT');

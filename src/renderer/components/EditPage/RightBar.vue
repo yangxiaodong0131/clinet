@@ -76,6 +76,7 @@
   import { getEditFiles, getEdit, getDocTypes, getHelpTypes } from '../../utils/EditServerFile'
   import { rightBarHelp, editPage } from '../../utils/EditOperation'
   import getStatFile from '../../utils/StatOperation';
+  import getLibraryFile from '../../utils/LibraryOperation';
   export default {
     data() {
       return {
@@ -134,17 +135,27 @@
       navBar: function (n) {
         this.$store.commit('EDIT_SET_NAV_TYPE', n);
         if (n === '病案文档') {
-          console.log(this.$store.state.Edit.dataType)
-          if (this.$store.state.Edit.dataType === '本地-文件') {
-            this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-            this.localData()
-          } else if (this.$store.state.Edit.dataType === '远程-用户') {
-            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
-            this.serverData('远程-用户')
-          } else if (this.$store.state.Edit.dataType === '远程-文档') {
-            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
-            this.serverData('远程-文档')
+          switch (this.$store.state.Edit.dataType) {
+            case '本地-文件':
+              this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
+              this.localData()
+              break;
+            case '远程-用户':
+              console.log('用户')
+              break;
+            case '远程-文档':
+              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
+              this.serverData('远程-文档')
+              break;
+            case '区块链-用户':
+              console.log('区块链-用户')
+              break;
+            case '区块链-文档':
+              console.log('区块链-文档')
+              break;
+            default:
+              break;
           }
         } else if (n === '数据分析') {
           this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
@@ -155,14 +166,22 @@
             case '远程-文档':
               this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
               getStatFile(this, '远程', 'edit')
-              // getStatFile(this, '本地', 'edit')
-              // getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
               break;
             default:
               break;
           }
         } else if (n === '数据字典') {
-          console.log('数据字典')
+          switch (this.$store.state.Edit.dataType) {
+            case '本地-文件':
+              getLibraryFile(this, '本地', 'edit')
+              break;
+            case '远程-文档':
+              this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server');
+              getLibraryFile(this, '远程', 'edit')
+              break;
+            default:
+              break;
+          }
         }
       },
       localData: function () {
