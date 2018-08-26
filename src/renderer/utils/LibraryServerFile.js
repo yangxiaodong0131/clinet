@@ -184,7 +184,7 @@ export function saveLibrary(obj, data, content) {
   })
 }
 
-export function saveLibraryPage(obj, data, content, table, dataIndex, type) {
+export function saveLibraryPage(obj, data, content, header, table, dataIndex, type) {
   const user = obj.$store.state.System.user;
   const tableName = obj.$store.state.Library.libraryTableInfo.tableName;
   const pageNum = obj.$store.state.Library.libraryTableInfo.page;
@@ -196,7 +196,7 @@ export function saveLibraryPage(obj, data, content, table, dataIndex, type) {
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/library/client_save2`,
-    data: qs.stringify({ data: JSON.stringify(content), page: pageNum, username: user.username, tab_type: tabType, rows: 30, order: sort.field, order_type: sort.type, server_type: serverType, type: type }),
+    data: qs.stringify({ data: JSON.stringify(content), header: JSON.stringify(header), page: pageNum, username: user.username, tab_type: tabType, rows: 30, order: sort.field, order_type: sort.type, server_type: serverType, type: type }),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {

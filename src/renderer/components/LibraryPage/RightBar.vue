@@ -264,9 +264,9 @@
             // console.log(data[]);
             const idIndex = data[0].indexOf('ID');
             if (data[1][idIndex] === '-') {
-              saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'add')
+              saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table[0], table, dataIndex, 'add')
             } else if (parseInt(data[1][idIndex], 10) > 0) {
-              saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'change')
+              saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table[0], table, dataIndex, 'change')
             }
           }
         } else {
@@ -293,7 +293,7 @@
         const table = this.$store.state.Library.libraryTable.data
         const dataIndex = this.$store.state.Library.changIndex[0]
         const data = [table[0], table[dataIndex]]
-        saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table, dataIndex, 'delete')
+        saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table[0], table, dataIndex, 'delete')
       },
     },
   };
