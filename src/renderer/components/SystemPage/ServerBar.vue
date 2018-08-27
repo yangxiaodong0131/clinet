@@ -24,21 +24,21 @@
             <div class="dropdown-divider"></div>
           </div>
         </li>
-        <li class="nav-item active" v-if="toolbar === 'getOrgs' && orgPage === 'getOrg'" id = "server-user-neworg"  v-on:click="insertOrgPage()">
+        <!--<li class="nav-item active" v-if="toolbar === 'getOrgs' && orgPage === 'getOrg'" id = "server-user-neworg"  v-on:click="insertOrgPage()">
           <a class="nav-link text-light" href="#"> 新建机构 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-if="toolbar === 'createOrgs' && orgPage === 'getOrg' && orgName ==='insert'" id = "server-user-addorg"  v-on:click="insertOrg()">
           <a class="nav-link text-light" href="#"> 添加机构 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-if="toolbar === 'createOrgs' && orgPage === 'getOrg' && orgName ==='update'">
-          <a class="nav-link text-light" href="#" v-on:click="updateOrg()"> 机构修改 <span class="sr-only">(current)</span></a>
+        <li class="nav-item active" v-if="toolbar === 'createOrgs' && orgPage === 'getOrg' && orgName ==='update'" v-on:click="updateOrg()">
+          <a class="nav-link text-light" href="#"> 机构修改 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-if="toolbar === 'getOrgs' && orgPage === 'getDepartment'">
           <a class="nav-link text-light" href="#" id="newsection" v-on:click="insertDepPage()"> 新建科室 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-if="toolbar === 'createDepartments' && orgPage === 'getDepartment' && orgName ==='insertDep'">
           <a class="nav-link text-light" href="#" id="addsection" v-on:click="insertDep()"> 添加科室 <span class="sr-only">(current)</span></a>
-        </li>
+        </li>-->
         <li class="nav-item active" v-if="toolbar === 'createDepartments' && orgPage === 'getDepartment' && orgName ==='updateDep'">
           <a class="nav-link text-light" href="#" v-on:click="updateDep()"> 科室修改 <span class="sr-only">(current)</span></a>
         </li>
@@ -199,7 +199,7 @@
               break;
             case '科室信息':
               this.$store.commit('SYSTEM_GET_ORGPAGE', 'getDepartment');
-              sGetDepart(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user, this.$store.state.System.pageInfo.department)
+              sGetDepart(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user, this.$store.state.System.pageInfo.department);
               this.$store.commit('SET_NOTICE', '科室信息');
               break;
             default:

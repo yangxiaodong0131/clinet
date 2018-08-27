@@ -42,12 +42,14 @@
         <input type="text" class="form-control" placeholder="Wt_name" id="system_department_name1" v-model="DepartmentInfo.wt_name" @input="deps()"/>
       </div>
     </form>
+    <button v-if="toolbar === 'createDepartments' && orgPage === 'getDepartment' && orgName ==='insertDep'" v-on:click="insertDep()">添加科室</button>
     <div class="row">
       <div class="col-9" />
     </div>
   </div>
 </template>
 <script>
+  import { sCreateDepart } from '../../../utils/ServerUser';
   export default {
     data() {
       return {
@@ -64,7 +66,27 @@
         }
       }
     },
+    computed: {
+      toolbar: {
+        get() {
+          return this.$store.state.System.toolbar
+        }
+      },
+      orgPage: {
+        get() {
+          return this.$store.state.System.orgPage
+        }
+      },
+      orgName: {
+        get() {
+          return this.$store.state.System.orgName
+        }
+      }
+    },
     methods: {
+      insertDep: function () {
+        sCreateDepart(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user, this.departmentInfo);
+      },
       deps: function () {
         const b = {
           org: this.DepartmentInfo.org,
