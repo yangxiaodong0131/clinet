@@ -82,6 +82,7 @@
   import NoticeBar from './HomePage/NoticeBar';
   import { socketConnect } from '../utils/Socket';
   import { sectionFile } from '../utils/LoadFile';
+  import dataDB from '../utils/dataDB';
   export default {
     name: 'login-page',
     components: { NavBar, NoticeBar },
@@ -109,8 +110,7 @@
         this.$electron.shell.openExternal(link);
       },
       login() {
-        this.db.test.insert({ a: 1 }, (err, res) => { console.log(res) })
-        this.db.test.find({}, (err, res) => { console.log(res) })
+        dataDB(this, 'local', 'test', null, null, null)
         const server = global.hitbdata.server['远程测试服务器'][0];
         if (this.loginName && this.loginPassword) {
           socketConnect(this, [server[0], server[1]], { username: this.loginName, password: this.loginPassword });
