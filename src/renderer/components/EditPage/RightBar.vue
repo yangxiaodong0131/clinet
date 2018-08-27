@@ -57,8 +57,8 @@
         </li>
         <li class="nav-item active" v-on:click='blockData()' id="edit-rightbar-block">
           <a class="nav-link text-light" href="#"> 区块链 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active">
+        </li> -->
+        <!-- <li class="nav-item active">
           <a class="nav-link text-light" href="#" v-on:click='page(-1)' id="edit-rightbar-uppage"> 前页 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active">
@@ -74,7 +74,7 @@
 
 <script>
   import { getEditFiles, getEdit, getDocTypes, getHelpTypes } from '../../utils/EditServerFile'
-  import { rightBarHelp, editPage } from '../../utils/EditOperation'
+  import { rightBarHelp } from '../../utils/EditOperation'
   import getStatFile from '../../utils/StatOperation';
   import getLibraryFile from '../../utils/LibraryOperation';
   export default {
@@ -250,9 +250,6 @@
         getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'block')
         // this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'block');
-      },
-      page: function (n) {
-        editPage(this, n)
       },
       rightEnter(e) {
         if (this.$store.state.Edit.rightPanel === 'local') {

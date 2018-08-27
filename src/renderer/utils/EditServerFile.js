@@ -15,6 +15,7 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
   }).then((res) => {
     if (res.status === 200) {
       obj.$store.commit('EDIT_SERVER_FILES', res.data.cda)
+      console.log(res.data.cda.slice(0, 20))
       if (type === 'user') {
         obj.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
       } else {

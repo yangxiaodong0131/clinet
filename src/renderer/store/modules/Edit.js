@@ -115,6 +115,7 @@ const mutations = {
   EDIT_LOAD_FILES() {
     const files = fs.readdirSync(global.hitbdata.path.user).filter(x => x.endsWith('.cda'))
     state.files = files;
+    console.log(state.files.length)
   },
   EDIT_LOAD_FILE(state, message) {
     state.file = message;
@@ -297,7 +298,13 @@ const mutations = {
   EDIT_SET_RIGHT_FOLDS(state, value) {
     const index = state.rightFolds.indexOf(value)
     if (index > -1) {
-      state.rightFolds.splice(index, 1)
+      const arr = []
+      state.rightPanels.forEach((x) => {
+        if (x !== value) {
+          arr.push(x)
+        }
+      })
+      state.rightFolds = arr
     } else {
       state.rightFolds.push(value)
     }
@@ -460,6 +467,7 @@ const mutations = {
     } else {
       state.files = fs.readdirSync(global.hitbdata.path.user).filter(x => x.endsWith('.cda'))
     }
+    console.log(state.files.length)
   },
 };
 
