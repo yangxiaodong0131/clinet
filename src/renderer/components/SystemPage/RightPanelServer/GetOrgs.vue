@@ -96,7 +96,8 @@
 </template>
 
 <script>
-  import { sGetDepart, sGetOrg, sGetProvince, sCreateOrg } from '../../../utils/ServerUser'
+  import { sGetDepart, sGetOrg, sCreateOrg } from '../../../utils/ServerUser'
+  import { sGetProvince } from '../../../utils/Server'
   export default {
     data() {
       return {

@@ -194,7 +194,6 @@
           case 'server': {
             if (this.$store.state.Library.libraryTableInfo.tableName) {
               this.$store.commit('LIBRARY_SET_SERVER_DIMENSION', [value, x]);
-              console.log(this.$store.state.Library.serverDimension)
               getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'edit', 'server', this.$store.state.Library.serverSort)
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
@@ -240,14 +239,15 @@
           // 定义要传给后台的数据
           const change = this.$store.state.Library.change
           const table = this.$store.state.Library.libraryTable.data
-          const data = [table[0], table[change.dataIndex]]
+          const data = table[change.dataIndex]
           // 判断下一个高亮是那个
           let dataIndex = this.$store.state.Library.changIndex[0]
           let trIndex = this.$store.state.Library.changIndex[1]
-          if (table[0][trIndex] === 'ID') {
-            this.$store.commit('SET_NOTICE', 'ID不允许修改')
+          // table[0][trIndex] === 'ID'
+          if (['ID', '创建用户', '修改用户', '创建时间', '修改时间'].includes(table[0][trIndex])) {
+            this.$store.commit('SET_NOTICE', '此单元格不允许修改')
           } else {
-            data[1][change.trIndex] = this.$store.state.Library.changeVal
+            data[change.trIndex] = this.$store.state.Library.changeVal
             if (trIndex === data[0].length - 1) {
               dataIndex += 1
               trIndex = 0
@@ -255,17 +255,17 @@
               trIndex += 1
             }
             // 存储修改
-            table[dataIndex] = data[1]
+            table[dataIndex] = data
             // 修改输出框值
             this.$store.commit('LIBRARY_SET_CHANGE_VAL', table[dataIndex][trIndex])
             // 变化下一个高亮
             this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [dataIndex, trIndex]);
             this.$store.commit('LIBRARY_SET_CHANGE', { val: table[dataIndex][trIndex], dataIndex: dataIndex, trIndex: trIndex })
             // console.log(data[]);
-            const idIndex = data[0].indexOf('ID');
-            if (data[1][idIndex] === '-') {
+            const idIndex = table[0].indexOf('ID');
+            if (data[idIndex] === '-') {
               saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table[0], table, dataIndex, 'add')
-            } else if (parseInt(data[1][idIndex], 10) > 0) {
+            } else if (parseInt(data[idIndex], 10) > 0) {
               saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table[0], table, dataIndex, 'change')
             }
           }
