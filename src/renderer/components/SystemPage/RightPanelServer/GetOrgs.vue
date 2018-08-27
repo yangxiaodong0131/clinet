@@ -36,6 +36,8 @@
           </tr>
         </tbody>
       </table>
+      <button v-if="toolbar === 'getOrgs' && orgPage === 'getOrg'" id = "server-user-neworg"  v-on:click="insertOrgPage()">新建机构</button>
+      <button v-if="toolbar === 'createOrgs' && orgPage === 'getOrg' && orgName ==='insert'" id = "server-user-addorg" v-on:click="insertOrg()">添加机构</button>
       <nav aria-label="Page navigation example" class="page">
         <ul class="pagination">
           <li class="page-item" v-for="(value, index) in this.$store.state.System.orgs.page_list" v-bind:key="index" v-bind:class="{'disabled': parseInt(value.page, 10) === page}" v-on:click="departmentPage(value.page)">
@@ -81,6 +83,7 @@
           </tr>
         </tbody>
       </table>
+      <button v-if="toolbar === 'getOrgs' && orgPage === 'getDepartment'" id="newsection" v-on:click="insertDepPage()">新建科室</button>
       <nav aria-label="Page navigation example" class="page">
         <ul class="pagination">
           <li class="page-item" v-for="(value, index) in this.$store.state.System.departments.page_list" v-bind:key="index" v-bind:class="{'disabled': parseInt(value.page, 10) === page}" v-on:click="departmentPage(value.page)">
@@ -93,7 +96,7 @@
 </template>
 
 <script>
-  import { sGetDepart, sGetOrg } from '../../../utils/ServerUser'
+  import { sGetDepart, sGetOrg, sGetProvince, sCreateOrg } from '../../../utils/ServerUser'
   export default {
     data() {
       return {
@@ -105,6 +108,21 @@
       orgPageType: {
         get() {
           return this.$store.state.System.orgPage
+        }
+      },
+      toolbar: {
+        get() {
+          return this.$store.state.System.toolbar
+        }
+      },
+      orgPage: {
+        get() {
+          return this.$store.state.System.orgPage
+        }
+      },
+      orgName: {
+        get() {
+          return this.$store.state.System.orgName
         }
       },
       page: {
@@ -156,6 +174,45 @@
           default:
             break;
         }
+      },
+      insertDepPage: function () {
+        this.$store.commit('SYSTEM_SET_ORG_NAME', 'insertDep');
+        this.$store.commit('SYSTEM_SET_TOOLBAR', 'createDepartments')
+      },
+      insertOrg: function () {
+        const reg = [/^([0-9A-Za-z\-_.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g, /^1[0-9]{10}$/]
+        let a = 1
+        let b = 1
+        if (reg[0].test(this.orgInfo.email)) {
+          a = 1
+        } else {
+          a = 0
+          this.$store.commit('SET_NOTICE', '邮箱输入错误');
+        }
+        if (reg[1].test(this.orgInfo.tel)) {
+          b = 1
+        } else {
+          b = 0
+          this.$store.commit('SET_NOTICE', '电话输入错误');
+        }
+        if (a * b === 1) {
+          sCreateOrg(this, [this.$store.state.System.server, this.$store.state.System.port], this.orgInfo)
+        }
+      },
+      getOrgs: function () {
+        sGetProvince(this, [this.server, this.port])
+        this.$store.commit('SYSTEM_SET_ORG_NAME', null);
+        this.$store.commit('SYSTEM_SET_TOOLBAR', 'getOrgs');
+        if (!this.$store.state.System.user.login) {
+          this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
+        } else {
+          sGetOrg(this, [this.server, this.port], this.$store.state.System.user, this.$store.state.System.pageInfo.org);
+          this.$store.commit('SET_NOTICE', '机构设置');
+        }
+      },
+      insertOrgPage: function () {
+        this.$store.commit('SYSTEM_SET_ORG_NAME', 'insert');
+        this.$store.commit('SYSTEM_SET_TOOLBAR', 'createOrgs')
       },
       departmentPage: function (value) {
         this.$store.commit('SYSTEM_GET_PAGEINFO', value)

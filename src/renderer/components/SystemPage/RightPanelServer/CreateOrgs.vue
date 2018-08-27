@@ -54,12 +54,15 @@
         <input type="email" class="form-control" placeholder="Email" v-model="OrgInfo.email" @input="orgs()" id = "InputOrgEmail">
       </div>
     </form>
+    <button v-if="toolbar === 'createOrgs' && orgPage === 'getOrg' && orgName ==='update'" v-on:click="updateOrg()">机构修改</button>
+    <button v-if="toolbar === 'createOrgs' && orgPage === 'getOrg' && orgName ==='insert'" id = "server-user-addorg"  v-on:click="insertOrg()">添加机构</button>
     <div class="row">
       <div class="col-9" />
     </div>
   </div>
 </template>
 <script>
+  import { sUpdateOrg, sCreateOrg } from '../../../utils/ServerUser';
   export default {
     data() {
       return {
@@ -82,9 +85,44 @@
         get() {
           return this.$store.state.System.province
         }
+      },
+      orgPage: {
+        get() {
+          return this.$store.state.System.orgPage
+        }
+      },
+      orgName: {
+        get() {
+          return this.$store.state.System.orgName
+        }
+      },
+      toolbar: {
+        get() {
+          return this.$store.state.System.toolbar
+        }
       }
     },
     methods: {
+      insertOrg: function () {
+        const reg = [/^([0-9A-Za-z\-_.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g, /^1[0-9]{10}$/]
+        let a = 1
+        let b = 1
+        if (reg[0].test(this.orgInfo.email)) {
+          a = 1
+        } else {
+          a = 0
+          this.$store.commit('SET_NOTICE', '邮箱输入错误');
+        }
+        if (reg[1].test(this.orgInfo.tel)) {
+          b = 1
+        } else {
+          b = 0
+          this.$store.commit('SET_NOTICE', '电话输入错误');
+        }
+        if (a * b === 1) {
+          sCreateOrg(this, [this.$store.state.System.server, this.$store.state.System.port], this.orgInfo)
+        }
+      },
       orgs: function () {
         const b = {
           code: this.OrgInfo.code,
@@ -99,6 +137,9 @@
           email: this.OrgInfo.email
         }
         this.$store.commit('SYSTEM_GET_ORG_INFO', b);
+      },
+      updateOrg: function () {
+        sUpdateOrg(this, [this.$store.state.System.server, this.$store.state.System.port], this.orgId, this.orgInfo)
       },
     }
   }
