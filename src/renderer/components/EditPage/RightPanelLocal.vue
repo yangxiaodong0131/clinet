@@ -4,7 +4,9 @@
       <table id="edit-rightpanellocal-table" v-show="chatType === false">
         <tr>
           <th colspan="10" class="table-info" id="edit-rightpanellocal-title"> {{title}}
-            <a href="#" v-on:click="close(panelName)" style="float: right">✖</a>
+            <a href="#" v-on:click="close" style="float: right">&nbsp;✖</a>
+            <a href="#" v-on:click="page(1)" style="float: right">&nbsp;后页→</a>
+            <a href="#" v-on:click="page(-1)" style="float: right">←前页</a>
           </th>
         </tr>
         <tr class="edit-rightpanellocal-tr" v-for="(data, index) in xs" v-bind:key='index' v-bind:id="'edit-rightpanellocal-tr'+index" v-bind:class="{'table-danger':flag == index}">
@@ -36,7 +38,7 @@
   import { getLibrary } from '../../utils/LibraryServerFile'
   import { getStat, getStatFiles } from '../../utils/StatServerFile';
   import { getEditFiles, getEdit } from '../../utils/EditServerFile'
-  import { getDate } from '../../utils/EditOperation';
+  import { getDate, editPage } from '../../utils/EditOperation';
   export default {
     data() {
       return {
@@ -209,10 +211,12 @@
           this.$store.commit('SET_NOTICE', '用户权限不够，不能够发布他人文件');
         }
         const currentdate = getDate()
-        console.log(currentdate)
         this.$store.commit('EDIT_UPDATE_DOC_HEADER', ['发布时间', currentdate]);
         this.$store.commit('EDIT_SET_DOC_STATE');
-      }
+      },
+      page: function (n) {
+        editPage(this, n)
+      },
     },
   };
 </script>

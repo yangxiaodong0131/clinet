@@ -3,7 +3,7 @@
     <!-- <table v-if="type === '编辑器使用帮助'"> -->
     <table v-if="this.$store.state.Edit.rightPanels.includes('编辑器使用帮助') && !this.$store.state.Edit.rightFolds.includes('编辑器使用帮助')">
       <tr>
-        <th class="table-danger"> 编辑器使用帮助
+        <th class="table-danger" v-on:dblclick="fold('编辑器使用帮助')"> 编辑器使用帮助
           <a href="#" v-on:click="close('编辑器使用帮助')" style="float: right">✖</a>
           <a href="#" v-on:click="fold('编辑器使用帮助')" style="float: right; marginRight: 3px">↗</a>
         </th>

@@ -203,7 +203,11 @@ export function saveLibraryPage(obj, data, content, header, table, dataIndex, ty
     if (res.status === 200) {
       if (type === 'add') {
         const idIndex = table[0].indexOf('ID');
+        const createIndex = table[0].indexOf('创建用户');
+        const updateIndex = table[0].indexOf('更新用户');
         table[dataIndex][idIndex] = res.data.id
+        table[dataIndex][createIndex] = res.data.create_user
+        table[dataIndex][updateIndex] = res.data.update_user
         obj.$store.commit('LIBRARY_SET_SERVER_TABLE', table);
       } else if (type === 'delete') {
         const library = res.data.library

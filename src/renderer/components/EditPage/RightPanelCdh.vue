@@ -1,7 +1,7 @@
 <template>
   <div style="overflow:auto;">
     <table v-if="!this.$store.state.Edit.rightFolds.includes('输入框提示')">
-      <tr>
+      <tr v-on:dblclick="fold('title')">
         <th colspan="10" class="table-info" id="edit-rightpanellocal-title"> {{title}}
           <a href="#" v-on:click="close(title)" style="float: right">✖</a>
           <a v-if="xs" href="#" v-on:click="fold('输入框提示')" style="float: right; marginRight: 3px">↗</a>

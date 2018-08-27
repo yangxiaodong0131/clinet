@@ -33,6 +33,7 @@ module.exports = {
     'no-comma-dangle': 0,
     'comma-dangle': 0,
     "max-len": [0, 180, 4],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
   }
 }
 

@@ -382,6 +382,7 @@ export function editBarEnter(obj, targetValue) {
 }
 
 export function rightBarHelp(obj, n) {
+  console.log(obj.$store.state.Edit.rightPanel)
   if (n) {
     // obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);
     obj.$store.commit('SET_NOTICE', n);
@@ -402,7 +403,6 @@ export function rightBarHelp(obj, n) {
       obj.$store.commit('EDIT_SET_HELP_TYPE', n);
       obj.$store.commit('SET_NOTICE', n);
       obj.helpType = n
-      obj.$store.commit('EDIT_SET_RIGHT_PANEL', 'help');
     } else if (n === '输入框提示') {
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);
       obj.$store.commit('EDIT_SET_HELP_TYPE', n);
@@ -410,8 +410,10 @@ export function rightBarHelp(obj, n) {
       if (obj.$store.state.Edit.rightPanel === 'server') {
         if (!obj.$store.state.Edit.rightCdh) {
           obj.$store.commit('SET_NOTICE', '输入提示无内容！');
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         } else if (!global.hitbdata.cdh) {
           obj.$store.commit('SET_NOTICE', '输入提示无内容！');
+          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         }
       }
     } else if (n === '病案历史' && obj.$store.state.Edit.rightPanel === 'server') {
@@ -419,7 +421,8 @@ export function rightBarHelp(obj, n) {
       obj.$store.commit('EDIT_SET_HELP_TYPE', n);
       getCaseHistory(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Edit.doc, obj.$store.state.System.user.username)
     } else if (n === '病案历史' && obj.$store.state.Edit.rightPanel !== 'server') {
-      obj.$store.commit('SET_NOTICE', '登陆后可查询病案历史！');
+      obj.$store.commit('SET_NOTICE', '登录后可查询病案历史！');
+      this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
     } else if (n === '病案质控' && obj.$store.state.Edit.rightPanel === 'server') {
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);
       obj.$store.commit('EDIT_SET_HELP_TYPE', n);
@@ -428,6 +431,7 @@ export function rightBarHelp(obj, n) {
         obj.$store.commit('EDIT_SET_DOC_CONTROL', controls);
       } else {
         obj.$store.commit('SET_NOTICE', '病案质控暂无内容！');
+        this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
       }
     } else {
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);
@@ -437,8 +441,9 @@ export function rightBarHelp(obj, n) {
 }
 
 export function editPage(obj, n) {
+  console.log(obj.$store.state.Edit.rightType)
   if (obj.$store.state.Edit.helpType !== '输入框提示') {
-    if (obj.$store.state.Edit.rightType === 'left') {
+    if (obj.$store.state.Edit.rightType === 'table') {
       let page = 0
       let countPage = 0
       switch (obj.$store.state.Edit.lastNav) {
