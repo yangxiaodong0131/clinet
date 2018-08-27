@@ -8,7 +8,7 @@ import App from './App';
 import router from './router';
 import store from './store';
 import appInit from './utils/AppInit.js';
-import db from './datastore';
+import db from './dataStore';
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.prototype.$http = axios;
