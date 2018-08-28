@@ -1,7 +1,6 @@
 // 统一的数据库操作入口，
 // 包括local、server、block三层数据库
 // 包括cda、library、stat、system、user等等数据表
-
 function insert(obj, col, data) {
   obj.db[col].insert(data, (err, res) => {
     console.log(res)
@@ -16,13 +15,13 @@ function find(obj, col, data) {
 
 function findOne(obj, col, data) {
   obj.db[col].findOne(data, (err, res) => {
-    console.log(res)
+    res.json(res)
   })
 }
 
-function count(obj, col, data) {
+function count(obj, col, data, callback) {
   obj.db[col].count(data, (err, res) => {
-    console.log(res)
+    callback(res)
   })
 }
 
@@ -39,11 +38,14 @@ function remove(obj, col, data, ops) {
 }
 
 export default function (obj, type, col, data, oper, ops) {
-  // console.log(type)
-  // console.log(col)
-  // console.log(data)
-  // console.log(oper)
-  // console.log(ops)
+  count(obj, col, data, (a) => {
+    console.log(a);
+    return a;
+  })
+
+  // const b = count(obj, col, data, foo(function(a)) => a )
+  // console.log(count(obj, col, data))
+  type = 'server'
   switch (type) {
     case 'local':
       switch (oper) {

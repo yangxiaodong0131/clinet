@@ -1,10 +1,12 @@
 import axios from 'axios'
+// import dataDB from './dataDB'
+import db from '../dataStore';
 
 export default function appInit() {
   const fs = require('fs')
   const path = require('path');
   const readline = require('readline');
-
+  // dataDB({ db: db }, 'local', 'cda', null, 'count', null)
   // 文件保存位置
   let pathHome = ''
   let pathData = ''
@@ -293,172 +295,136 @@ export default function appInit() {
   }
 
   // 术语字典文件
-  // const mdcFile = path.format({
-  //   dir: hitbdataLibrary,
-  //   base: 'test_mdc.csv'
-  // });
-  // if (!fs.existsSync(mdcFile)) {
-  //   axios.get('/static/test_mdc.csv')
-  //     .then((res) => {
-  //       fs.writeFile(mdcFile, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-  // const adrgFile = path.format({
-  //   dir: hitbdataLibrary,
-  //   base: 'test_adrg.csv'
-  // });
-  // if (!fs.existsSync(adrgFile)) {
-  //   axios.get('/static/test_adrg.csv')
-  //     .then((res) => {
-  //       fs.writeFile(adrgFile, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-  // const drgFile = path.format({
-  //   dir: hitbdataLibrary,
-  //   base: 'test_drg.csv'
-  // });
-  // if (!fs.existsSync(drgFile)) {
-  //   axios.get('/static/test_drg.csv')
-  //     .then((res) => {
-  //       fs.writeFile(drgFile, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-  // const icd10File = path.format({
-  //   dir: hitbdataLibrary,
-  //   base: 'test_icd10.csv'
-  // });
-  // if (!fs.existsSync(icd10File)) {
-  //   axios.get('/static/test_icd10.csv')
-  //     .then((res) => {
-  //       fs.writeFile(icd10File, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-  // const icd9File = path.format({
-  //   dir: hitbdataLibrary,
-  //   base: 'test_icd9.csv'
-  // });
-  // if (!fs.existsSync(icd9File)) {
-  //   axios.get('/static/test_icd9.csv')
-  //     .then((res) => {
-  //       fs.writeFile(icd9File, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-  // const orgFile2 = path.format({
-  //   dir: hitbdataLibrary,
-  //   base: 'test_org.csv'
-  // });
-  // if (!fs.existsSync(orgFile2)) {
-  //   axios.get('/static/test_org.csv')
-  //     .then((res) => {
-  //       fs.writeFile(orgFile2, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-  // const deptFile2 = path.format({
-  //   dir: hitbdataLibrary,
-  //   base: 'test_department.csv'
-  // });
-  // if (!fs.existsSync(deptFile2)) {
-  //   axios.get('/static/test_department.csv')
-  //     .then((res) => {
-  //       fs.writeFile(deptFile2, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
+  db.library.count({}, (err, res) => {
+    if (res === 0) {
+      // mdc
+      axios.get('/static/test_mdc.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.library = 'test_mdc'
+            db.library.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // adrg
+      axios.get('/static/test_adrg.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.library = 'test_adrg'
+            db.library.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // drg
+      axios.get('/static/test_drg.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.library = 'test_drg'
+            db.library.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // icd10
+      axios.get('/static/test_icd10.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.library = 'test_icd10'
+            db.library.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // icd9
+      axios.get('/static/test_icd9.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.library = 'test_icd9'
+            db.library.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // org
+      axios.get('/static/test_org.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.library = 'test_org'
+            db.library.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // department
+      axios.get('/static/test_department.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.library = 'test_department'
+            db.library.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  })
   // stat分析文件
-  // const statFile1 = path.format({
-  //   dir: hitbdataStat,
-  //   base: 'test_stat_1.csv'
-  // });
-  // if (!fs.existsSync(statFile1)) {
-  //   axios.get('/static/test_stat_1.csv')
-  //     .then((res) => {
-  //       fs.writeFile(statFile1, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-  // const statFile2 = path.format({
-  //   dir: hitbdataStat,
-  //   base: 'test_stat_2.csv'
-  // });
-  // if (!fs.existsSync(statFile2)) {
-  //   axios.get('/static/test_stat_2.csv')
-  //     .then((res) => {
-  //       fs.writeFile(statFile2, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-  // const wt4File3 = path.format({
-  //   dir: hitbdataStat,
-  //   base: 'test_wt4_2015年1月.csv'
-  // });
-  // if (!fs.existsSync(wt4File3)) {
-  //   axios.get('/static/test_wt4_2015年1月.csv')
-  //     .then((res) => {
-  //       fs.writeFile(wt4File3, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-  // const wt4File4 = path.format({
-  //   dir: hitbdataStat,
-  //   base: 'test_wt4_2015年2月.csv'
-  // });
-  // if (!fs.existsSync(wt4File4)) {
-  //   axios.get('/static/test_wt4_2015年2月.csv')
-  //     .then((res) => {
-  //       fs.writeFile(wt4File4, res.data, (err) => {
-  //         console.log(err)
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
+  db.stat.count({}, (err, res) => {
+    if (res === 0) {
+      // test_stat_1
+      axios.get('/static/test_stat_1.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.stat_type = 'test_stat_1'
+            db.stat.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // test_stat_2
+      axios.get('/static/test_stat_2.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.stat_type = 'test_stat_2'
+            db.stat.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // test_wt4_2015年1月
+      axios.get('/static/test_wt4_2015年1月.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.stat_type = 'test_wt4_2015年1月'
+            db.stat.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      // test_wt4_2015年2月
+      axios.get('/static/test_wt4_2015年2月.json')
+        .then((res) => {
+          res.data.forEach((data) => {
+            data.stat_type = 'test_wt4_2015年2月'
+            db.stat.insert(data)
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  })
 
   // 用户导入文件
   const orgFile1 = path.format({

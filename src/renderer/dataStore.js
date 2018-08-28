@@ -12,27 +12,27 @@ db.test = new Datastore({
     console.log(err)
   });
 })
-
+// 用户数据表
 db.user = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/user.db')
 })
-
+// cda表
 db.cda = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/cda.db')
 })
-
+//
 db.library = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/library.db')
 })
-
+// 统计分析表
 db.stat = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/stat.db')
 })
-
+// 系统设置表
 db.system = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/system.db')
