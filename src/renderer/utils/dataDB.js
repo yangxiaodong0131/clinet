@@ -37,6 +37,13 @@ function remove(obj, col, data, ops) {
   })
 }
 
+function libraryFiles(obj) {
+  // obj.db.library.find(data, ops, (err, res) => {
+  //   console.log(res)
+  // })
+  console.log(obj);
+}
+
 export default function (obj, type, col, data, oper, ops) {
   count(obj, col, data, (a) => {
     console.log(a);
@@ -55,6 +62,7 @@ export default function (obj, type, col, data, oper, ops) {
         case 'count': count(obj, col, data); break
         case 'update': update(obj, col, data, ops); break
         case 'remove': remove(obj, col, data, ops); break
+        case 'libraryFiles': libraryFiles(obj); break
         default: break
       }
       break

@@ -297,83 +297,71 @@ export default function appInit() {
   // 术语字典文件
   db.library.count({}, (err, res) => {
     if (res === 0) {
+      const libraryFile = []
       // mdc
       axios.get('/static/test_mdc.json')
         .then((res) => {
-          res.data.forEach((data) => {
-            data.library = 'test_mdc'
-            db.library.insert(data)
-          })
+          db.library.insert(res.data)
         })
         .catch((error) => {
           console.log(error);
         });
+      libraryFile.push({ fileName: 'test_mdc', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
       // adrg
       axios.get('/static/test_adrg.json')
         .then((res) => {
-          res.data.forEach((data) => {
-            data.library = 'test_adrg'
-            db.library.insert(data)
-          })
+          db.library.insert(res.data)
         })
         .catch((error) => {
           console.log(error);
         });
+      libraryFile.push({ fileName: 'test_adrg', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
       // drg
       axios.get('/static/test_drg.json')
         .then((res) => {
-          res.data.forEach((data) => {
-            data.library = 'test_drg'
-            db.library.insert(data)
-          })
+          db.library.insert(res.data)
         })
         .catch((error) => {
           console.log(error);
         });
+      libraryFile.push({ fileName: 'test_drg', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
       // icd10
       axios.get('/static/test_icd10.json')
         .then((res) => {
-          res.data.forEach((data) => {
-            data.library = 'test_icd10'
-            db.library.insert(data)
-          })
+          db.library.insert(res.data)
         })
         .catch((error) => {
           console.log(error);
         });
+      libraryFile.push({ fileName: 'test_icd10', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
       // icd9
       axios.get('/static/test_icd9.json')
         .then((res) => {
-          res.data.forEach((data) => {
-            data.library = 'test_icd9'
-            db.library.insert(data)
-          })
+          db.library.insert(res.data)
         })
         .catch((error) => {
           console.log(error);
         });
+      libraryFile.push({ fileName: 'test_icd9', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
       // org
       axios.get('/static/test_org.json')
         .then((res) => {
-          res.data.forEach((data) => {
-            data.library = 'test_org'
-            db.library.insert(data)
-          })
+          db.library.insert(res.data)
         })
         .catch((error) => {
           console.log(error);
         });
+      libraryFile.push({ fileName: 'test_org', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
       // department
       axios.get('/static/test_department.json')
         .then((res) => {
-          res.data.forEach((data) => {
-            data.library = 'test_department'
-            db.library.insert(data)
-          })
+          db.library.insert(res.data)
         })
         .catch((error) => {
           console.log(error);
         });
+      libraryFile.push({ fileName: 'test_department', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      db.libraryFile.insert(libraryFile)
     }
   })
   // stat分析文件

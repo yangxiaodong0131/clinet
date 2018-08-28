@@ -27,6 +27,10 @@ db.library = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/library.db')
 })
+db.libraryFile = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/libraryFile.db')
+})
 // 统计分析表
 db.stat = new Datastore({
   autoload: true,
