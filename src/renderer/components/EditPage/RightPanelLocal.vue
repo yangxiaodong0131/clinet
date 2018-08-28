@@ -5,6 +5,7 @@
         <tr>
           <th colspan="10" class="table-info" id="edit-rightpanellocal-title"> {{title}}
             <a href="#" v-on:click="close" style="float: right">&nbsp;✖</a>
+            <span style="float: right">当前页：{{this.$store.state.Edit.filesPage}} / 共{{this.$store.state.Edit.filesNum}}页</span>
             <a href="#" v-on:click="page(1)" style="float: right">&nbsp;后页→</a>
             <a href="#" v-on:click="page(-1)" style="float: right">←前页</a>
           </th>
@@ -95,7 +96,8 @@
       },
       xs: {
         get() {
-          let x = this.$store.state.Edit.files
+          // let x = this.$store.state.Edit.files
+          let x = this.$store.state.Edit.currentFiles
           // switch (this.$store.state.Edit.lastNav) {
           //   case '/stat':
           //     x = this.$store.state.Stat.files

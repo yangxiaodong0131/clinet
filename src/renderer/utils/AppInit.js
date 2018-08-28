@@ -1,37 +1,39 @@
 import axios from 'axios'
+// import dataDB from './dataDB'
+import db from '../dataStore';
 
 export default function appInit() {
   const fs = require('fs')
   const path = require('path');
   const readline = require('readline');
-
+  // dataDB({ db: db }, 'local', 'cda', null, 'count', null)
   // 文件保存位置
   let pathHome = ''
   let pathData = ''
   let pathSystem = ''
   let pathLoaded = ''
-  let pathCompare = ''
-  let pathUser = ''
-  let pathLibrary = ''
-  let pathStat = ''
+  // let pathCompare = ''
+  // let pathUser = ''
+  // let pathLibrary = ''
+  // let pathStat = ''
   if (process.env.USERPROFILE) {
     pathHome = process.env.USERPROFILE
     pathData = '\\clinet-data'
     pathSystem = '\\system'
     pathLoaded = '\\loaded'
-    pathCompare = '\\compare'
-    pathUser = '\\user'
-    pathLibrary = '\\library'
-    pathStat = '\\stat'
+    // pathCompare = '\\compare'
+    // pathUser = '\\user'
+    // pathLibrary = '\\library'
+    // pathStat = '\\stat'
   } else {
     pathHome = process.env.HOME
     pathData = '/clinet-data'
     pathSystem = '/system'
     pathLoaded = '/loaded'
-    pathCompare = '/compare'
-    pathUser = '/user'
-    pathLibrary = '/library'
-    pathStat = '/stat'
+    // pathCompare = '/compare'
+    // pathUser = '/user'
+    // pathLibrary = '/library'
+    // pathStat = '/stat'
   }
 
   const hitbdata = path.join(pathHome, pathData);
@@ -40,25 +42,25 @@ export default function appInit() {
   if (!fs.existsSync(hitbdataSystem)) { fs.mkdirSync(hitbdataSystem) }
   const hitbdataLoaded = path.join(hitbdata, pathLoaded);
   if (!fs.existsSync(hitbdataLoaded)) { fs.mkdirSync(hitbdataLoaded) }
-  const hitbdataCompare = path.join(hitbdata, pathCompare);
-  if (!fs.existsSync(hitbdataCompare)) { fs.mkdirSync(hitbdataCompare) }
-  const hitbdataUser = path.join(hitbdata, pathUser);
-  if (!fs.existsSync(hitbdataUser)) { fs.mkdirSync(hitbdataUser) }
-  const hitbdataLibrary = path.join(hitbdata, pathLibrary);
-  if (!fs.existsSync(hitbdataLibrary)) { fs.mkdirSync(hitbdataLibrary) }
-  const hitbdataStat = path.join(hitbdata, pathStat);
-  if (!fs.existsSync(hitbdataStat)) { fs.mkdirSync(hitbdataStat) }
+  // const hitbdataCompare = path.join(hitbdata, pathCompare);
+  // if (!fs.existsSync(hitbdataCompare)) { fs.mkdirSync(hitbdataCompare) }
+  // const hitbdataUser = path.join(hitbdata, pathUser);
+  // if (!fs.existsSync(hitbdataUser)) { fs.mkdirSync(hitbdataUser) }
+  // const hitbdataLibrary = path.join(hitbdata, pathLibrary);
+  // if (!fs.existsSync(hitbdataLibrary)) { fs.mkdirSync(hitbdataLibrary) }
+  // const hitbdataStat = path.join(hitbdata, pathStat);
+  // if (!fs.existsSync(hitbdataStat)) { fs.mkdirSync(hitbdataStat) }
 
   // 设置应用系统的全局变量-文件存储位置
   global.hitbdata = {};
   global.hitbdata.path = {
     home: hitbdata,
     system: hitbdataSystem,
-    loaded: hitbdataLoaded,
-    compare: hitbdataCompare,
-    user: hitbdataUser,
-    library: hitbdataLibrary,
-    stat: hitbdataStat
+    loaded: hitbdataLoaded
+    // compare: hitbdataCompare,
+    // user: hitbdataUser,
+    // library: hitbdataLibrary,
+    // stat: hitbdataStat
   };
 
   // 服务器配置文件
@@ -207,13 +209,13 @@ export default function appInit() {
       f.push(line)
     })
   }
-  const cdhFile = path.format({
-    dir: hitbdataLibrary,
-    base: 'cdh.cdh'
-  })
-  if (fs.existsSync(cdhFile)) {
-    a(cdhFile)
-  }
+  // const cdhFile = path.format({
+  //   dir: hitbdataLibrary,
+  //   base: 'cdh.cdh'
+  // // })
+  // if (fs.existsSync(cdhFile)) {
+  //   a(cdhFile)
+  // }
 
   const editFile = path.format({
     dir: hitbdataSystem,
@@ -292,172 +294,124 @@ export default function appInit() {
   }
 
   // 术语字典文件
-  const mdcFile = path.format({
-    dir: hitbdataLibrary,
-    base: 'test_mdc.csv'
-  });
-  if (!fs.existsSync(mdcFile)) {
-    axios.get('/static/test_mdc.csv')
-      .then((res) => {
-        fs.writeFile(mdcFile, res.data, (err) => {
-          console.log(err)
+  db.libraryFile.count({}, (err, res) => {
+    if (res === 0) {
+      const libraryFile = []
+      // mdc
+      axios.get('/static/test_mdc.json')
+        .then((res) => {
+          db.library.insert(res.data)
         })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const adrgFile = path.format({
-    dir: hitbdataLibrary,
-    base: 'test_adrg.csv'
-  });
-  if (!fs.existsSync(adrgFile)) {
-    axios.get('/static/test_adrg.csv')
-      .then((res) => {
-        fs.writeFile(adrgFile, res.data, (err) => {
-          console.log(err)
+        .catch((error) => {
+          console.log(error);
+        });
+      libraryFile.push({ fileName: 'test_mdc', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      // adrg
+      axios.get('/static/test_adrg.json')
+        .then((res) => {
+          db.library.insert(res.data)
         })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const drgFile = path.format({
-    dir: hitbdataLibrary,
-    base: 'test_drg.csv'
-  });
-  if (!fs.existsSync(drgFile)) {
-    axios.get('/static/test_drg.csv')
-      .then((res) => {
-        fs.writeFile(drgFile, res.data, (err) => {
-          console.log(err)
+        .catch((error) => {
+          console.log(error);
+        });
+      libraryFile.push({ fileName: 'test_adrg', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      // drg
+      axios.get('/static/test_drg.json')
+        .then((res) => {
+          db.library.insert(res.data)
         })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const icd10File = path.format({
-    dir: hitbdataLibrary,
-    base: 'test_icd10.csv'
-  });
-  if (!fs.existsSync(icd10File)) {
-    axios.get('/static/test_icd10.csv')
-      .then((res) => {
-        fs.writeFile(icd10File, res.data, (err) => {
-          console.log(err)
+        .catch((error) => {
+          console.log(error);
+        });
+      libraryFile.push({ fileName: 'test_drg', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      // icd10
+      axios.get('/static/test_icd10.json')
+        .then((res) => {
+          db.library.insert(res.data)
         })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const icd9File = path.format({
-    dir: hitbdataLibrary,
-    base: 'test_icd9.csv'
-  });
-  if (!fs.existsSync(icd9File)) {
-    axios.get('/static/test_icd9.csv')
-      .then((res) => {
-        fs.writeFile(icd9File, res.data, (err) => {
-          console.log(err)
+        .catch((error) => {
+          console.log(error);
+        });
+      libraryFile.push({ fileName: 'test_icd10', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      // icd9
+      axios.get('/static/test_icd9.json')
+        .then((res) => {
+          db.library.insert(res.data)
         })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const orgFile2 = path.format({
-    dir: hitbdataLibrary,
-    base: 'test_org.csv'
-  });
-  if (!fs.existsSync(orgFile2)) {
-    axios.get('/static/test_org.csv')
-      .then((res) => {
-        fs.writeFile(orgFile2, res.data, (err) => {
-          console.log(err)
+        .catch((error) => {
+          console.log(error);
+        });
+      libraryFile.push({ fileName: 'test_icd9', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      // org
+      axios.get('/static/test_org.json')
+        .then((res) => {
+          db.library.insert(res.data)
         })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const deptFile2 = path.format({
-    dir: hitbdataLibrary,
-    base: 'test_department.csv'
-  });
-  if (!fs.existsSync(deptFile2)) {
-    axios.get('/static/test_department.csv')
-      .then((res) => {
-        fs.writeFile(deptFile2, res.data, (err) => {
-          console.log(err)
+        .catch((error) => {
+          console.log(error);
+        });
+      libraryFile.push({ fileName: 'test_org', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      // department
+      axios.get('/static/test_department.json')
+        .then((res) => {
+          db.library.insert(res.data)
         })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+        .catch((error) => {
+          console.log(error);
+        });
+      libraryFile.push({ fileName: 'test_department', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      db.libraryFile.insert(libraryFile)
+    }
+  })
   // stat分析文件
-  const statFile1 = path.format({
-    dir: hitbdataStat,
-    base: 'test_stat_1.csv'
-  });
-  if (!fs.existsSync(statFile1)) {
-    axios.get('/static/test_stat_1.csv')
-      .then((res) => {
-        fs.writeFile(statFile1, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const statFile2 = path.format({
-    dir: hitbdataStat,
-    base: 'test_stat_2.csv'
-  });
-  if (!fs.existsSync(statFile2)) {
-    axios.get('/static/test_stat_2.csv')
-      .then((res) => {
-        fs.writeFile(statFile2, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const wt4File3 = path.format({
-    dir: hitbdataStat,
-    base: 'test_wt4_2015年1月.csv'
-  });
-  if (!fs.existsSync(wt4File3)) {
-    axios.get('/static/test_wt4_2015年1月.csv')
-      .then((res) => {
-        fs.writeFile(wt4File3, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const wt4File4 = path.format({
-    dir: hitbdataStat,
-    base: 'test_wt4_2015年2月.csv'
-  });
-  if (!fs.existsSync(wt4File4)) {
-    axios.get('/static/test_wt4_2015年2月.csv')
-      .then((res) => {
-        fs.writeFile(wt4File4, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  // db.stat.count({}, (err, res) => {
+  //   if (res === 0) {
+  //     // test_stat_1
+  //     axios.get('/static/test_stat_1.json')
+  //       .then((res) => {
+  //         res.data.forEach((data) => {
+  //           data.stat_type = 'test_stat_1'
+  //           db.stat.insert(data)
+  //         })
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //     // test_stat_2
+  //     axios.get('/static/test_stat_2.json')
+  //       .then((res) => {
+  //         res.data.forEach((data) => {
+  //           data.stat_type = 'test_stat_2'
+  //           db.stat.insert(data)
+  //         })
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //     // test_wt4_2015年1月
+  //     axios.get('/static/test_wt4_2015年1月.json')
+  //       .then((res) => {
+  //         res.data.forEach((data) => {
+  //           data.stat_type = 'test_wt4_2015年1月'
+  //           db.stat.insert(data)
+  //         })
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //     // test_wt4_2015年2月
+  //     axios.get('/static/test_wt4_2015年2月.json')
+  //       .then((res) => {
+  //         res.data.forEach((data) => {
+  //           data.stat_type = 'test_wt4_2015年2月'
+  //           db.stat.insert(data)
+  //         })
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // })
 
   // 用户导入文件
   const orgFile1 = path.format({
@@ -522,31 +476,31 @@ export default function appInit() {
   }
 
   // 用户本地文件
-  const cdaFile = path.format({
-    dir: hitbdataUser,
-    base: '2018年度病案.cda'
-  });
-  if (!fs.existsSync(cdaFile)) { fs.writeFileSync(cdaFile, '') }
-  // 未保存病案
-  const notSaveDoc = path.format({
-    dir: hitbdataUser,
-    base: '未保存病案.cda'
-  });
-  if (fs.existsSync(notSaveDoc)) {
-    fs.lstat(notSaveDoc, (err) => {
-      if (!err) {
-        const fRead = fs.createReadStream(notSaveDoc);
-        const fReadline = readline.createInterface({ input: fRead });
-        const f = [];
-        fReadline.on('close', () => {
-          global.hitbDoc = f
-        });
-        fReadline.on('line', (line) => {
-          f.push(line)
-        })
-      }
-    })
-  }
+  // const cdaFile = path.format({
+  //   dir: hitbdataUser,
+  //   base: '2018年度病案.cda'
+  // });
+  // if (!fs.existsSync(cdaFile)) { fs.writeFileSync(cdaFile, '') }
+  // // 未保存病案
+  // const notSaveDoc = path.format({
+  //   dir: hitbdataUser,
+  //   base: '未保存病案.cda'
+  // });
+  // if (fs.existsSync(notSaveDoc)) {
+  //   fs.lstat(notSaveDoc, (err) => {
+  //     if (!err) {
+  //       const fRead = fs.createReadStream(notSaveDoc);
+  //       const fReadline = readline.createInterface({ input: fRead });
+  //       const f = [];
+  //       fReadline.on('close', () => {
+  //         global.hitbDoc = f
+  //       });
+  //       fReadline.on('line', (line) => {
+  //         f.push(line)
+  //       })
+  //     }
+  //   })
+  // }
 
   // 本地Section文件
   const sections = path.format({
@@ -579,24 +533,24 @@ export default function appInit() {
         console.log(error);
       });
   }
-  // 本地病案质控
-  const controls = path.format({
-    dir: hitbdataUser,
-    base: '病案质控.cda'
-  });
-  if (fs.existsSync(controls)) {
-    fs.lstat(controls, (err) => {
-      if (!err) {
-        const fRead = fs.createReadStream(controls);
-        const fReadline = readline.createInterface({ input: fRead });
-        const f = [];
-        fReadline.on('close', () => {
-          global.hitbControls = f
-        });
-        fReadline.on('line', (line) => {
-          f.push(line)
-        })
-      }
-    })
-  }
+  // // 本地病案质控
+  // const controls = path.format({
+  //   dir: hitbdataUser,
+  //   base: '病案质控.cda'
+  // });
+  // if (fs.existsSync(controls)) {
+  //   fs.lstat(controls, (err) => {
+  //     if (!err) {
+  //       const fRead = fs.createReadStream(controls);
+  //       const fReadline = readline.createInterface({ input: fRead });
+  //       const f = [];
+  //       fReadline.on('close', () => {
+  //         global.hitbControls = f
+  //       });
+  //       fReadline.on('line', (line) => {
+  //         f.push(line)
+  //       })
+  //     }
+  //   })
+  // }
 }

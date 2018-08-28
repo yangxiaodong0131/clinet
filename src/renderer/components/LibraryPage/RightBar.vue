@@ -85,7 +85,8 @@
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
   import pageSearch from '../../utils/PageSearch';
-  import getLibraryFile from '../../utils/LibraryOperation';
+  // import getLibraryFile from '../../utils/LibraryOperation';
+  import dataDB from '../../utils/dataDB';
   export default {
     data() {
       return {
@@ -123,7 +124,18 @@
     },
     methods: {
       libraryFile: function (n) {
-        getLibraryFile(this, n)
+        let type = ''
+        switch (n) {
+          case '本地': type = 'local'; break;
+          case '远程': type = 'server'; break;
+          case '区块链': type = 'block'; break;
+          default: type = ''; break;
+        }
+        // getLibraryFile(this, n)
+        dataDB(this, type, 'libraryFile', null, 'libraryFiles', null)
+        this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
+        this.$store.commit('LIBRARY_SET_TABLE_TYPE', type);
+        this.$store.commit('SET_NOTICE', `${n}文件`);
       },
       page: function (n) {
         if (this.$store.state.Library.libraryTableInfo.page === 1 && n === -1) {

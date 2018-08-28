@@ -13,7 +13,10 @@ const state = {
   lastNav: '/edit',
   fileName: '',
   filePage: 0,
-  filesPage: 0,
+  // 翻页
+  filesPage: 1,
+  filesOffset: 0,
+  filesNum: 0,
   fileType: 'cda',
   hintPage: 0,
   editBarValue: '',
@@ -56,6 +59,7 @@ const state = {
   expertHint: [],
   expertSection: null,
   idIndex: null,
+  currentFiles: []
 };
 
 const mutations = {
@@ -129,6 +133,9 @@ const mutations = {
   EDIT_SET_FILES_PAGE(state, n) {
     state.filesPage += n;
   },
+  EDIT_CLEAR_FILES_PAGE(state) {
+    state.filesPage = 1;
+  },
   EDIT_LOAD_DOC(state, message) {
     const x = message.map(m => m.split(' ').filter(i => i !== ''))
     state.doc = x;
@@ -154,6 +161,9 @@ const mutations = {
     // todo: 从服务器接口获取文档列表
     // const files = []
     state.files = message;
+  },
+  EDIT_SET_CURRENT_SERVER_FILES(state, message) {
+    state.currentFiles = message;
   },
   EDIT_SET_FILES_INDEX(state, message) {
     state.filesIndex = message;
@@ -467,12 +477,20 @@ const mutations = {
     } else {
       state.files = fs.readdirSync(global.hitbdata.path.user).filter(x => x.endsWith('.cda'))
     }
-    console.log(state.files.length)
   },
+  EDIT_SET_FILES_NUM(state, value) {
+    state.filesNum = value
+  },
+  EDIT_SET_FILES_OFFSET(state, value) {
+    state.filesOffset = value
+  }
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_SET_FILES_OFFSET');
+    commit('EDIT_SET_FILES_NUM');
+    commit('EDIT_SET_CURRENT_SERVER_FILES');
     commit('EDIT_OTHER_LOAD_FILES');
     commit('EDIT_SET_NAV_TYPE');
     commit('EDIT_SET_DATA_TYPE');

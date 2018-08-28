@@ -1,7 +1,23 @@
 <template>
-  <div id="edit-leftpaneldoc-doc">
+  <div id="edit-leftpaneldoc-doc" style="marginBottom: 5px">
     <div class="card">
       <!-- <table><tr class="table-warning">当前病案状态：{{docState}}</tr></table> -->
+      <div>
+        <table>
+          <tr v-on:dblclick="fold('title')">
+            <th colspan="10" class="table-info"> 
+              <span v-if="doc.length === 0" style="float: left; paddingLeft: 5px">病案历史无内容！</span>
+              <span v-else style="float: left; paddingLeft: 5px">{{title}}</span>
+              <a href="#" v-on:click="close('病案历史')" style="float: right">✖</a>
+              <a v-if="doc.length > 0" href="#" v-on:click="fold('病案历史')" style="float: right; marginRight: 3px">↗</a>
+            </th>
+          </tr>
+        </table>
+      </div>
+      <!-- <div>
+        <span v-for="(section, key) of doc" v-bind:key='key' v-if="key.length === 0" style="float: left" >病案参考无内容！</span>
+        <a href="#" v-on:click="close('病案参考')" style="float: right; marginRight: 5px">✖</a>
+      </div> -->
       <div class="card-body" v-for="(section, key) of doc" v-bind:key='key'>
         <!-- 个人信息 -->
         <div v-if="lastNav === '/stat' || lastNav === '/library' || lastNav === '/system'">
@@ -97,6 +113,12 @@
     //   this.getDocState()
     // },
     computed: {
+      title: {
+        get() {
+          const x = '病案历史'
+          return x
+        }
+      },
       flag: {
         get() {
           // const doc = this.$store.state.Edit.doc
@@ -143,6 +165,9 @@
       //   editDocState(this, doc)
       //   this.$store.commit('EDIT_SET_DOC_STATE')
       // }
+      close(data) {
+        this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);
+      }
     },
   };
 </script>

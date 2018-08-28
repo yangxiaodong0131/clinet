@@ -1,17 +1,24 @@
 <template>
   <div style="overflow:auto;" >
-    <div v-for="(data1, index1) of expertHint" v-bind:key='index1'>
+    <div>
       <table v-if="!rightFolds.includes('专家提示')">
         <tr>
-          <th colspan="10" class="table-info"> 专家提示（共有{{data1.length}}条记录）
+          <th colspan="10" class="table-info"> 专家提示（共有{{eLength}}条记录）
             <a href="#" v-on:click="close('专家提示')" style="float: right">✖</a>
             <a href="#" v-on:click="fold('专家提示')" style="float: right; marginRight: 3px">↗</a>
           </th>
         </tr>
-        <tr v-for="(data, index) in data1" v-bind:key='index'>
+        <tr  v-for="(data1, index1) of expertHint" v-bind:key='index1'>
           <td> {{index + 1}} </td>
           <td v-on:click="getItem(data)" v-on:dblclick="addItem(data)">{{expertKey}}</td>
-          <td v-on:click="getItem(data)" v-on:dblclick="addItem(data)">{{data}}</td>
+          <!-- <td v-on:click="getItem(data)" v-on:dblclick="addItem(data)">{{data}}</td> -->
+          <td>
+            <ol class="breadcrumb" >
+            <li class="breadcrumb-item" v-for="(data, index) in data1" v-bind:key='index' v-on:click="getItem(data)" v-on:dblclick="addItem(data)">
+              {{ data }}
+            </li>
+          </ol>
+          </td>
         </tr>
       </table>
       <table v-if="rightFolds.includes('专家提示')">
@@ -33,6 +40,7 @@
     computed: {
       rightFolds: {
         get() {
+          console.log(this.$store.state.Edit.rightFolds)
           return this.$store.state.Edit.rightFolds
         }
       },
@@ -51,6 +59,7 @@
               arr.push(this.$store.state.Edit.expertHint[x])
             }
           })
+          console.log(arr)
           return arr
         }
       },
