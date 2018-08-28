@@ -2,8 +2,8 @@ import saveFile from './SaveFile'
 import { saveEdit, getDocContent, editDocState, editDocShow, getCaseHistory, getExpertHint, clinetHelp } from './EditServerFile'
 import { join, message } from './Socket'
 import { sCompDrg } from './Server'
-import { getLibrary, saveLibrary } from './LibraryServerFile'
-import { getStat } from './StatServerFile'
+import { saveLibrary } from './LibraryServerFile'
+// import { getStat } from './StatServerFile'
 
 export function getDate() {
   const date = new Date();
@@ -382,7 +382,6 @@ export function editBarEnter(obj, targetValue) {
 }
 
 export function rightBarHelp(obj, n) {
-  console.log(obj.$store.state.Edit.rightPanel)
   if (n) {
     // obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);
     obj.$store.commit('SET_NOTICE', n);
@@ -440,71 +439,91 @@ export function rightBarHelp(obj, n) {
   }
 }
 
+// export function editPage(obj, n) {
+//   if (obj.$store.state.Edit.helpType !== '输入框提示') {
+//     if (obj.$store.state.Edit.rightType === 'table') {
+//       let page = 0
+//       let countPage = 0
+//       switch (obj.$store.state.Edit.lastNav) {
+//         case '/library':
+//           page = obj.$store.state.Library.tablePage
+//           countPage = obj.$store.state.Library.countPage
+//           break;
+//         case '/stat':
+//           page = obj.$store.state.Stat.tablePage
+//           countPage = obj.$store.state.Stat.countPage
+//           break;
+//         default:
+//           page = obj.$store.state.Edit.filesPage
+//           break;
+//       }
+//       if (page === 1 && n === -1) {
+//         obj.$store.commit('SET_NOTICE', '当前已是第一页')
+//       } else if (countPage === page && n === 1 && ['/stat', '/library'].includes(obj.$store.state.Edit.lastNav)) {
+//         obj.$store.commit('SET_NOTICE', '当前已是尾页');
+//       } else {
+//         switch (obj.$store.state.Edit.lastNav) {
+//           case '/library':
+//             if (obj.$store.state.Library.tableType === 'server') {
+//               obj.$store.commit('LIBRARY_TABLE_PAGE', [n]);
+//               getLibrary(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Library.serverTable.tableName, obj.$store.state.Library.tablePage, obj.$store.state.Library.dimensionType, obj.$store.state.Library.dimensionServer, 'edit', 'server', ['asc', '编码'])
+//             } else {
+//               obj.$store.commit('LIBRARY_TABLE_PAGE', [n]);
+//               obj.$store.commit('EDIT_LOAD_FILE', obj.$store.state.Library.localTable)
+//               obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Library.tablePage}页,共${obj.$store.state.Library.countPage}页`)
+//             }
+//             break;
+//           case '/stat':
+//             if (obj.$store.state.Stat.tableType === 'server') {
+//               obj.$store.commit('STAT_TABLE_PAGE', n);
+//               getStat(obj, [obj.$store.state.System.server, obj.$store.state.System.port], { tableName: obj.$store.state.Stat.serverTable.tableName, page: obj.$store.state.Stat.tablePage, username: obj.$store.state.System.user.username, type: obj.$store.state.Stat.dimensionType, value: obj.$store.state.Stat.dimensionServer }, 'edit')
+//             } else {
+//               obj.$store.commit('STAT_TABLE_PAGE', n);
+//               obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Stat.tablePage}页,共${obj.$store.state.Stat.countPage}页`)
+//             }
+//             break;
+//           default:
+//             obj.$store.commit('EDIT_SET_FILE_PAGE', n);
+//             obj.$store.commit('SET_NOTICE', '下一页')
+//             break;
+//         }
+//       }
+//     } else if (obj.$store.state.Edit.rightPanel === 'edit') {
+//       if (obj.$store.state.Edit.filesPage === 0 && n === -1) {
+//         obj.$store.commit('SET_NOTICE', '当前已是第一页')
+//       } else {
+//         obj.$store.commit('EDIT_SET_FILES_PAGE', n);
+//         obj.$store.commit('SET_NOTICE', '下一页')
+//       }
+//     }
+//   } else if (obj.$store.state.Edit.helpType === '输入框提示') {
+//     if (n === -1 && obj.$store.state.Edit.cdhFilePage === 0) {
+//       obj.$store.commit('SET_NOTICE', '当前已经是第一页')
+//     } else if (n === +1 && obj.$store.state.Edit.cdhFilePage === obj.$store.state.Edit.cdhFilePagecount) {
+//       obj.$store.commit('SET_NOTICE', '当前已经最后一页')
+//     } else {
+//       obj.$store.commit('EDIT_GET_CDH_FILE', n);
+//     }
+//   }
+// }
+
 export function editPage(obj, n) {
-  console.log(obj.$store.state.Edit.rightType)
-  if (obj.$store.state.Edit.helpType !== '输入框提示') {
-    if (obj.$store.state.Edit.rightType === 'table') {
-      let page = 0
-      let countPage = 0
-      switch (obj.$store.state.Edit.lastNav) {
-        case '/library':
-          page = obj.$store.state.Library.tablePage
-          countPage = obj.$store.state.Library.countPage
-          break;
-        case '/stat':
-          page = obj.$store.state.Stat.tablePage
-          countPage = obj.$store.state.Stat.countPage
-          break;
-        default:
-          page = obj.$store.state.Edit.filePage
-          break;
-      }
-      if (page === 1 && n === -1) {
-        obj.$store.commit('SET_NOTICE', '当前已是第一页')
-      } else if (countPage === page && n === 1 && ['/stat', '/library'].includes(obj.$store.state.Edit.lastNav)) {
-        obj.$store.commit('SET_NOTICE', '当前已是尾页');
-      } else {
-        switch (obj.$store.state.Edit.lastNav) {
-          case '/library':
-            if (obj.$store.state.Library.tableType === 'server') {
-              obj.$store.commit('LIBRARY_TABLE_PAGE', [n]);
-              getLibrary(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Library.serverTable.tableName, obj.$store.state.Library.tablePage, obj.$store.state.Library.dimensionType, obj.$store.state.Library.dimensionServer, 'edit', 'server', ['asc', '编码'])
-            } else {
-              obj.$store.commit('LIBRARY_TABLE_PAGE', [n]);
-              obj.$store.commit('EDIT_LOAD_FILE', obj.$store.state.Library.localTable)
-              obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Library.tablePage}页,共${obj.$store.state.Library.countPage}页`)
-            }
-            break;
-          case '/stat':
-            if (obj.$store.state.Stat.tableType === 'server') {
-              obj.$store.commit('STAT_TABLE_PAGE', n);
-              getStat(obj, [obj.$store.state.System.server, obj.$store.state.System.port], { tableName: obj.$store.state.Stat.serverTable.tableName, page: obj.$store.state.Stat.tablePage, username: obj.$store.state.System.user.username, type: obj.$store.state.Stat.dimensionType, value: obj.$store.state.Stat.dimensionServer }, 'edit')
-            } else {
-              obj.$store.commit('STAT_TABLE_PAGE', n);
-              obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Stat.tablePage}页,共${obj.$store.state.Stat.countPage}页`)
-            }
-            break;
-          default:
-            obj.$store.commit('EDIT_SET_FILE_PAGE', n);
-            obj.$store.commit('SET_NOTICE', '下一页')
-            break;
-        }
-      }
-    } else if (obj.$store.state.Edit.rightPanel === 'edit') {
-      if (obj.$store.state.Edit.filesPage === 0 && n === -1) {
-        obj.$store.commit('SET_NOTICE', '当前已是第一页')
-      } else {
-        obj.$store.commit('EDIT_SET_FILES_PAGE', n);
-        obj.$store.commit('SET_NOTICE', '下一页')
-      }
-    }
-  } else if (obj.$store.state.Edit.helpType === '输入框提示') {
-    if (n === -1 && obj.$store.state.Edit.cdhFilePage === 0) {
-      obj.$store.commit('SET_NOTICE', '当前已经是第一页')
-    } else if (n === +1 && obj.$store.state.Edit.cdhFilePage === obj.$store.state.Edit.cdhFilePagecount) {
-      obj.$store.commit('SET_NOTICE', '当前已经最后一页')
+  const page = obj.$store.state.Edit.filesPage
+  const offset = obj.$store.state.Edit.filesOffset
+  const files = obj.$store.state.Edit.files
+  const filesNum = obj.$store.state.Edit.filesNum
+  if (page === 1 && n < 0) {
+    obj.$store.commit('SET_NOTICE', '当前已经是第一页')
+  } else if (page === filesNum && n > 0) {
+    obj.$store.commit('SET_NOTICE', '当前已经最后一页')
+  } else {
+    obj.$store.commit('EDIT_SET_FILES_PAGE', n);
+    if (n > 0) {
+      obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', files.slice(offset, offset + 20));
+      obj.$store.commit('EDIT_SET_FILES_OFFSET', offset + 20);
     } else {
-      obj.$store.commit('EDIT_GET_CDH_FILE', n);
+      obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', files.slice(offset - 20, offset));
+      obj.$store.commit('EDIT_SET_FILES_OFFSET', offset - 20);
     }
   }
 }

@@ -27,6 +27,7 @@
     computed: {
       rightPanels: {
         get() {
+          console.log(this.$store.state.Edit.rightPanels)
           return this.$store.state.Edit.rightPanels
         }
       },

@@ -2,7 +2,7 @@
   <div v-bind:style="{ height: height + 'px', overflow: 'auto' }">
     <table v-if="!this.$store.state.Edit.rightFolds.includes('编辑病案')" id="edit-leftpaneltable-table">
       <tr>
-        <th colspan="10" class="table-info"> {{fileName}}（共有{{fileLength}}条记录）
+        <th colspan="15" class="table-info"> {{fileName}}（共有{{fileLength}}条记录）
           <a href="#" v-on:click="close('编辑病案')" style="float: right">✖</a>
           <a href="#" v-on:click="fold('编辑病案')" style="float: right; marginRight: 3px">↗</a>
         </th>

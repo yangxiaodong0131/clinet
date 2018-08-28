@@ -1,12 +1,21 @@
 <template>
-  <div id="edit-rightpaneldoc-doc">
+  <div id="edit-rightpaneldoc-doc" style="marginBottom: 5px">
     <div class="card">
       <div>
-        <a href="#" v-on:click="close('病案参考')" style="float: right; marginRight: 5px">✖</a>
+        <table>
+          <tr v-on:dblclick="fold('title')">
+            <th colspan="10" class="table-info" id="edit-rightpanellocal-title" v-for="(section, key) of doc" v-bind:key='key'> 
+              <span v-if="key.length === 0" style="float: left; paddingLeft: 5px">病案参考无内容！</span>
+              <span v-else style="float: left; paddingLeft: 10px">{{title}}</span>
+              <a href="#" v-on:click="close('病案参考')" style="float: right">✖</a>
+              <a v-if="key.length > 0" href="#" v-on:click="fold('病案参考')" style="float: right; marginRight: 3px">↗</a>
+            </th>
+          </tr>
+        </table>
       </div>
       <div class="card-body" v-for="(section, key) of doc" v-bind:key='key'>
         <!-- 个人信息 -->
-        <div v-if="lastNav === '/stat'">
+        <div v-if="lastNav === '/stat' && key.length > 0">
           <table>
             <tr class="table-warning" v-on:dblclick="addSection(key.split(',')[1])"><td>{{key.split(',')[1]}}</td><td></td></tr>
             <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="onClick(item)" v-on:dblclick="onDblClick(item)">
@@ -15,7 +24,7 @@
             </tr>
           </table>
         </div>
-        <div v-if="lastNav === '/edit'">
+        <div v-if="lastNav === '/edit' && key.length > 0">
           <table v-if="key.split(',')[1] === '个人信息'">
             <tr class="table-warning" v-on:dblclick="addSection(key.split(',')[1])"><td>{{key.split(',')[1]}}</td><td></td></tr>
             <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="onClick(item)" v-on:dblclick="onDblClick(item)">
@@ -83,6 +92,12 @@
   import editDoc from '../../utils/EditDoc'
   export default {
     computed: {
+      title: {
+        get() {
+          const x = '病案参考'
+          return x
+        }
+      },
       flag: {
         get() {
           // const doc = this.$store.state.Edit.doc
@@ -98,6 +113,7 @@
           const doc = this.$store.state.Edit.docShow
           const systemSection = this.$store.state.System.systemSection
           const doc1 = editDoc(doc, systemSection)
+          console.log(doc1)
           return doc1
         }
       },

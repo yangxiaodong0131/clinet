@@ -1,7 +1,7 @@
 <template>
   <div id="edit-rightpanelhelp">
     <!-- <table v-if="type === '编辑器使用帮助'"> -->
-    <table v-if="this.$store.state.Edit.rightPanels.includes('编辑器使用帮助') && !this.$store.state.Edit.rightFolds.includes('编辑器使用帮助')">
+    <table v-if="rightPanels.includes('编辑器使用帮助') && !this.$store.state.Edit.rightFolds.includes('编辑器使用帮助')">
       <tr>
         <th class="table-danger" v-on:dblclick="fold('编辑器使用帮助')"> 编辑器使用帮助
           <a href="#" v-on:click="close('编辑器使用帮助')" style="float: right">✖</a>
@@ -113,7 +113,7 @@
         </td>
       </tr>
     </table>
-    <table v-if="this.$store.state.Edit.rightPanels.includes('编辑器使用帮助') && this.$store.state.Edit.rightFolds.includes('编辑器使用帮助')">
+    <table v-if="rightPanels.includes('编辑器使用帮助') && this.$store.state.Edit.rightFolds.includes('编辑器使用帮助')">
       <tr>
         <th class="table-danger"> 编辑器使用帮助
           <a href="#" v-on:click="close('编辑器使用帮助')" style="float: right">✖</a>
@@ -123,30 +123,31 @@
       <tr  style="textAlign: center"><a href="#" v-on:click="fold('编辑器使用帮助')">...</a></tr>
     </table>
     <!-- <table v-if="type === '病案历史'"> -->
-    <table v-if="this.$store.state.Edit.rightPanels.includes('病案历史')">
+    <!-- <table v-if="this.$store.state.Edit.rightPanels.includes('病案历史')">
       <tr>
         <th class="table-danger"> 病案历史
           <a href="#" v-on:click="close('病案历史')" style="float: right">✖</a>
         </th>
       </tr>
-    </table>
-    <right-panel-his v-if="this.$store.state.Edit.rightPanels.includes('病案历史')"></right-panel-his>
+    </table> -->
+    <right-panel-his v-if="rightPanels.includes('病案历史')"></right-panel-his>
     <!-- <right-panel-cdh v-if="type === '输入框提示'"></right-panel-cdh> -->
-    <right-panel-cdh v-if="this.$store.state.Edit.rightPanels.includes('输入框提示') || this.$store.state.Edit.rightPanels.includes('输入提示')"></right-panel-cdh>
+    <right-panel-cdh v-if="rightPanels.includes('输入框提示') || this.$store.state.Edit.rightPanels.includes('输入提示')"></right-panel-cdh>
     <!-- <right-panel-doc v-if="type === '病案参考'"></right-panel-doc> -->
-    <right-panel-doc v-if="this.$store.state.Edit.rightPanels.includes('病案参考')"></right-panel-doc>
-    <right-panel-control v-if="this.$store.state.Edit.rightPanels.includes('病案质控')"></right-panel-control>
-    <right-panel-expert v-if="this.$store.state.Edit.rightPanels.includes('专家提示')"></right-panel-expert>
+    <right-panel-doc v-if="rightPanels.includes('病案参考')"></right-panel-doc>
+    <right-panel-control v-if="rightPanels.includes('病案质控')"></right-panel-control>
+    <right-panel-expert v-if="rightPanels.includes('专家提示')"></right-panel-expert>
     <!-- <table v-if="type === 'DRG分析'"> -->
-    <table v-if="this.$store.state.Edit.rightPanels.includes('DRG分析')">
+    <table v-if="rightPanels.includes('DRG分析')">
       <tr>
-        <th class="table-danger"> DRG分析
+        <th class="table-info"> DRG分析暂无内容！
           <a href="#" v-on:click="close('DRG分析')" style="float: right">✖</a>
         </th>
       </tr>
     </table>
     <!-- <table v-if="type === '在线交流'"> -->
-    <table v-if="this.$store.state.Edit.rightPanels.includes('在线交流')">
+    <table v-if="rightPanels.includes('在线交流')">
+      <th colspan="10" class="table-info">在线交流</th>
       <tr class="table-danger">
         <th class="table-danger" colspan="2"> 当前在线用户：
           <a href="#" v-on:click="close('在线交流')" style="float: right">✖</a>
@@ -158,9 +159,9 @@
       </tr>
     </table>
     <!-- <table v-if="type === 'HIS接口'"> -->
-    <table v-if="this.$store.state.Edit.rightPanels.includes('HIS接口')">
+    <table v-if="rightPanels.includes('HIS接口')">
       <tr>
-        <th class="table-danger"> HIS接口
+        <th class="table-info"> HIS接口暂无内容！
           <a href="#" v-on:click="close('HIS接口')" style="float: right">✖</a>
         </th>
       </tr>
@@ -187,6 +188,12 @@
       chatUsers: {
         get() {
           return this.$store.state.Edit.chatUsers
+        }
+      },
+      rightPanels: {
+        get() {
+          console.log(this.$store.state.Edit.rightPanels)
+          return this.$store.state.Edit.rightPanels
         }
       }
     },

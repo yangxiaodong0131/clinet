@@ -15,6 +15,11 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
   }).then((res) => {
     if (res.status === 200) {
       obj.$store.commit('EDIT_SERVER_FILES', res.data.cda)
+      const num = Math.ceil(res.data.cda.length / 20)
+      obj.$store.commit('EDIT_SET_FILES_NUM', num)
+      obj.$store.commit('EDIT_SET_FILES_OFFSET', 20)
+      obj.$store.commit('EDIT_CLEAR_FILES_PAGE')
+      obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', res.data.cda.slice(0, 20))
       console.log(res.data.cda.slice(0, 20))
       if (type === 'user') {
         obj.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
@@ -265,6 +270,7 @@ export function editDocState(obj, doc) {
   // console.log(obj1)
 }
 
+// 病案历史
 export function editDocShow(obj, data, value) {
   // const value2 = value.join(' ')
   // const value2 = value[1].split(',').map(x => x.split(' ')[1])
@@ -276,6 +282,7 @@ export function editDocShow(obj, data, value) {
     data: qs.stringify({ item: value, server_type: 'server' }),
     responseType: 'json'
   }).then((res) => {
+    console.log(res.data.cda)
     obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda)
   }).catch((err) => {
     console.log(err);
@@ -284,6 +291,7 @@ export function editDocShow(obj, data, value) {
   // console.log(diag)
 }
 
+// 病案质控
 export function addDocControl(obj, data, value, username) {
   const [key, values] = value.split(':')
   axios({
@@ -302,6 +310,7 @@ export function addDocControl(obj, data, value, username) {
   })
 }
 
+// 专家提示
 export function getExpertHint(obj, data, value, section) {
   const arr = []
   arr.push(value[0])
