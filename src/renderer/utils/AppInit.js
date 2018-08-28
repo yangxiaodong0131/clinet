@@ -37,7 +37,6 @@ export default function appInit() {
   }
 
   const hitbdata = path.join(pathHome, pathData);
-  console.log(hitbdata);
   if (!fs.existsSync(hitbdata)) { fs.mkdirSync(hitbdata) }
   const hitbdataSystem = path.join(hitbdata, pathSystem);
   if (!fs.existsSync(hitbdataSystem)) { fs.mkdirSync(hitbdataSystem) }
@@ -295,7 +294,7 @@ export default function appInit() {
   }
 
   // 术语字典文件
-  db.library.count({}, (err, res) => {
+  db.libraryFile.count({}, (err, res) => {
     if (res === 0) {
       const libraryFile = []
       // mdc
@@ -365,54 +364,54 @@ export default function appInit() {
     }
   })
   // stat分析文件
-  db.stat.count({}, (err, res) => {
-    if (res === 0) {
-      // test_stat_1
-      axios.get('/static/test_stat_1.json')
-        .then((res) => {
-          res.data.forEach((data) => {
-            data.stat_type = 'test_stat_1'
-            db.stat.insert(data)
-          })
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      // test_stat_2
-      axios.get('/static/test_stat_2.json')
-        .then((res) => {
-          res.data.forEach((data) => {
-            data.stat_type = 'test_stat_2'
-            db.stat.insert(data)
-          })
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      // test_wt4_2015年1月
-      axios.get('/static/test_wt4_2015年1月.json')
-        .then((res) => {
-          res.data.forEach((data) => {
-            data.stat_type = 'test_wt4_2015年1月'
-            db.stat.insert(data)
-          })
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      // test_wt4_2015年2月
-      axios.get('/static/test_wt4_2015年2月.json')
-        .then((res) => {
-          res.data.forEach((data) => {
-            data.stat_type = 'test_wt4_2015年2月'
-            db.stat.insert(data)
-          })
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  })
+  // db.stat.count({}, (err, res) => {
+  //   if (res === 0) {
+  //     // test_stat_1
+  //     axios.get('/static/test_stat_1.json')
+  //       .then((res) => {
+  //         res.data.forEach((data) => {
+  //           data.stat_type = 'test_stat_1'
+  //           db.stat.insert(data)
+  //         })
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //     // test_stat_2
+  //     axios.get('/static/test_stat_2.json')
+  //       .then((res) => {
+  //         res.data.forEach((data) => {
+  //           data.stat_type = 'test_stat_2'
+  //           db.stat.insert(data)
+  //         })
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //     // test_wt4_2015年1月
+  //     axios.get('/static/test_wt4_2015年1月.json')
+  //       .then((res) => {
+  //         res.data.forEach((data) => {
+  //           data.stat_type = 'test_wt4_2015年1月'
+  //           db.stat.insert(data)
+  //         })
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //     // test_wt4_2015年2月
+  //     axios.get('/static/test_wt4_2015年2月.json')
+  //       .then((res) => {
+  //         res.data.forEach((data) => {
+  //           data.stat_type = 'test_wt4_2015年2月'
+  //           db.stat.insert(data)
+  //         })
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // })
 
   // 用户导入文件
   const orgFile1 = path.format({

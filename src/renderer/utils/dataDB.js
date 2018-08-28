@@ -7,9 +7,17 @@ function insert(obj, col, data) {
   })
 }
 
-function find(obj, col, data) {
-  obj.db[col].find(data, (err, res) => {
-    console.log(res)
+function find(obj, col, data, type) {
+  console.log(type);
+  obj.db[col].find(data).skip(0).limit(30).exec((err, res) => {
+    switch (type) {
+      case 'libraryFile':
+        obj.$store.commit('LIBRARY_LOAD_FILE', res)
+        break;
+      default:
+        console.log(res);
+        break;
+    }
   })
 }
 
@@ -37,22 +45,18 @@ function remove(obj, col, data, ops) {
   })
 }
 
-function libraryFiles(obj) {
-  // obj.db.library.find(data, ops, (err, res) => {
-  //   console.log(res)
-  // })
-  console.log(obj);
-}
-
-export default function (obj, type, col, data, oper, ops) {
-  count(obj, col, data, (a) => {
-    console.log(a);
-    return a;
+function libraryFiles(obj, col) {
+  obj.db[col].find({}, (err, res) => {
+    obj.$store.commit('LIBRARY_LOAD_FILES', res.map(x => x.fileName))
   })
-
-  // const b = count(obj, col, data, foo(function(a)) => a )
-  // console.log(count(obj, col, data))
-  type = 'server'
+}
+// obj type(local,server,block) 表  条件 操作类型  条件2
+export default function (obj, type, col, data, oper, ops) {
+  console.log([type, col, data, oper, ops])
+  // count(obj, col, data, (a) => {
+  //   console.log(a);
+  //   return a;
+  // })
   switch (type) {
     case 'local':
       switch (oper) {
@@ -62,7 +66,8 @@ export default function (obj, type, col, data, oper, ops) {
         case 'count': count(obj, col, data); break
         case 'update': update(obj, col, data, ops); break
         case 'remove': remove(obj, col, data, ops); break
-        case 'libraryFiles': libraryFiles(obj); break
+        case 'libraryFiles': libraryFiles(obj, col); break
+        case 'libraryFile': find(obj, col, data, oper); break
         default: break
       }
       break
