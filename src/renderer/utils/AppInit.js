@@ -225,8 +225,6 @@ export default function appInit() {
       })
     }
   })
-
-
   // 术语字典文件
   db.libraryFile.count({}, (err, res) => {
     if (res === 0) {
@@ -404,31 +402,15 @@ export default function appInit() {
   }
 
   // 用户本地文件
-  // const cdaFile = path.format({
-  //   dir: hitbdataUser,
-  //   base: '2018年度病案.cda'
-  // });
-  // if (!fs.existsSync(cdaFile)) { fs.writeFileSync(cdaFile, '') }
-  // // 未保存病案
-  // const notSaveDoc = path.format({
-  //   dir: hitbdataUser,
-  //   base: '未保存病案.cda'
-  // });
-  // if (fs.existsSync(notSaveDoc)) {
-  //   fs.lstat(notSaveDoc, (err) => {
-  //     if (!err) {
-  //       const fRead = fs.createReadStream(notSaveDoc);
-  //       const fReadline = readline.createInterface({ input: fRead });
-  //       const f = [];
-  //       fReadline.on('close', () => {
-  //         global.hitbDoc = f
-  //       });
-  //       fReadline.on('line', (line) => {
-  //         f.push(line)
-  //       })
-  //     }
-  //   })
-  // }
+  db.cda.count({ fileType: 'cda' }, (err, res) => {
+    if (res === 0) {
+      db.cda.insert({ fileType: 'cda', value: '', fileName: '未保存病案.cda' })
+    } else if (res > 0) {
+      db.cda.findOne({ fileType: 'cda' }, (err, res) => {
+        global.hitbDoc = res.value
+      })
+    }
+  })
 
   // 本地Section文件
   const sections = path.format({
