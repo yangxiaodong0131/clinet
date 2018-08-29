@@ -22,6 +22,11 @@ db.cda = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/cda.db')
 })
+// cdh表
+db.cdh = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/cdh.db')
+})
 //
 db.library = new Datastore({
   autoload: true,
@@ -36,12 +41,20 @@ db.stat = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/stat.db')
 })
+// 统计分析表
+db.statFile = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/statFile.db')
+})
 // 系统设置表
 db.system = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/system.db')
 })
-
+db.server = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/server.db')
+})
 db.loaded = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/loaded.db')

@@ -64,39 +64,24 @@ export default function appInit() {
   };
 
   // 服务器配置文件
-  const serverFile = path.format({
-    dir: hitbdataSystem,
-    base: 'hitb_server.csv'
-  });
-
-  if (fs.existsSync(serverFile)) {
-    const fRead = fs.createReadStream(serverFile);
-    const fReadline = readline.createInterface({ input: fRead });
-    const f = []; // 将CSV文件逐行读到数组中
-    const t = {}; // 将数组逐行转换为js对象
-
-    fReadline.on('close', () => {
-      f.shift();
-      f.forEach((line) => {
-        const x = line.split(',');
-        if (!t[x[0]]) { t[x[0]] = []; }
-        const a = x.shift();
-        t[a].push(x);
+  db.server.count({}, (err, res) => {
+    if (res === 0) {
+      global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }
+      db.server.insert({ name: '远程测试服务器', host: 'www.jiankanglaifu.com', port: '80', setting: '' })
+    } else {
+      db.server.find({}, (err, res) => {
+        const t = {}
+        res.forEach((x) => {
+          if (t[x.name]) {
+            t[x.name].push([x.host, x.port, x.setting])
+          } else {
+            t[x.name] = [[x.host, x.port, x.setting]]
+          }
+        })
+        global.hitbdata.server = t;
       })
-      global.hitbdata.server = t;
-    });
-
-    fReadline.on('line', (line) => {
-      f.push(line)
-    })
-  } else {
-    const data = '服务器名称,IP地址,PORT端口,连接设置\n远程测试服务器,www.jiankanglaifu.com,80,'
-    global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }
-    fs.writeFile(serverFile, data, (err) => {
-      console.log(err)
-    })
-  }
-
+    }
+  })
   // 区块链服务节点
   const blockFile = path.format({
     dir: hitbdataSystem,
@@ -185,114 +170,61 @@ export default function appInit() {
       });
   }
 
-  // 读取提示的cdh文件
-  function a(value) {
-    const fRead = fs.createReadStream(value);
-    const fReadline = readline.createInterface({ input: fRead });
-    const f = []; // 将CSV文件逐行读到数组中
-    const t = {}; // 将数组逐行转换为js对象
-    const header = []
-    fReadline.on('close', () => {
-      // if (value.endsWith('.csv')) {
-      f.shift();
-      global.hitbdata.cdhFile = f;
-      f.forEach((line) => {
-        const x = line.split(' ');
-        const [a, ...rest] = x;
-        header.push(a)
-        t[a] = rest;
+  // cdh帮助
+  db.cdh.count({}, (err, res) => {
+    if (res === 0) {
+      axios.get('/static/hitb_edit.cdh')
+        .then((res) => {
+          const t = []; // 将数组逐行转换为js对象
+          const header = []
+          res.data.split('\n').forEach((line) => {
+            const x = line.split(' ');
+            const [a, ...rest] = x;
+            header.push(a)
+            t.push({ key: a, value: rest, fileType: 'cdh' })
+          })
+          db.cdh.insert(t)
+          db.cdh.insert({ fileType: 'header', value: header })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (res > 0) {
+      db.cdh.find({ fileType: 'cdh' }, (err, res) => {
+        const t = {}
+        res.forEach((x) => {
+          t[x.key] = x.value
+        })
         global.hitbdata.cdh = t;
       })
-      global.hitbdata.cdhHeader = header;
-    });
-    fReadline.on('line', (line) => {
-      f.push(line)
-    })
-  }
-  // const cdhFile = path.format({
-  //   dir: hitbdataLibrary,
-  //   base: 'cdh.cdh'
-  // // })
-  // if (fs.existsSync(cdhFile)) {
-  //   a(cdhFile)
-  // }
-
-  const editFile = path.format({
-    dir: hitbdataSystem,
-    base: 'hitb_edit.cdh'
-  });
-  if (!fs.existsSync(editFile)) {
-    axios.get('/static/hitb_edit.cdh')
-      .then((res) => {
-        fs.writeFile(editFile, res.data, (err) => {
-          console.log(err)
-        })
+      db.cdh.findOne({ fileType: 'header' }, (err, res) => {
+        global.hitbdata.cdhHeader = res.header;
       })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  if (fs.existsSync(editFile)) {
-    a(editFile)
-    // fs.lstat(editFile, (err) => {
-    //   if (!err) {
-    //     const fRead = fs.createReadStream(editFile);
-    //     const fReadline = readline.createInterface({ input: fRead });
-    //     const f = [];
-    //     fReadline.on('close', () => {
-    //       const obj = {}
-    //       f.forEach((x) => {
-    //         const s = x.split(' ').filter(i => i !== '');
-    //         const k = s.shift()
-    //         obj[k] = s
-    //       })
-    //       global.hitbdata.cdh = obj
-    //     });
-    //     fReadline.on('line', (line) => {
-    //       f.push(line)
-    //     })
-    //   }
-    // })
-  }
+    }
+  })
 
   // 读取模板的cda文件
-  const modelFile = path.format({
-    dir: hitbdataSystem,
-    base: 'hitb_model.cda'
-  });
-  if (!fs.existsSync(modelFile)) {
-    axios.get('/static/hitb_model.cda')
-      .then((res) => {
-        fs.writeFile(modelFile, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  if (fs.existsSync(modelFile)) {
-    fs.lstat(modelFile, (err) => {
-      if (!err) {
-        const fRead = fs.createReadStream(modelFile);
-        const fReadline = readline.createInterface({ input: fRead });
-        const f = [];
-        fReadline.on('close', () => {
+  db.cda.count({ fileType: 'model' }, (err, res) => {
+    if (res === 0) {
+      axios.get('/static/hitb_model.cda')
+        .then((res) => {
           const obj = {}
-          f.forEach((x) => {
+          res.data.split('\n').forEach((x) => {
             const s = x.split(' ').filter(i => i !== '');
             const k = s.shift()
             obj[k] = s
           })
-          global.hitbmodel = obj
-        });
-        fReadline.on('line', (line) => {
-          f.push(line)
+          db.cda.insert({ fileType: 'model', value: obj })
         })
-      }
-    })
-  }
-
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (res > 0) {
+      db.cda.findOne({ fileType: 'model' }, (err, res) => {
+        global.hitbmodel = res.value;
+      })
+    }
+  })
   // 术语字典文件
   db.libraryFile.count({}, (err, res) => {
     if (res === 0) {
@@ -364,54 +296,48 @@ export default function appInit() {
     }
   })
   // stat分析文件
-  // db.stat.count({}, (err, res) => {
-  //   if (res === 0) {
-  //     // test_stat_1
-  //     axios.get('/static/test_stat_1.json')
-  //       .then((res) => {
-  //         res.data.forEach((data) => {
-  //           data.stat_type = 'test_stat_1'
-  //           db.stat.insert(data)
-  //         })
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //     // test_stat_2
-  //     axios.get('/static/test_stat_2.json')
-  //       .then((res) => {
-  //         res.data.forEach((data) => {
-  //           data.stat_type = 'test_stat_2'
-  //           db.stat.insert(data)
-  //         })
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //     // test_wt4_2015年1月
-  //     axios.get('/static/test_wt4_2015年1月.json')
-  //       .then((res) => {
-  //         res.data.forEach((data) => {
-  //           data.stat_type = 'test_wt4_2015年1月'
-  //           db.stat.insert(data)
-  //         })
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //     // test_wt4_2015年2月
-  //     axios.get('/static/test_wt4_2015年2月.json')
-  //       .then((res) => {
-  //         res.data.forEach((data) => {
-  //           data.stat_type = 'test_wt4_2015年2月'
-  //           db.stat.insert(data)
-  //         })
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   }
-  // })
+  db.statFile.count({}, (err, res) => {
+    if (res === 0) {
+      const statFile = []
+      // test_stat_1
+      axios.get('/static/test_stat_1.json')
+        .then((res) => {
+          db.stat.insert(res.data)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      statFile.push({ fileName: 'test_stat_1', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      // test_stat_2
+      axios.get('/static/test_stat_2.json')
+        .then((res) => {
+          db.stat.insert(res.data)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      statFile.push({ fileName: 'test_stat_1', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      // test_wt4_2015年1月
+      axios.get('/static/test_wt4_2015年1月.json')
+        .then((res) => {
+          db.stat.insert(res.data)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      statFile.push({ fileName: 'test_stat_1', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      // test_wt4_2015年2月
+      axios.get('/static/test_wt4_2015年2月.json')
+        .then((res) => {
+          db.stat.insert(res.data)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      statFile.push({ fileName: 'test_stat_1', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      db.statFile.insert(statFile)
+    }
+  })
 
   // 用户导入文件
   const orgFile1 = path.format({
@@ -476,31 +402,15 @@ export default function appInit() {
   }
 
   // 用户本地文件
-  // const cdaFile = path.format({
-  //   dir: hitbdataUser,
-  //   base: '2018年度病案.cda'
-  // });
-  // if (!fs.existsSync(cdaFile)) { fs.writeFileSync(cdaFile, '') }
-  // // 未保存病案
-  // const notSaveDoc = path.format({
-  //   dir: hitbdataUser,
-  //   base: '未保存病案.cda'
-  // });
-  // if (fs.existsSync(notSaveDoc)) {
-  //   fs.lstat(notSaveDoc, (err) => {
-  //     if (!err) {
-  //       const fRead = fs.createReadStream(notSaveDoc);
-  //       const fReadline = readline.createInterface({ input: fRead });
-  //       const f = [];
-  //       fReadline.on('close', () => {
-  //         global.hitbDoc = f
-  //       });
-  //       fReadline.on('line', (line) => {
-  //         f.push(line)
-  //       })
-  //     }
-  //   })
-  // }
+  db.cda.count({ fileType: 'cda' }, (err, res) => {
+    if (res === 0) {
+      db.cda.insert({ fileType: 'cda', value: '', fileName: '未保存病案.cda' })
+    } else if (res > 0) {
+      db.cda.findOne({ fileType: 'cda' }, (err, res) => {
+        global.hitbDoc = res.value
+      })
+    }
+  })
 
   // 本地Section文件
   const sections = path.format({
