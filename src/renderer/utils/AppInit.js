@@ -64,39 +64,24 @@ export default function appInit() {
   };
 
   // 服务器配置文件
-  const serverFile = path.format({
-    dir: hitbdataSystem,
-    base: 'hitb_server.csv'
-  });
-
-  if (fs.existsSync(serverFile)) {
-    const fRead = fs.createReadStream(serverFile);
-    const fReadline = readline.createInterface({ input: fRead });
-    const f = []; // 将CSV文件逐行读到数组中
-    const t = {}; // 将数组逐行转换为js对象
-
-    fReadline.on('close', () => {
-      f.shift();
-      f.forEach((line) => {
-        const x = line.split(',');
-        if (!t[x[0]]) { t[x[0]] = []; }
-        const a = x.shift();
-        t[a].push(x);
+  db.server.count({}, (err, res) => {
+    if (res === 0) {
+      global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }
+      db.server.insert({ name: '远程测试服务器', host: 'www.jiankanglaifu.com', port: '80', setting: '' })
+    } else {
+      db.server.find({}, (err, res) => {
+        const t = {}
+        res.forEach((x) => {
+          if (t[x.name]) {
+            t[x.name].push([x.host, x.port, x.setting])
+          } else {
+            t[x.name] = [[x.host, x.port, x.setting]]
+          }
+        })
+        global.hitbdata.server = t;
       })
-      global.hitbdata.server = t;
-    });
-
-    fReadline.on('line', (line) => {
-      f.push(line)
-    })
-  } else {
-    const data = '服务器名称,IP地址,PORT端口,连接设置\n远程测试服务器,www.jiankanglaifu.com,80,'
-    global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }
-    fs.writeFile(serverFile, data, (err) => {
-      console.log(err)
-    })
-  }
-
+    }
+  })
   // 区块链服务节点
   const blockFile = path.format({
     dir: hitbdataSystem,
@@ -184,33 +169,6 @@ export default function appInit() {
         console.log(error);
       });
   }
-
-  // 读取提示的cdh文件
-  // function a(value) {
-  //   const fRead = fs.createReadStream(value);
-  //   const fReadline = readline.createInterface({ input: fRead });
-  //   const f = []; // 将CSV文件逐行读到数组中
-  //   const t = {}; // 将数组逐行转换为js对象
-  //   const header = []
-  //   fReadline.on('close', () => {
-  //     // if (value.endsWith('.csv')) {
-  //     f.shift();
-  //     global.hitbdata.cdhFile = f;
-  //     f.forEach((line) => {
-  //       const x = line.split(' ');
-  //       const [a, ...rest] = x;
-  //       header.push(a)
-  //       t.push({ key: a, value: rest, fileType: 'cdh' })
-  //       // global.hitbdata.cdh = t;
-  //     })
-  //     db.cdh.insert(t)
-  //     db.cdh.insert({ fileType: 'header', value: header })
-  //     // global.hitbdata.cdhHeader = header;
-  //   });
-  //   fReadline.on('line', (line) => {
-  //     f.push(line)
-  //   })
-  // }
 
   // cdh帮助
   db.cdh.count({}, (err, res) => {

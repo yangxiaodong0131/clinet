@@ -51,7 +51,10 @@ db.system = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/system.db')
 })
-
+db.server = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/server.db')
+})
 db.loaded = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/loaded.db')
