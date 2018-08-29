@@ -36,6 +36,11 @@ db.stat = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/stat.db')
 })
+// 统计分析表
+db.statFile = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/statFile.db')
+})
 // 系统设置表
 db.system = new Datastore({
   autoload: true,
