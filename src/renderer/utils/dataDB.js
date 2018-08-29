@@ -7,9 +7,12 @@ function insert(obj, col, data) {
   })
 }
 
-function find(obj, col, data, type) {
-  console.log(type);
-  obj.db[col].find(data).skip(0).limit(30).exec((err, res) => {
+function find(obj, col, data, type, skip, limit) {
+  let query = obj.db[col].find(data)
+  if (skip !== null && limit !== null) {
+    query = query.skip(skip).limit(limit)
+  }
+  query.exec((err, res) => {
     switch (type) {
       case 'libraryFile':
         obj.$store.commit('LIBRARY_LOAD_FILE', res)
@@ -51,7 +54,7 @@ function libraryFiles(obj, col) {
   })
 }
 // obj type(local,server,block) 表  条件 操作类型  条件2
-export default function (obj, type, col, data, oper, ops) {
+export default function (obj, type, col, data, oper, ops, skip = null, limit = null) {
   console.log([type, col, data, oper, ops])
   // count(obj, col, data, (a) => {
   //   console.log(a);
@@ -61,13 +64,13 @@ export default function (obj, type, col, data, oper, ops) {
     case 'local':
       switch (oper) {
         case 'insert': insert(obj, col, data); break
-        case 'find': find(obj, col, data); break
+        case 'find': find(obj, col, data, skip, limit); break
         case 'findOne': findOne(obj, col, data); break
         case 'count': count(obj, col, data); break
         case 'update': update(obj, col, data, ops); break
         case 'remove': remove(obj, col, data, ops); break
         case 'libraryFiles': libraryFiles(obj, col); break
-        case 'libraryFile': find(obj, col, data, oper); break
+        case 'libraryFile': find(obj, col, data, oper, skip, limit); break
         default: break
       }
       break
