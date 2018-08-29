@@ -45,7 +45,7 @@
           this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
         }
         if (this.$store.state.Library.tableType === 'local') {
-          dataDB(this, 'local', 'library', { fileType: data }, 'libraryFile', null)
+          dataDB(this, 'local', 'library', { fileType: data }, 'libraryFile', null, 0, 30)
           // loadFile(this, data, 'library')
           // this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'local');
         } else {

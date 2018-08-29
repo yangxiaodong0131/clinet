@@ -40,19 +40,12 @@ const mutations = {
   },
   LIBRARY_LOAD_FILE(state, message) {
     const table = []
-    const keys = Object.keys(message[0])
+    const keys = Object.keys(message[0]).filter(i => !['_id', 'id', 'fileType'].includes(i))
     // 存储表头
     table.push(keys)
     // 取得表内容,取不到的用-代替
     message.forEach((xs) => {
-      const f = []
-      keys.forEach((x, i) => {
-        if (xs[x]) {
-          f[i] = xs[x]
-        } else {
-          f[i] = '-'
-        }
-      })
+      const f = keys.map(x => xs[x])
       table.push(f)
     })
     state.libraryTable.data = table
