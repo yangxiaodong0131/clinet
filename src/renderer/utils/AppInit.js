@@ -186,74 +186,64 @@ export default function appInit() {
   }
 
   // 读取提示的cdh文件
-  function a(value) {
-    const fRead = fs.createReadStream(value);
-    const fReadline = readline.createInterface({ input: fRead });
-    const f = []; // 将CSV文件逐行读到数组中
-    const t = {}; // 将数组逐行转换为js对象
-    const header = []
-    fReadline.on('close', () => {
-      // if (value.endsWith('.csv')) {
-      f.shift();
-      global.hitbdata.cdhFile = f;
-      f.forEach((line) => {
-        const x = line.split(' ');
-        const [a, ...rest] = x;
-        header.push(a)
-        t[a] = rest;
-        global.hitbdata.cdh = t;
-      })
-      global.hitbdata.cdhHeader = header;
-    });
-    fReadline.on('line', (line) => {
-      f.push(line)
-    })
-  }
-  // const cdhFile = path.format({
-  //   dir: hitbdataLibrary,
-  //   base: 'cdh.cdh'
-  // // })
-  // if (fs.existsSync(cdhFile)) {
-  //   a(cdhFile)
+  // function a(value) {
+  //   const fRead = fs.createReadStream(value);
+  //   const fReadline = readline.createInterface({ input: fRead });
+  //   const f = []; // 将CSV文件逐行读到数组中
+  //   const t = {}; // 将数组逐行转换为js对象
+  //   const header = []
+  //   fReadline.on('close', () => {
+  //     // if (value.endsWith('.csv')) {
+  //     f.shift();
+  //     global.hitbdata.cdhFile = f;
+  //     f.forEach((line) => {
+  //       const x = line.split(' ');
+  //       const [a, ...rest] = x;
+  //       header.push(a)
+  //       t.push({ key: a, value: rest, fileType: 'cdh' })
+  //       // global.hitbdata.cdh = t;
+  //     })
+  //     db.cdh.insert(t)
+  //     db.cdh.insert({ fileType: 'header', value: header })
+  //     // global.hitbdata.cdhHeader = header;
+  //   });
+  //   fReadline.on('line', (line) => {
+  //     f.push(line)
+  //   })
   // }
 
-  const editFile = path.format({
-    dir: hitbdataSystem,
-    base: 'hitb_edit.cdh'
-  });
-  if (!fs.existsSync(editFile)) {
-    axios.get('/static/hitb_edit.cdh')
-      .then((res) => {
-        fs.writeFile(editFile, res.data, (err) => {
-          console.log(err)
+  // cdh帮助
+  db.cdh.count({}, (err, res) => {
+    if (res === 0) {
+      axios.get('/static/hitb_edit.cdh')
+        .then((res) => {
+          const t = []; // 将数组逐行转换为js对象
+          const header = []
+          res.data.split('\n').forEach((line) => {
+            const x = line.split(' ');
+            const [a, ...rest] = x;
+            header.push(a)
+            t.push({ key: a, value: rest, fileType: 'cdh' })
+          })
+          db.cdh.insert(t)
+          db.cdh.insert({ fileType: 'header', value: header })
         })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (res > 0) {
+      db.cdh.find({ fileType: 'cdh' }, (err, res) => {
+        const t = {}
+        res.forEach((x) => {
+          t[x.key] = x.value
+        })
+        global.hitbdata.cdh = t;
       })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  if (fs.existsSync(editFile)) {
-    a(editFile)
-    // fs.lstat(editFile, (err) => {
-    //   if (!err) {
-    //     const fRead = fs.createReadStream(editFile);
-    //     const fReadline = readline.createInterface({ input: fRead });
-    //     const f = [];
-    //     fReadline.on('close', () => {
-    //       const obj = {}
-    //       f.forEach((x) => {
-    //         const s = x.split(' ').filter(i => i !== '');
-    //         const k = s.shift()
-    //         obj[k] = s
-    //       })
-    //       global.hitbdata.cdh = obj
-    //     });
-    //     fReadline.on('line', (line) => {
-    //       f.push(line)
-    //     })
-    //   }
-    // })
-  }
+      db.cdh.findOne({ fileType: 'header' }, (err, res) => {
+        global.hitbdata.cdhHeader = res.header;
+      })
+    }
+  })
 
   // 读取模板的cda文件
   const modelFile = path.format({
@@ -284,6 +274,7 @@ export default function appInit() {
             const k = s.shift()
             obj[k] = s
           })
+          console.log(obj);
           global.hitbmodel = obj
         });
         fReadline.on('line', (line) => {
@@ -407,67 +398,67 @@ export default function appInit() {
     }
   })
 
-  // 用户导入文件
-  const orgFile1 = path.format({
-    dir: hitbdata,
-    base: 'test_org.csv'
-  });
-  if (!fs.existsSync(orgFile1)) {
-    axios.get('/static/test_org.csv')
-      .then((res) => {
-        fs.writeFile(orgFile1, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const deptFile1 = path.format({
-    dir: hitbdata,
-    base: 'test_department.csv'
-  });
-  if (!fs.existsSync(deptFile1)) {
-    axios.get('/static/test_department.csv')
-      .then((res) => {
-        fs.writeFile(deptFile1, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const wt4File1 = path.format({
-    dir: hitbdata,
-    base: 'test_wt4_2015年1月.csv'
-  });
-  if (!fs.existsSync(wt4File1)) {
-    axios.get('/static/test_wt4_2015年1月.csv')
-      .then((res) => {
-        fs.writeFile(wt4File1, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const wt4File2 = path.format({
-    dir: hitbdata,
-    base: 'test_wt4_2015年2月.csv'
-  });
-  if (!fs.existsSync(wt4File2)) {
-    axios.get('/static/test_wt4_2015年2月.csv')
-      .then((res) => {
-        fs.writeFile(wt4File2, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  // // 用户导入文件
+  // const orgFile1 = path.format({
+  //   dir: hitbdata,
+  //   base: 'test_org.csv'
+  // });
+  // if (!fs.existsSync(orgFile1)) {
+  //   axios.get('/static/test_org.csv')
+  //     .then((res) => {
+  //       fs.writeFile(orgFile1, res.data, (err) => {
+  //         console.log(err)
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
+  // const deptFile1 = path.format({
+  //   dir: hitbdata,
+  //   base: 'test_department.csv'
+  // });
+  // if (!fs.existsSync(deptFile1)) {
+  //   axios.get('/static/test_department.csv')
+  //     .then((res) => {
+  //       fs.writeFile(deptFile1, res.data, (err) => {
+  //         console.log(err)
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
+  // const wt4File1 = path.format({
+  //   dir: hitbdata,
+  //   base: 'test_wt4_2015年1月.csv'
+  // });
+  // if (!fs.existsSync(wt4File1)) {
+  //   axios.get('/static/test_wt4_2015年1月.csv')
+  //     .then((res) => {
+  //       fs.writeFile(wt4File1, res.data, (err) => {
+  //         console.log(err)
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
+  // const wt4File2 = path.format({
+  //   dir: hitbdata,
+  //   base: 'test_wt4_2015年2月.csv'
+  // });
+  // if (!fs.existsSync(wt4File2)) {
+  //   axios.get('/static/test_wt4_2015年2月.csv')
+  //     .then((res) => {
+  //       fs.writeFile(wt4File2, res.data, (err) => {
+  //         console.log(err)
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
 
   // 用户本地文件
   // const cdaFile = path.format({

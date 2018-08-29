@@ -22,6 +22,11 @@ db.cda = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/cda.db')
 })
+// cdh表
+db.cdh = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/cdh.db')
+})
 //
 db.library = new Datastore({
   autoload: true,
