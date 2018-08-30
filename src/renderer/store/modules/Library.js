@@ -101,16 +101,16 @@ const mutations = {
     } else {
       state.libraryTableInfo.page += m[0];
     }
-    const page = Math.ceil(state.tableSel.length / 35)
-    if (state.libraryTableInfo.page > page && state.tableType !== 'server') {
-      state.libraryTableInfo.page = page
-    } else if (state.libraryTableInfo.page < 1) {
-      state.libraryTableInfo.page = 1
-    }
+    // const page = Math.ceil(state.tableSel.length / 35)
+    // if (state.libraryTableInfo.page > page && state.tableType !== 'server') {
+    //   state.libraryTableInfo.page = page
+    // } else if (state.libraryTableInfo.page < 1) {
+    //   state.libraryTableInfo.page = 1
+    // }
     // .slice(1)
-    if (state.localTables[state.libraryTableInfo.page] !== undefined) {
-      state.libraryTable.data = state.localTables[state.libraryTableInfo.page]
-    }
+    // if (state.localTables[state.libraryTableInfo.page] !== undefined) {
+    //   state.libraryTable.data = state.localTables[state.libraryTableInfo.page]
+    // }
     // console.log(state.localTables[state.libraryTableInfo.page])
     // state.libraryTable.data = state.localTables[state.libraryTableInfo.page]
   },

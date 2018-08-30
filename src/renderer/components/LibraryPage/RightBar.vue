@@ -147,6 +147,10 @@
           getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, this.$store.state.Library.libraryTableInfo.page, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
         } else if (this.$store.state.Library.tableType === 'local') {
           this.$store.commit('LIBRARY_TABLE_PAGE', [n]);
+          // console.log(this.$store.state.Library.libraryTableInfo.page)
+          const pages = (this.$store.state.Library.libraryTableInfo.page - 1) * 30
+          // console.log(pages)
+          dataDB(this, 'local', 'library', { fileType: this.$store.state.Library.files[this.$store.state.Library.fileIndex] }, 'libraryFile', null, pages, 30)
           this.$store.commit('SET_NOTICE', `当前${this.$store.state.Library.libraryTableInfo.page}页,共${this.$store.state.Library.libraryTableInfo.countPage}页`)
         }
       },
