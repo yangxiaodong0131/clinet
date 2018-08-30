@@ -35,6 +35,7 @@
     },
     methods: {
       loadFile: function (data, index) {
+        this.$store.commit('LIBRARY_SET_TABLE_PAGE', 0)
         // this.$store.commit('LIBRARY_SET_SERVER_TABLE_TITLE', data);
         // this.$store.commit('SYSTEM_GET_SHARE_FILE_NAME', this.$store.state.Library.files[index]);
         // this.$store.commit('LIBRARY_GET_ROW', 0);
@@ -45,6 +46,7 @@
           this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
         }
         if (this.$store.state.Library.tableType === 'local') {
+          dataDB(this, 'local', 'library', { fileType: data }, 'libraryCount', null, null, 30)
           dataDB(this, 'local', 'library', { fileType: data }, 'libraryFile', null, 0, 30)
           // loadFile(this, data, 'library')
           // this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'local');
