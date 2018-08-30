@@ -1,9 +1,17 @@
 // 统一的数据库操作入口，
 // 包括local、server、block三层数据库
 // 包括cda、library、stat、system、user等等数据表
-function insert(obj, col, data) {
+function insert(obj, col, data, type) {
   obj.db[col].insert(data, (err, res) => {
-    console.log(res)
+    // obj.$store.commit('SET_NOTICE', `文件「${x}」保存成功！`)
+    switch (type) {
+      case 'createCda':
+        obj.$store.commit('SET_NOTICE', `文件「${data.fileName}」保存成功！`)
+        break;
+      default:
+        console.log(res);
+        break;
+    }
   })
 }
 
@@ -67,31 +75,33 @@ function count(obj, col, data, type, limit) {
   })
 }
 
-function update(obj, col, data, ops) {
-  obj.db[col].update(data, ops, (err, res) => {
+function update(obj, col, data, newData) {
+  obj.db[col].update(data, { $set: newData }, (err, res) => {
     console.log(res)
   })
 }
 
-function remove(obj, col, data, ops) {
-  obj.db[col].remove(data, ops, (err, res) => {
+function remove(obj, col, data, newData) {
+  obj.db[col].remove(data, newData, (err, res) => {
     console.log(res)
   })
 }
 
 // obj type(local,server,block) 表  条件 操作类型  条件2
-export default function (obj, fileType, col, data, type, ops, skip = null, limit = null) {
+export default function (obj, fileType, col, data, type, newData, skip = null, limit = null) {
   switch (fileType) {
     case 'local':
       switch (type) {
-        case 'insert': insert(obj, col, data); break
+        case 'insert': insert(obj, col, data, type); break
         case 'find': find(obj, col, data, type, skip, limit); break
         case 'findOne': findOne(obj, col, data); break
         case 'count': count(obj, col, data); break
-        case 'update': update(obj, col, data, ops); break
-        case 'remove': remove(obj, col, data, ops); break
+        case 'update': update(obj, col, data, newData, type); break
+        case 'remove': remove(obj, col, data, newData); break
         case 'editFiles': find(obj, col, data, type, skip, limit); break
         case 'editFile': findOne(obj, col, data, type); break
+        case 'createCda': insert(obj, col, data, type); break
+        case 'saveCda': update(obj, col, data, newData, type); break
         case 'libraryFiles': find(obj, col, data, type, skip, limit); break
         case 'libraryFile': find(obj, col, data, type, skip, limit); break
         case 'libraryCount': count(obj, col, data, type, limit); break
