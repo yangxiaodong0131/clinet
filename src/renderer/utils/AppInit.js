@@ -404,7 +404,7 @@ export default function appInit() {
   // 用户本地文件
   db.cda.count({ fileType: 'cda' }, (err, res) => {
     if (res === 0) {
-      db.cda.insert({ fileType: 'cda', value: '', fileName: '未保存病案.cda' })
+      db.cda.insert({ fileType: 'cda', value: [], fileName: '未保存病案.cda', username: 'system', cTime: '', uTime: '' })
     } else if (res > 0) {
       db.cda.findOne({ fileType: 'cda' }, (err, res) => {
         global.hitbDoc = res.value

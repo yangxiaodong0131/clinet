@@ -14,6 +14,9 @@ function find(obj, col, data, type, skip, limit) {
   }
   query.exec((err, res) => {
     switch (type) {
+      case 'editFiles':
+        obj.$store.commit('EDIT_LOAD_FILES', res.map(x => x.fileName));
+        break;
       case 'libraryFiles':
         obj.$store.commit('LIBRARY_LOAD_FILES', res.map(x => x.fileName));
         break;
@@ -80,6 +83,7 @@ export default function (obj, fileType, col, data, type, ops, skip = null, limit
         case 'count': count(obj, col, data); break
         case 'update': update(obj, col, data, ops); break
         case 'remove': remove(obj, col, data, ops); break
+        case 'editFiles': find(obj, col, data, type, skip, limit); break
         case 'libraryFiles': find(obj, col, data, type, skip, limit); break
         case 'libraryFile': find(obj, col, data, type, skip, limit); break
         case 'libraryCount': count(obj, col, data, type, limit); break

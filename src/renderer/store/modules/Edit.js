@@ -116,10 +116,11 @@ const mutations = {
   EDIT_SERVER_CDH(state, m) {
     state.serverCdh = m;
   },
-  EDIT_LOAD_FILES() {
-    const files = fs.readdirSync(global.hitbdata.path.user).filter(x => x.endsWith('.cda'))
-    state.files = files;
-    console.log(state.files.length)
+  EDIT_LOAD_FILES(state, m) {
+    state.files = m
+    // const files = fs.readdirSync(global.hitbdata.path.user).filter(x => x.endsWith('.cda'))
+    // state.files = files;
+    // console.log(state.files.length)
   },
   EDIT_LOAD_FILE(state, message) {
     state.file = message;
