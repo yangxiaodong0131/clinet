@@ -44,7 +44,7 @@ function count(obj, col, data, type, limit) {
     const countPage = Math.ceil(res / limit)
     switch (type) {
       case 'libraryCount':
-        obj.$store.commit('LIBRARY_SET_TABLE_PAGE', countPage)
+        obj.$store.commit('LIBRARY_SET_COUNT_PAGE', countPage)
         break;
       case 'statCount':
         obj.$store.commit('LIBRARY_SET_TABLE_PAGE', countPage)

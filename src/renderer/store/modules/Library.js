@@ -250,7 +250,7 @@ const mutations = {
     state.rowHeight = data
   },
   LIBRARY_SET_COUNT_PAGE(state, n) {
-    state.countPage = n
+    state.libraryTableInfo.countPage = n
   },
   LIBRARY_SET_FILE_TYPES(state, value) {
     state.fileTypes = value
