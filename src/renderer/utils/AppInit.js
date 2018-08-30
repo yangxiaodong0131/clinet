@@ -316,7 +316,7 @@ export default function appInit() {
         .catch((error) => {
           console.log(error);
         });
-      statFile.push({ fileName: 'test_stat_1', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      statFile.push({ fileName: 'test_stat_2', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
       // test_wt4_2015年1月
       axios.get('/static/test_wt4_2015年1月.json')
         .then((res) => {
@@ -325,7 +325,7 @@ export default function appInit() {
         .catch((error) => {
           console.log(error);
         });
-      statFile.push({ fileName: 'test_stat_1', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      statFile.push({ fileName: 'test_wt4_2015年1月', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
       // test_wt4_2015年2月
       axios.get('/static/test_wt4_2015年2月.json')
         .then((res) => {
@@ -334,7 +334,7 @@ export default function appInit() {
         .catch((error) => {
           console.log(error);
         });
-      statFile.push({ fileName: 'test_stat_1', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
+      statFile.push({ fileName: 'test_wt4_2015年2月', cUser: 'system', uUser: 'system', cTIme: '', uTime: '' })
       db.statFile.insert(statFile)
     }
   })

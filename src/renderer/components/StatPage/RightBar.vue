@@ -179,10 +179,11 @@
   import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
   // import saveFile from '../../utils/SaveFile';
-  import { getStatFiles, getStat, saveStat, getStatInfo, downloadStat, sCustom } from '../../utils/StatServerFile';
+  import { getStat, saveStat, getStatInfo, downloadStat, sCustom } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
+  import dataDB from '../../utils/dataDB';
   // import sGetTarget from '../../utils/Server';
-  import getStatFile from '../../utils/StatOperation';
+  // import getStatFile from '../../utils/StatOperation';
 
   export default {
     data() {
@@ -223,7 +224,21 @@
     },
     methods: {
       statFile: function (n) {
-        getStatFile(this, n)
+        let type = ''
+        switch (n) {
+          case '本地': type = 'local'; break;
+          case '远程': type = 'server'; break;
+          case '区块链': type = 'block'; break;
+          default: type = ''; break;
+        }
+        this.$store.commit('STAT_SET_TABLE_PAGE', 1)
+        this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
+        this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
+        dataDB(this, type, 'statFile', null, 'statFiles', null)
+        // this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
+        // this.$store.commit('LIBRARY_SET_TABLE_TYPE', type);
+        // this.$store.commit('SET_NOTICE', `${n}文件`);
+        // getStatFile(this, n)
         // this.$store.commit('STAT_SET_TABLE_PAGE', 1)
         // this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
         // if (n === '本地') {
@@ -253,40 +268,40 @@
         //   }
         // }
       },
-      loadData: function () {
-        this.$store.commit('SET_NOTICE', '选择本地文件')
-        this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-        this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-        this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
-        this.$store.commit('STAT_LOAD_FILES');
-        this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-      },
-      serverData: function () {
-        if (!this.$store.state.System.user.login) {
-          this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-        } else {
-          this.$store.commit('SET_NOTICE', '选择远程文件')
-          this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-          this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-          this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
-          this.$store.commit('STAT_SET_BAR_TYPE', 'server')
-          this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-          getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
-        }
-      },
-      blockData: function () {
-        if (!this.$store.state.System.user.login) {
-          this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-        } else {
-          this.$store.commit('SET_NOTICE', '区块链文件');
-          this.$store.commit('STAT_SET_TABLE_TYPE', 'block');
-          this.$store.commit('STAT_SET_BAR_TYPE', 'block');
-          this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-          this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-          this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-          getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.username, 'block')
-        }
-      },
+      // loadData: function () {
+      //   this.$store.commit('SET_NOTICE', '选择本地文件')
+      //   this.$store.commit('STAT_SET_TABLE_PAGE', 1)
+      //   // this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
+      //   // this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
+      //   // this.$store.commit('STAT_LOAD_FILES');
+      //   // this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
+      // },
+      // serverData: function () {
+      //   if (!this.$store.state.System.user.login) {
+      //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
+      //   } else {
+      //     this.$store.commit('SET_NOTICE', '选择远程文件')
+      //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
+      //     this.$store.commit('STAT_SET_TABLE_PAGE', 1)
+      //     this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
+      //     this.$store.commit('STAT_SET_BAR_TYPE', 'server')
+      //     this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
+      //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
+      //   }
+      // },
+      // blockData: function () {
+      //   if (!this.$store.state.System.user.login) {
+      //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
+      //   } else {
+      //     this.$store.commit('SET_NOTICE', '区块链文件');
+      //     this.$store.commit('STAT_SET_TABLE_TYPE', 'block');
+      //     this.$store.commit('STAT_SET_BAR_TYPE', 'block');
+      //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
+      //     this.$store.commit('STAT_SET_TABLE_PAGE', 1)
+      //     this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
+      //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.username, 'block')
+      //   }
+      // },
       page: function (n) {
         if (this.$store.state.Stat.tablePage === 1 && n === -1) {
           this.$store.commit('SET_NOTICE', '当前已是第一页')

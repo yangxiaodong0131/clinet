@@ -249,9 +249,6 @@ const mutations = {
   LIBRARY_GET_ROW(state, data) {
     state.rowHeight = data
   },
-  LIBRARY_SET_LOCAL_COUNT_PAGE(state, n) {
-    state.libraryTableInfo.countPage = Math.ceil(n[0] / n[1])
-  },
   LIBRARY_SET_COUNT_PAGE(state, n) {
     state.countPage = n
   },
@@ -288,7 +285,6 @@ const mutations = {
 
 const actions = {
   someAsyncTask({ commit }) {
-    commit('LIBRARY_SET_LOCAL_COUNT_PAGE');
     commit('LIBRARY_CLEAR_CHANGE');
     commit('LIBRARY_SET_CHANGE_INDEX');
     commit('LIBRARY_SET_CHANGE');

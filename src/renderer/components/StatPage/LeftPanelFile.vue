@@ -12,9 +12,10 @@
 </template>
 
 <script>
-  import loadFile from '../../utils/LoadFile';
+  // import loadFile from '../../utils/LoadFile';
   // import chartLine from '../../utils/ChartLine';
   // import chartBar from '../../utils/ChartBar';
+  import dataDB from '../../utils/dataDB';
   import { getStatFiles, getStat } from '../../utils/StatServerFile'
   // import { sGetWt4 } from '../../utils/Server'
   export default {
@@ -45,12 +46,13 @@
     },
     methods: {
       loadFile: function (data, index) {
-        console.log(data)
         // 设置文件高亮
         this.$store.commit('STAT_SET_FILE_INDEX', ['first', index]);
         // 判断读取文件
         if (this.$store.state.Stat.tableType === 'local') {
-          loadFile(this, data, 'stat');
+          dataDB(this, 'local', 'stat', { fileType: data }, 'statCount', null, null, 20)
+          dataDB(this, 'local', 'stat', { fileType: data }, 'statFile', null, 0, 20)
+          // loadFile(this, data, 'stat');
         } else if (this.$store.state.Stat.tableType === 'server' || this.$store.state.Stat.isServer) {
           this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
           // 判断是否是病案
@@ -62,7 +64,6 @@
               this.$store.commit('STAT_SET_SERVER_MENU', ['三级菜单', []]);
             }
             this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-            console.log(data)
             getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, this.$store.state.Stat.tableType)
           }
         }
