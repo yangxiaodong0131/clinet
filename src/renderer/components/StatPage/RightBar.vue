@@ -176,7 +176,7 @@
   import chartRadar from '../../utils/ChartRadar';
   import chartBar from '../../utils/ChartBar';
   import chartPie from '../../utils/ChartPie';
-  import chartData from '../../utils/ChartData';
+  // import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
   // import saveFile from '../../utils/SaveFile';
   import { getStat, saveStat, getStatInfo, downloadStat, sCustom } from '../../utils/StatServerFile';
@@ -303,24 +303,27 @@
       //   }
       // },
       page: function (n) {
-        if (this.$store.state.Stat.tablePage === 1 && n === -1) {
+        if (this.$store.state.Stat.statTableInfo.page === 1 && n === -1) {
           this.$store.commit('SET_NOTICE', '当前已是第一页')
-        } else if ((this.$store.state.Stat.tablePage === this.$store.state.Stat.statTableInfo.countPage && n === 1) || this.$store.state.Stat.statTableInfo.countPage === 0) {
+        } else if ((this.$store.state.Stat.statTableInfo.page === this.$store.state.Stat.statTableInfo.countPage && n === 1) || this.$store.state.Stat.statTableInfo.countPage === 0) {
           this.$store.commit('SET_NOTICE', '当前已是尾页');
-        } else {
-          switch (this.$store.state.Stat.tableType) {
-            case 'server':
-              this.$store.commit('STAT_TABLE_PAGE', n);
-              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: this.$store.state.Stat.statTableInfo.page, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
-              break;
-            case 'local':
-              this.$store.commit('STAT_TABLE_PAGE', n);
-              this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
-              chartData(this, this.$store.state.Stat.statTable.data, this.$store.state.Stat.selectedRow, this.$store.state.Stat.selectedCol)
-              break;
-            default:
-              break;
-          }
+        } else if (['local', 'server', 'block'].includes(this.$store.state.Stat.tableType)) {
+          this.$store.commit('LIBRARY_TABLE_PAGE', [n]);
+          const skip = (this.$store.state.Stat.statTableInfo.page - 1) * 20
+          dataDB(this, 'local', 'stat', { fileType: this.$store.state.Stat.files[this.$store.state.Stat.fileIndex] }, 'statFile', null, skip, 20)
+          // switch (this.$store.state.Stat.tableType) {
+          //   case 'server':
+          //     this.$store.commit('STAT_TABLE_PAGE', n);
+          //     getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: this.$store.state.Stat.statTableInfo.page, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+          //     break;
+          //   case 'local':
+          //     this.$store.commit('STAT_TABLE_PAGE', n);
+          //     this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
+          //     chartData(this, this.$store.state.Stat.statTable.data, this.$store.state.Stat.selectedRow, this.$store.state.Stat.selectedCol)
+          //     break;
+          //   default:
+          //     break;
+          // }
           switch (this.$store.state.Stat.chartLeft) {
             case '柱状图':
               chartBar('chartLeft', this.$store.state.Stat.chartData)

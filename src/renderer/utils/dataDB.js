@@ -66,7 +66,7 @@ function count(obj, col, data, type, limit) {
         obj.$store.commit('LIBRARY_SET_COUNT_PAGE', countPage)
         break;
       case 'statCount':
-        obj.$store.commit('LIBRARY_SET_TABLE_PAGE', countPage)
+        obj.$store.commit('STAT_SET_COUNT_PAGE', countPage)
         break;
       default:
         console.log(res);
@@ -109,6 +109,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'libraryCount': count(obj, col, data, type, limit); break
         case 'statFiles': find(obj, col, data, type, skip, limit); break
         case 'statFile': find(obj, col, data, type, skip, limit); break
+        case 'statCount': count(obj, col, data, type, limit); break
         default: break
       }
       break
