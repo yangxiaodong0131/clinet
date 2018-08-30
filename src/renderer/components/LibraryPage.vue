@@ -18,7 +18,7 @@
 <script>
   import NavBar from './HomePage/NavBar';
   import LeftPanel from './LibraryPage/LeftPanel';
-  import RightPanel from './LibraryPage/RightPanel1';
+  import RightPanel from './LibraryPage/RightPanel';
   import NoticeBar from './HomePage/NoticeBar';
 
   export default {

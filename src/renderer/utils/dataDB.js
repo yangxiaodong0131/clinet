@@ -30,9 +30,18 @@ function findOne(obj, col, data) {
   })
 }
 
-function count(obj, col, data, callback) {
+function count(obj, col, data, type, limit) {
   obj.db[col].count(data, (err, res) => {
-    callback(res)
+    const countPage = Math.ceil(res / limit)
+    switch (type) {
+      case 'libraryCount':
+        obj.$store.commit('LIBRARY_SET_TABLE_PAGE', countPage)
+        break;
+      default:
+        console.log(res);
+        break;
+    }
+    obj.$store.commit('SET_NOTICE', `当前1页,共${countPage}页`)
   })
 }
 
@@ -54,15 +63,10 @@ function libraryFiles(obj, col) {
   })
 }
 // obj type(local,server,block) 表  条件 操作类型  条件2
-export default function (obj, type, col, data, oper, ops, skip = null, limit = null) {
-  console.log([type, col, data, oper, ops])
-  // count(obj, col, data, (a) => {
-  //   console.log(a);
-  //   return a;
-  // })
-  switch (type) {
+export default function (obj, fileType, col, data, type, ops, skip = null, limit = null) {
+  switch (fileType) {
     case 'local':
-      switch (oper) {
+      switch (type) {
         case 'insert': insert(obj, col, data); break
         case 'find': find(obj, col, data, skip, limit); break
         case 'findOne': findOne(obj, col, data); break
@@ -70,7 +74,8 @@ export default function (obj, type, col, data, oper, ops, skip = null, limit = n
         case 'update': update(obj, col, data, ops); break
         case 'remove': remove(obj, col, data, ops); break
         case 'libraryFiles': libraryFiles(obj, col); break
-        case 'libraryFile': find(obj, col, data, oper, skip, limit); break
+        case 'libraryFile': find(obj, col, data, type, skip, limit); break
+        case 'libraryCount': count(obj, col, data, type, limit); break
         default: break
       }
       break
