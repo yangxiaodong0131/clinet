@@ -14,8 +14,17 @@ function find(obj, col, data, type, skip, limit) {
   }
   query.exec((err, res) => {
     switch (type) {
+      case 'libraryFiles':
+        obj.$store.commit('LIBRARY_LOAD_FILES', res.map(x => x.fileName));
+        break;
       case 'libraryFile':
-        obj.$store.commit('LIBRARY_LOAD_FILE', res)
+        obj.$store.commit('LIBRARY_LOAD_FILE', res);
+        break;
+      case 'statFiles':
+        obj.$store.commit('STAT_LOAD_FILES', res.map(x => x.fileName));
+        break;
+      case 'statFile':
+        obj.$store.commit('STAT_SET_TABLE', res);
         break;
       default:
         console.log(res);
@@ -35,6 +44,9 @@ function count(obj, col, data, type, limit) {
     const countPage = Math.ceil(res / limit)
     switch (type) {
       case 'libraryCount':
+        obj.$store.commit('LIBRARY_SET_TABLE_PAGE', countPage)
+        break;
+      case 'statCount':
         obj.$store.commit('LIBRARY_SET_TABLE_PAGE', countPage)
         break;
       default:
@@ -57,25 +69,22 @@ function remove(obj, col, data, ops) {
   })
 }
 
-function libraryFiles(obj, col) {
-  obj.db[col].find({}, (err, res) => {
-    obj.$store.commit('LIBRARY_LOAD_FILES', res.map(x => x.fileName))
-  })
-}
 // obj type(local,server,block) 表  条件 操作类型  条件2
 export default function (obj, fileType, col, data, type, ops, skip = null, limit = null) {
   switch (fileType) {
     case 'local':
       switch (type) {
         case 'insert': insert(obj, col, data); break
-        case 'find': find(obj, col, data, skip, limit); break
+        case 'find': find(obj, col, data, type, skip, limit); break
         case 'findOne': findOne(obj, col, data); break
         case 'count': count(obj, col, data); break
         case 'update': update(obj, col, data, ops); break
         case 'remove': remove(obj, col, data, ops); break
-        case 'libraryFiles': libraryFiles(obj, col); break
+        case 'libraryFiles': find(obj, col, data, type, skip, limit); break
         case 'libraryFile': find(obj, col, data, type, skip, limit); break
         case 'libraryCount': count(obj, col, data, type, limit); break
+        case 'statFiles': find(obj, col, data, type, skip, limit); break
+        case 'statFile': find(obj, col, data, type, skip, limit); break
         default: break
       }
       break
