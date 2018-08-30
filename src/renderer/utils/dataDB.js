@@ -36,9 +36,16 @@ function find(obj, col, data, type, skip, limit) {
   })
 }
 
-function findOne(obj, col, data) {
+function findOne(obj, col, data, type) {
   obj.db[col].findOne(data, (err, res) => {
-    res.json(res)
+    switch (type) {
+      case 'editFile':
+        obj.$store.commit('EDIT_LOAD_FILE', res.value);
+        break;
+      default:
+        console.log(res);
+        break;
+    }
   })
 }
 
@@ -84,6 +91,7 @@ export default function (obj, fileType, col, data, type, ops, skip = null, limit
         case 'update': update(obj, col, data, ops); break
         case 'remove': remove(obj, col, data, ops); break
         case 'editFiles': find(obj, col, data, type, skip, limit); break
+        case 'editFile': findOne(obj, col, data, type); break
         case 'libraryFiles': find(obj, col, data, type, skip, limit); break
         case 'libraryFile': find(obj, col, data, type, skip, limit); break
         case 'libraryCount': count(obj, col, data, type, limit); break
