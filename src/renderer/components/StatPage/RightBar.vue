@@ -226,15 +226,24 @@
       statFile: function (n) {
         let type = ''
         switch (n) {
-          case '本地': type = 'local'; break;
-          case '远程': type = 'server'; break;
-          case '区块链': type = 'block'; break;
+          case '本地':
+            type = 'local';
+            break;
+          case '远程':
+            this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
+            this.$store.commit('STAT_SET_BAR_TYPE', 'server')
+            type = 'server';
+            break;
+          case '区块链':
+            type = 'block';
+            break;
           default: type = ''; break;
         }
+        console.log(type);
+        this.$store.commit('STAT_SET_TABLE_TYPE', type)
         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
         this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-        this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
-        dataDB(this, type, 'statFile', null, 'statFiles', null)
+        dataDB(this, type, 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: type })
         // this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
         // this.$store.commit('LIBRARY_SET_TABLE_TYPE', type);
         // this.$store.commit('SET_NOTICE', `${n}文件`);
@@ -308,9 +317,10 @@
         } else if ((this.$store.state.Stat.statTableInfo.page === this.$store.state.Stat.statTableInfo.countPage && n === 1) || this.$store.state.Stat.statTableInfo.countPage === 0) {
           this.$store.commit('SET_NOTICE', '当前已是尾页');
         } else if (['local', 'server', 'block'].includes(this.$store.state.Stat.tableType)) {
-          this.$store.commit('LIBRARY_TABLE_PAGE', [n]);
+          this.$store.commit('STAT_SET_TABLE_PAGE', this.$store.state.Stat.statTableInfo.page + n);
           const skip = (this.$store.state.Stat.statTableInfo.page - 1) * 20
-          dataDB(this, 'local', 'stat', { fileType: this.$store.state.Stat.files[this.$store.state.Stat.fileIndex] }, 'statFile', null, skip, 20)
+          dataDB(this, 'local', 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', null, skip, 20)
+          this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
           // switch (this.$store.state.Stat.tableType) {
           //   case 'server':
           //     this.$store.commit('STAT_TABLE_PAGE', n);
@@ -324,42 +334,42 @@
           //   default:
           //     break;
           // }
-          switch (this.$store.state.Stat.chartLeft) {
-            case '柱状图':
-              chartBar('chartLeft', this.$store.state.Stat.chartData)
-              break;
-            case '折线图':
-              chartLine('chartLeft', this.$store.state.Stat.chartData)
-              break;
-            case '雷达图':
-              chartRadar('chartLeft', this.$store.state.Stat.chartData)
-              break;
-            case '散点图':
-              chartScatter('chartLeft', this.$store.state.Stat.chartData)
-              break;
-            case '饼图':
-              chartPie('chartLeft', this.$store.state.Stat.chartData)
-              break;
-            default: break;
-          }
-          switch (this.$store.state.Stat.chartRight) {
-            case '柱状图':
-              chartBar('chartRight', this.$store.state.Stat.chartData)
-              break;
-            case '折线图':
-              chartLine('chartRight', this.$store.state.Stat.chartData)
-              break;
-            case '雷达图':
-              chartRadar('chartRight', this.$store.state.Stat.chartData)
-              break;
-            case '散点图':
-              chartScatter('chartRight', this.$store.state.Stat.chartData)
-              break;
-            case '饼图':
-              chartPie('chartRight', this.$store.state.Stat.chartData)
-              break;
-            default: break;
-          }
+          // switch (this.$store.state.Stat.chartLeft) {
+          //   case '柱状图':
+          //     chartBar('chartLeft', this.$store.state.Stat.chartData)
+          //     break;
+          //   case '折线图':
+          //     chartLine('chartLeft', this.$store.state.Stat.chartData)
+          //     break;
+          //   case '雷达图':
+          //     chartRadar('chartLeft', this.$store.state.Stat.chartData)
+          //     break;
+          //   case '散点图':
+          //     chartScatter('chartLeft', this.$store.state.Stat.chartData)
+          //     break;
+          //   case '饼图':
+          //     chartPie('chartLeft', this.$store.state.Stat.chartData)
+          //     break;
+          //   default: break;
+          // }
+          // switch (this.$store.state.Stat.chartRight) {
+          //   case '柱状图':
+          //     chartBar('chartRight', this.$store.state.Stat.chartData)
+          //     break;
+          //   case '折线图':
+          //     chartLine('chartRight', this.$store.state.Stat.chartData)
+          //     break;
+          //   case '雷达图':
+          //     chartRadar('chartRight', this.$store.state.Stat.chartData)
+          //     break;
+          //   case '散点图':
+          //     chartScatter('chartRight', this.$store.state.Stat.chartData)
+          //     break;
+          //   case '饼图':
+          //     chartPie('chartRight', this.$store.state.Stat.chartData)
+          //     break;
+          //   default: break;
+          // }
         }
       },
       edit: function () {

@@ -2,6 +2,7 @@
 // 包括local、server、block三层数据库
 // 包括cda、library、stat、system、user等等数据表
 import { getLibraryFiles, getLibrary } from './LibraryServerFile'
+import { getStatFiles } from './StatServerFile'
 function insert(obj, col, data, type) {
   obj.db[col].insert(data, (err, res) => {
     // obj.$store.commit('SET_NOTICE', `文件「${x}」保存成功！`)
@@ -124,8 +125,9 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
           case 'libraryFile':
             getLibrary(obj, serverConfig, data.fileType, page + 1, newData.dimensionType, newData.serverDimension, newData.type1, serverType, newData.sort)
             break;
-          case 'libraryCount': count(obj, col, data, type, limit); break
-          case 'statFiles': find(obj, col, data, type, skip, limit); break
+          case 'statFiles':
+            getStatFiles(obj, serverConfig, newData.fileType, newData.username, newData.tableType)
+            break
           case 'statFile': find(obj, col, data, type, skip, limit); break
           default: break
         }
