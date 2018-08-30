@@ -26,7 +26,6 @@ export function saveEditDoc(obj, data) {
   const fileName = obj.$store.state.Edit.fileName
   let doc = obj.$store.state.Edit.doc
   doc = doc.filter(x => x !== '')
-  console.log(doc)
   doc = doc.map(x => x.join(' '))
   let x = ''
   let p = ''
@@ -385,6 +384,7 @@ export function rightBarHelp(obj, n) {
   if (n) {
     // obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);
     obj.$store.commit('SET_NOTICE', n);
+    obj.$store.commit('EDIT_DELETE_RIGHT_FOLDS', n);
     // obj.$store.commit('EDIT_SET_HELP_TYPE', n);
     if (obj.$store.state.Edit.rightPanel === 'server') {
       clinetHelp(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username)

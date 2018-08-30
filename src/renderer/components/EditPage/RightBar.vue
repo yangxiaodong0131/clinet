@@ -77,6 +77,7 @@
   import { rightBarHelp } from '../../utils/EditOperation'
   import getStatFile from '../../utils/StatOperation';
   import getLibraryFile from '../../utils/LibraryOperation';
+  import dataDB from '../../utils/dataDB';
   export default {
     data() {
       return {
@@ -137,9 +138,11 @@
         if (n === '病案文档') {
           switch (this.$store.state.Edit.dataType) {
             case '本地-文件':
-              this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-              this.localData()
+              // this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+              // this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
+              // this.localData()
+              console.log('----')
+              dataDB(this, 'local', 'cda', null, 'editFiles', null)
               break;
             case '远程-用户':
               this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
