@@ -64,6 +64,7 @@ export default function appInit() {
   };
 
   // 服务器配置文件
+  global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }
   db.server.count({}, (err, res) => {
     if (res === 0) {
       global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }

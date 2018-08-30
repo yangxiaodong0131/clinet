@@ -32,6 +32,7 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   // 去除文件名中的.csv
   const type = tableName.split('.csv')[0]
   let url = ''
+  console.log(dimensionType !== null);
   if (dimensionType !== null) {
     const keys = Object.keys(dimensionServer)
     keys.forEach((n) => {
