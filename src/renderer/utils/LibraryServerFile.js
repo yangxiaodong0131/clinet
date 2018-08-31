@@ -1,5 +1,4 @@
-
-import saveFile from './SaveFile';
+import dataDB from './dataDB';
 const axios = require('axios');
 const qs = require('qs');
 // const fs = require('fs');
@@ -112,22 +111,21 @@ export function getList(obj, url, tableName, type, username, serverType = 'serve
   })
 }
 
-export function librarDown(obj, url, fileName) {
+export function downloadLibrary(obj, url, fileName) {
+  const username = obj.$store.state.System.user.username
   const filename = fileName.split('.csv')[0]
   axios({
     method: 'get',
-    url: `http://${url[0]}:${url[1]}/library/rule_down?filename=${filename}`,
+    url: `http://${url[0]}:${url[1]}/library/rule_down?filename=${filename}&`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
       obj.$store.commit('SET_NOTICE', '下载成功')
-      obj.$store.commit('LIBRARY_GET_DOWN_FILE', res.data.result)
-      if (fileName !== '模板.csv') {
-        saveFile(obj, fileName, '/library')
-      } else {
-        saveFile(obj, fileName, '/user')
-      }
+      console.log(res.data.result);
+      dataDB(obj, 'local', 'library', res.data.result, 'insert', null, null, null)
+      dataDB(obj, 'local', 'libraryFile', { fileName: filename, cUser: username, uUser: username, cTIme: '', uTime: '' }, 'insert', null, null, null)
+      obj.$store.commit('SET_NOTICE', `文件「${filename}」保存成功！`)
     } else {
       obj.$store.commit('SET_NOTICE', '下载失败')
     }
@@ -138,7 +136,6 @@ export function librarDown(obj, url, fileName) {
 }
 
 export function getLibrarySerach(obj, url, fileName, value, servertype) {
-  console.log(value);
   const filename = fileName.split('.csv')[0]
   axios({
     method: 'get',
