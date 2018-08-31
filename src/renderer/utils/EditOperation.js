@@ -1,8 +1,9 @@
 import saveFile from './SaveFile'
-import { saveEdit, getDocContent, editDocState, editDocShow, getCaseHistory, getExpertHint, clinetHelp } from './EditServerFile'
+import { saveEdit, editDocState, editDocShow, getCaseHistory, getExpertHint, clinetHelp } from './EditServerFile'
 import { join, message } from './Socket'
 import { sCompDrg } from './Server'
 import { saveLibrary } from './LibraryServerFile'
+import dataDB from './dataDB'
 // import { getStat } from './StatServerFile'
 
 export function getDate() {
@@ -113,118 +114,122 @@ export function saveEditDoc(obj, data) {
     }
     p = obj.$store.state.Edit.lastNav
     saveFile(obj, x, p)
+    const doc = obj.$store.state.Edit.doc
+    dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: x, value: doc }, 'createCda', null)
     obj.$store.commit('EDIT_SET_DELETE_LOCAL', obj.$store.state.Edit.fileIndex)
   }
 }
 
-// export function cacheEditDoc(obj) {
-//   const currentdate = getDate()
-//   obj.$store.commit('EDIT_UPDATE_DOC_HEADER', ['缓存时间', currentdate]);
-//   obj.$store.commit('EDIT_SET_DOC_STATE');
-//   const fileIndex = obj.$store.state.Edit.fileIndex
-//   let doc = obj.$store.state.Edit.doc
-//   if (fileIndex >= 0) {
-//     if (obj.$store.state.Edit.lastNav === '/edit') {
-//       doc = doc.filter(x => x !== '')
-//       // doc = doc.map(x => x.join(' '))
-//       const docHeader = obj.$store.state.Edit.docHeader
-//       const keys = Object.keys(docHeader)
-//       const values = Object.values(docHeader)
-//       let string = ''
-//       keys.forEach((x, key) => {
-//         let a = ''
-//         if (values[key] && values[key].includes(' ')) {
-//           a = values[key].replace(/ /g, '　')
-//         } else {
-//           a = values[key]
-//         }
-//         if (string === '') {
-//           string = `${x}:${a}`
-//         } else {
-//           string = `${string};${x}:${a}`
-//         }
-//       })
-//       const summary = []
-//       const diag = []
-//       if (doc[0] && doc[0].includes('创建时间')) {
-//         doc.splice(0, 1, string);
-//       } else {
-//         doc.splice(0, 0, string);
-//       }
-//       doc.forEach((x) => {
-//         const b = x.split(';')
-//         let creatTime = ''
-//         b.forEach((x) => {
-//           if (x.includes('创建时间')) {
-//             creatTime = x
-//           }
-//           if (x.includes('诊断')) {
-//             diag.push(x)
-//           }
-//         })
-//         const diag1 = []
-//         diag.forEach((x) => {
-//           diag1.push(x.replace(/ /g, ':'))
-//         })
-//         if (x.includes('创建时间') || x.includes('诊断')) {
-//           summary.push([fileIndex, creatTime, diag1.toString()])
-//         }
-//       })
-//       obj.$store.commit('EDIT_ADD_DOC_SUMMARY', summary);
-//       obj.$store.commit('EDIT_SET_IS_SAVE_LOCAL', fileIndex);
-//     }
-//     console.log(doc)
-//     if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Library.tableType === 'local') {
-//       obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc]);
-//     } else {
-//       console.log('asdf')
-//       obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc.toString()]);
-//     }
-//     // saveFile(obj, '未保存病案.cda', '/edit')
-//     // obj.$store.commit('EDIT_SET_DOC');
-//   } else {
-//     obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
-//     obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-//   }
-// }
-
 export function newEditDoc(obj, n) {
-  // obj.$store.commit('EDIT_SET_CHAT_TYPE', false);
-  obj.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案')
-  obj.$store.commit('EDIT_SET_FILE_INDEX', obj.$store.state.Edit.file.length)
-  if (obj.$store.state.Edit.lastNav === '/edit') {
-    obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true])
-    if (n) {
-      obj.$store.commit('EDIT_SET_DOC_TYPE', n)
-    } else { n = obj.$store.state.Edit.docType }
-    obj.$store.commit('SET_NOTICE', n);
-    obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-    if (obj.$store.state.Edit.rightPanel === 'server') {
-      getDocContent(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username, n)
-    } else if (global.hitbmodel[n] !== undefined) {
+  const currentdate = getDate()
+  obj.$store.commit('EDIT_UPDATE_DOC_HEADER', ['缓存时间', currentdate]);
+  obj.$store.commit('EDIT_SET_DOC_STATE');
+  const fileIndex = obj.$store.state.Edit.fileIndex
+  let doc = obj.$store.state.Edit.doc
+  if (fileIndex >= 0) {
+    if (obj.$store.state.Edit.lastNav === '/edit') {
+      doc = doc.filter(x => x !== '')
+      // doc = doc.map(x => x.join(' '))
+      const docHeader = obj.$store.state.Edit.docHeader
+      const keys = Object.keys(docHeader)
+      const values = Object.values(docHeader)
+      let string = ''
+      keys.forEach((x, key) => {
+        let a = ''
+        if (values[key] && values[key].includes(' ')) {
+          a = values[key].replace(/ /g, '　')
+        } else {
+          a = values[key]
+        }
+        if (string === '') {
+          string = `${x}:${a}`
+        } else {
+          string = `${string};${x}:${a}`
+        }
+      })
+      // const summary = []
+      // const diag = []
+      // if (doc[0] && doc[0].includes('创建时间')) {
+      //   doc.splice(0, 1, string);
+      // } else {
+      //   doc.splice(0, 0, string);
+      // }
+      // doc.forEach((x) => {
+      //   const b = x.split(';')
+      //   let creatTime = ''
+      //   b.forEach((x) => {
+      //     if (x.includes('创建时间')) {
+      //       creatTime = x
+      //     }
+      //     if (x.includes('诊断')) {
+      //       diag.push(x)
+      //     }
+      //   })
+      //   const diag1 = []
+      //   diag.forEach((x) => {
+      //     diag1.push(x.replace(/ /g, ':'))
+      //   })
+      //   if (x.includes('创建时间') || x.includes('诊断')) {
+      //     summary.push([fileIndex, creatTime, diag1.toString()])
+      //   }
+      // })
+      // obj.$store.commit('EDIT_ADD_DOC_SUMMARY', summary);
+      obj.$store.commit('EDIT_SET_IS_SAVE_LOCAL', fileIndex);
+    }
+    if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Library.tableType === 'local') {
+      obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc]);
+    } else {
+      // obj.$store.commit('EDIT_SAVE_DOC', [fileIndex, doc.toString()]);
+      const filename = getDate().replace(/[ :-]/g, '')
       obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
-      obj.$store.commit('EDIT_ADD_DOC', '');
-    } else { obj.$store.commit('EDIT_SET_DOC'); }
-    // if (fileName.includes('@')) {
-    //   saveEdit(obj, [obj.$store.state.System.server, obj.$store.state.System.port, obj.$store.state.Edit.files[obj.$store.state.Edit.filesIndex], [''], obj.$store.state.System.user.username, 2])
-    // }
-    const currentdate = getDate()
-    obj.$store.commit('EDIT_UPDATE_DOC_HEADER', ['创建时间', currentdate]);
-    obj.$store.commit('EDIT_SET_DOC_STATE');
-    obj.docType = n
-    // cacheEditDoc(obj);
-    document.getElementById('edit-editbar-input').focus()
-    // } else {
-    // obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice')
-    // obj.$store.commit('SET_NOTICE', '请选择保存病案的文件！')
-    // }
-  } else if (obj.$store.state.Edit.lastNav === '/library') {
-    obj.$store.commit('EDIT_ADD_DOC', '');
-    obj.$store.commit('EDIT_SET_DOC');
-    // cacheEditDoc(obj);
-    document.getElementById('edit-editbar-input').focus()
+      dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${filename}.cda`, value: global.hitbmodel[n] }, 'createCda', null)
+    }
+    // saveFile(obj, '未保存病案.cda', '/edit')
+    // obj.$store.commit('EDIT_SET_DOC');
+  } else {
+    obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
+    obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
   }
 }
+
+// export function newEditDoc(obj, n) {
+//   // obj.$store.commit('EDIT_SET_CHAT_TYPE', false);
+//   obj.$store.commit('EDIT_SET_RIGHT_PANELS', '编辑病案')
+//   obj.$store.commit('EDIT_SET_FILE_INDEX', obj.$store.state.Edit.file.length)
+//   if (obj.$store.state.Edit.lastNav === '/edit') {
+//     obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true])
+//     if (n) {
+//       obj.$store.commit('EDIT_SET_DOC_TYPE', n)
+//     } else { n = obj.$store.state.Edit.docType }
+//     obj.$store.commit('SET_NOTICE', n);
+//     obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+//     if (obj.$store.state.Edit.rightPanel === 'server') {
+//       getDocContent(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username, n)
+//     } else if (global.hitbmodel[n] !== undefined) {
+//       obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
+//       // obj.$store.commit('EDIT_ADD_DOC', '');
+//       dataDB(this, 'local', 'cda', { fileType: 'cda', fileName: x, value:  }, 'createCda', null)
+//     } else { obj.$store.commit('EDIT_SET_DOC'); }
+//     // if (fileName.includes('@')) {
+//     //   saveEdit(obj, [obj.$store.state.System.server, obj.$store.state.System.port, obj.$store.state.Edit.files[obj.$store.state.Edit.filesIndex], [''], obj.$store.state.System.user.username, 2])
+//     // }
+//     const currentdate = getDate()
+//     obj.$store.commit('EDIT_UPDATE_DOC_HEADER', ['创建时间', currentdate]);
+//     obj.$store.commit('EDIT_SET_DOC_STATE');
+//     obj.docType = n
+//     // cacheEditDoc(obj);
+//     document.getElementById('edit-editbar-input').focus()
+//     // } else {
+//     // obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice')
+//     // obj.$store.commit('SET_NOTICE', '请选择保存病案的文件！')
+//     // }
+//   } else if (obj.$store.state.Edit.lastNav === '/library') {
+//     obj.$store.commit('EDIT_ADD_DOC', '');
+//     obj.$store.commit('EDIT_SET_DOC');
+//     // cacheEditDoc(obj);
+//     document.getElementById('edit-editbar-input').focus()
+//   }
+// }
 
 // 读取文件
 export function loadEditDoc(obj, index, type) {
@@ -348,9 +353,9 @@ export function editBarEnter(obj, targetValue) {
               }
               obj.$store.commit('EDIT_SET_DOC_INDEX', [1]);
               n += 1
-              if (!global.hitbdata.cdhHeader.includes(v[0]) && obj.$store.state.Edit.rightPanels.includes('病案质控')) {
-                obj.$store.commit('EDIT_ADD_DOC_CONTROL', v);
-              }
+              // if (!global.hitbdata.cdhHeader.includes(v[0]) && obj.$store.state.Edit.rightPanels.includes('病案质控')) {
+              //   obj.$store.commit('EDIT_ADD_DOC_CONTROL', v);
+              // }
               if (obj.$store.state.Edit.lastNav === '/edit' && obj.$store.state.Edit.rightPanel === 'server') {
                 getExpertHint(obj, [obj.$store.state.System.server, obj.$store.state.System.port], v, obj.$store.state.Edit.section)
               }
@@ -409,10 +414,10 @@ export function rightBarHelp(obj, n) {
       if (obj.$store.state.Edit.rightPanel === 'server') {
         if (!obj.$store.state.Edit.rightCdh) {
           obj.$store.commit('SET_NOTICE', '输入提示无内容！');
-          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+          obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         } else if (!global.hitbdata.cdh) {
           obj.$store.commit('SET_NOTICE', '输入提示无内容！');
-          this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+          obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
         }
       }
     } else if (n === '病案历史' && obj.$store.state.Edit.rightPanel === 'server') {
@@ -421,7 +426,7 @@ export function rightBarHelp(obj, n) {
       getCaseHistory(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Edit.doc, obj.$store.state.System.user.username)
     } else if (n === '病案历史' && obj.$store.state.Edit.rightPanel !== 'server') {
       obj.$store.commit('SET_NOTICE', '登录后可查询病案历史！');
-      this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+      obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
     } else if (n === '病案质控' && obj.$store.state.Edit.rightPanel === 'server') {
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);
       obj.$store.commit('EDIT_SET_HELP_TYPE', n);
@@ -430,7 +435,7 @@ export function rightBarHelp(obj, n) {
         obj.$store.commit('EDIT_SET_DOC_CONTROL', controls);
       } else {
         obj.$store.commit('SET_NOTICE', '病案质控暂无内容！');
-        this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+        obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
       }
     } else {
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);

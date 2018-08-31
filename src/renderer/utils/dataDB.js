@@ -50,7 +50,7 @@ function findOne(obj, col, data, type) {
   obj.db[col].findOne(data, (err, res) => {
     switch (type) {
       case 'editFile':
-        obj.$store.commit('EDIT_LOAD_FILE', res.value);
+        obj.$store.commit('EDIT_LOAD_DOC', res.value);
         break;
       default:
         console.log(res);

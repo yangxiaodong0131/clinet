@@ -35,7 +35,7 @@
 
 <script>
   import { share } from '../../utils/Server';
-  import loadFile from '../../utils/LoadFile';
+  // import loadFile from '../../utils/LoadFile';
   import { getLibrary } from '../../utils/LibraryServerFile'
   import { getStat, getStatFiles } from '../../utils/StatServerFile';
   import { getEdit } from '../../utils/EditServerFile'
@@ -197,12 +197,14 @@
             this.$store.commit('EDIT_DELETE_RIGHT_PANELS', '编辑病案');
           }
         } else {
-          if (this.$store.state.Edit.rightPanels.includes('编辑病案')) {
-            this.$store.commit('EDIT_DELETE_RIGHT_PANELS', '编辑病案');
-          }
-          this.$store.commit('EDIT_SET_LOAD_FILENAME', data);
-          this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
-          loadFile(this, data, x, 'edit')
+          // if (this.$store.state.Edit.rightPanels.includes('编辑病案')) {
+          //   this.$store.commit('EDIT_DELETE_RIGHT_PANELS', '编辑病案');
+          // }
+          // this.$store.commit('EDIT_SET_LOAD_FILENAME', data);
+          // this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
+          // loadFile(this, data, x, 'edit')
+          const name = this.$store.state.Edit.files[index]
+          dataDB(this, 'local', 'cda', { fileName: name }, 'editFile', null)
         }
       },
       close(data) {

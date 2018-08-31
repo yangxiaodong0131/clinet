@@ -138,12 +138,12 @@ const mutations = {
     state.filesPage = 1;
   },
   EDIT_LOAD_DOC(state, message) {
-    const x = message.map(m => m.split(' ').filter(i => i !== ''))
-    state.doc = x;
+    // const x = message.map(m => m.split(' ').filter(i => i !== ''))
+    state.doc = message;
     if (state.lastNav !== '/edit') {
       state.idIndex = state.file[1].split(',').indexOf('ID')
     }
-    state.editBarValue = x[0]
+    state.editBarValue = message[0]
     if (global.hitbSections.length > 0 && global.hitbSections.includes(state.editBarValue)) {
       state.section = state.editBarValue[0]
     }
