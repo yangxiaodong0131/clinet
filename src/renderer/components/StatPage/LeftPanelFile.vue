@@ -67,8 +67,6 @@
             }
             this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
             dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
-            // this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-            // getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, this.$store.state.Stat.tableType)
           }
         }
       },

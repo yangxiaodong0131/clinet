@@ -193,9 +193,12 @@ export default function appInit() {
     } else if (res > 0) {
       db.cdh.find({ fileType: 'cdh' }, (err, res) => {
         const t = {}
+        const f = []
         res.forEach((x) => {
           t[x.key] = x.value
+          f.push([x.key, x.value.join(' ')].join(' '))
         })
+        global.hitbdata.cdhFile = f
         global.hitbdata.cdh = t;
       })
       db.cdh.findOne({ fileType: 'header' }, (err, res) => {

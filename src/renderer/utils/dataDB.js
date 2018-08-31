@@ -91,7 +91,6 @@ function remove(obj, col, data, newData) {
 
 // obj type(local,server,block) 表  条件 操作类型  条件2
 export default function (obj, serverType, col, data, type, newData, skip = null, limit = null) {
-  console.log([serverType, col, data, type, newData, skip, limit]);
   switch (serverType) {
     case 'local':
       switch (type) {

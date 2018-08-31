@@ -145,6 +145,7 @@
           this.$store.commit('LIBRARY_TABLE_PAGE', [n]);
           const skip = (this.$store.state.Library.libraryTableInfo.page - 1) * 30
           dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.files[this.$store.state.Library.fileIndex] }, 'libraryFile', { type1: this.$store.state.Library.tableType, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, skip, 30)
+          this.$store.commit('SET_NOTICE', `当前${this.$store.state.Library.libraryTableInfo.page}页,共${this.$store.state.Library.libraryTableInfo.countPage}页`)
         }
       },
       edit: function () {
