@@ -30,7 +30,7 @@ const state = {
   fileTypes: ['本地', '远程', '区块链'],
   statList: { org: [], department: [], time: [], year_time: [], half_year: [], season_time: [], month_time: [], drg: [], adrg: [], mdc: [], localList: [] },
   dimension: { org: '', time: '', drg: '', type: 'org' },
-  statTable: { data: [], compare: [], info: [], download: [] },
+  statTable: { data: [], compare: [], info: [] },
   statTableInfo: { page: 1, countPage: 0, pageList: [], tableName: '', tableSel: [], dimensionOrg: '', dimensionTime: '', dimensionDrg: '', header: [] },
   customindex: []
 };

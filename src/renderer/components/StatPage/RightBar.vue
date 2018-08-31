@@ -164,14 +164,11 @@
   import chartRadar from '../../utils/ChartRadar';
   import chartBar from '../../utils/ChartBar';
   import chartPie from '../../utils/ChartPie';
-  // import chartData from '../../utils/ChartData';
+  import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
-  // import saveFile from '../../utils/SaveFile';
-  import { getStat, saveStat, getStatInfo, downloadStat, sCustom } from '../../utils/StatServerFile';
+  import { getStat, saveStat, getStatInfo, sCustom } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
   import dataDB from '../../utils/dataDB';
-  // import sGetTarget from '../../utils/Server';
-  // import getStatFile from '../../utils/StatOperation';
 
   export default {
     data() {
@@ -218,8 +215,9 @@
             type = 'local';
             break;
           case '远程':
-            this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-            this.$store.commit('STAT_SET_BAR_TYPE', 'server')
+            if (this.$store.state.System.user.login) {
+              this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
+            }
             type = 'server';
             break;
           case '区块链':
@@ -231,73 +229,7 @@
         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
         this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
         dataDB(this, type, 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: type })
-        // this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
-        // this.$store.commit('LIBRARY_SET_TABLE_TYPE', type);
-        // this.$store.commit('SET_NOTICE', `${n}文件`);
-        // getStatFile(this, n)
-        // this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-        // this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-        // if (n === '本地') {
-        //   this.$store.commit('SET_NOTICE', '选择本地文件')
-        //   this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
-        //   this.$store.commit('STAT_LOAD_FILES');
-        //   this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-        // } else if (n === '远程') {
-        //   if (!this.$store.state.System.user.login) {
-        //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-        //   } else {
-        //     this.$store.commit('SET_NOTICE', '选择远程文件')
-        //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-        //     this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
-        //     this.$store.commit('STAT_SET_BAR_TYPE', 'server')
-        //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
-        //   }
-        // } else if (n === '区块链') {
-        //   if (!this.$store.state.System.user.login) {
-        //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-        //   } else {
-        //     this.$store.commit('SET_NOTICE', '区块链文件');
-        //     this.$store.commit('STAT_SET_TABLE_TYPE', 'block');
-        //     this.$store.commit('STAT_SET_BAR_TYPE', 'block');
-        //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-        //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.username, 'block')
-        //   }
-        // }
       },
-      // loadData: function () {
-      //   this.$store.commit('SET_NOTICE', '选择本地文件')
-      //   this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-      //   // this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-      //   // this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
-      //   // this.$store.commit('STAT_LOAD_FILES');
-      //   // this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-      // },
-      // serverData: function () {
-      //   if (!this.$store.state.System.user.login) {
-      //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-      //   } else {
-      //     this.$store.commit('SET_NOTICE', '选择远程文件')
-      //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-      //     this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-      //     this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
-      //     this.$store.commit('STAT_SET_BAR_TYPE', 'server')
-      //     this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-      //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
-      //   }
-      // },
-      // blockData: function () {
-      //   if (!this.$store.state.System.user.login) {
-      //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-      //   } else {
-      //     this.$store.commit('SET_NOTICE', '区块链文件');
-      //     this.$store.commit('STAT_SET_TABLE_TYPE', 'block');
-      //     this.$store.commit('STAT_SET_BAR_TYPE', 'block');
-      //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-      //     this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-      //     this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-      //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.username, 'block')
-      //   }
-      // },
       page: function (n) {
         if (this.$store.state.Stat.statTableInfo.page === 1 && n === -1) {
           this.$store.commit('SET_NOTICE', '当前已是第一页')
@@ -305,58 +237,53 @@
           this.$store.commit('SET_NOTICE', '当前已是尾页');
         } else if (['local', 'server', 'block'].includes(this.$store.state.Stat.tableType)) {
           this.$store.commit('STAT_SET_TABLE_PAGE', this.$store.state.Stat.statTableInfo.page + n);
+          // 计算skip
           const skip = (this.$store.state.Stat.statTableInfo.page - 1) * 20
-          dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, skip, 20)
+          // 定义查询条件
+          const data = { fileType: this.$store.state.Stat.statTableInfo.tableName }
+          const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }
+          // 调用通用方法查询
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', data, 'statFile', newData, skip, 20)
           this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
-          // switch (this.$store.state.Stat.tableType) {
-          //   case 'server':
-          //     this.$store.commit('STAT_TABLE_PAGE', n);
-          //     getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: this.$store.state.Stat.statTableInfo.page, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
-          //     break;
-          //   case 'local':
-          //     this.$store.commit('STAT_TABLE_PAGE', n);
-          //     this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
-          //     chartData(this, this.$store.state.Stat.statTable.data, this.$store.state.Stat.selectedRow, this.$store.state.Stat.selectedCol)
-          //     break;
-          //   default:
-          //     break;
-          // }
-          // switch (this.$store.state.Stat.chartLeft) {
-          //   case '柱状图':
-          //     chartBar('chartLeft', this.$store.state.Stat.chartData)
-          //     break;
-          //   case '折线图':
-          //     chartLine('chartLeft', this.$store.state.Stat.chartData)
-          //     break;
-          //   case '雷达图':
-          //     chartRadar('chartLeft', this.$store.state.Stat.chartData)
-          //     break;
-          //   case '散点图':
-          //     chartScatter('chartLeft', this.$store.state.Stat.chartData)
-          //     break;
-          //   case '饼图':
-          //     chartPie('chartLeft', this.$store.state.Stat.chartData)
-          //     break;
-          //   default: break;
-          // }
-          // switch (this.$store.state.Stat.chartRight) {
-          //   case '柱状图':
-          //     chartBar('chartRight', this.$store.state.Stat.chartData)
-          //     break;
-          //   case '折线图':
-          //     chartLine('chartRight', this.$store.state.Stat.chartData)
-          //     break;
-          //   case '雷达图':
-          //     chartRadar('chartRight', this.$store.state.Stat.chartData)
-          //     break;
-          //   case '散点图':
-          //     chartScatter('chartRight', this.$store.state.Stat.chartData)
-          //     break;
-          //   case '饼图':
-          //     chartPie('chartRight', this.$store.state.Stat.chartData)
-          //     break;
-          //   default: break;
-          // }
+          if (this.$store.state.Stat.tableType) {
+            chartData(this, this.$store.state.Stat.statTable.data, this.$store.state.Stat.selectedRow, this.$store.state.Stat.selectedCol)
+          }
+          switch (this.$store.state.Stat.chartLeft) {
+            case '柱状图':
+              chartBar('chartLeft', this.$store.state.Stat.chartData)
+              break;
+            case '折线图':
+              chartLine('chartLeft', this.$store.state.Stat.chartData)
+              break;
+            case '雷达图':
+              chartRadar('chartLeft', this.$store.state.Stat.chartData)
+              break;
+            case '散点图':
+              chartScatter('chartLeft', this.$store.state.Stat.chartData)
+              break;
+            case '饼图':
+              chartPie('chartLeft', this.$store.state.Stat.chartData)
+              break;
+            default: break;
+          }
+          switch (this.$store.state.Stat.chartRight) {
+            case '柱状图':
+              chartBar('chartRight', this.$store.state.Stat.chartData)
+              break;
+            case '折线图':
+              chartLine('chartRight', this.$store.state.Stat.chartData)
+              break;
+            case '雷达图':
+              chartRadar('chartRight', this.$store.state.Stat.chartData)
+              break;
+            case '散点图':
+              chartScatter('chartRight', this.$store.state.Stat.chartData)
+              break;
+            case '饼图':
+              chartPie('chartRight', this.$store.state.Stat.chartData)
+              break;
+            default: break;
+          }
         }
       },
       edit: function () {
@@ -571,7 +498,11 @@
         this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
       },
       statDownload: function () {
-        downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+        const data = { fileType: this.$store.state.Stat.statTableInfo.tableName }
+        const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }
+        // 调用通用方法查询
+        dataDB(this, this.$store.state.Stat.tableType, 'stat', data, 'downloadStat', newData, 0, 20)
+        // downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
       },
       custom: function () {
         sGetTarget(this, [this.$store.state.System.server, this.$store.state.System.port], 'list');

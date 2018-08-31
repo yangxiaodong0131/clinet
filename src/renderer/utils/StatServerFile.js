@@ -1,4 +1,5 @@
-import saveFile from './SaveFile';
+// import saveFile from './SaveFile';
+import dataDB from './dataDB';
 const axios = require('axios');
 const qs = require('qs');
 const ChartScatter = require('./ChartScatter');
@@ -10,6 +11,7 @@ const ChartData = require('./ChartData');
 // this, [url, port], filename, username, serverType
 export function getStatFiles(obj, data, filename, username, serverType = 'server', show = null) {
   obj.$store.commit('STAT_SET_TABLE_TYPE', serverType)
+  obj.$store.commit('STAT_SET_BAR_TYPE', serverType)
   let url = ''
   if (filename !== '') {
     url = `http://${data[0]}:${data[1]}/stat/stat_file?name=${filename}&username=${username}&server_type=${serverType}`
@@ -217,7 +219,7 @@ export function getStatWt4(obj, data, org, time, drg, serverType = 'server') {
 
 export function downloadStat(obj, data, opt, tableType, serverType = 'server') {
   let file = opt.tableName
-  const tableName = file
+  const tableName = file.split('.csv').join('')
   // 去除文件名中的.csv
   file = file.split('.csv')[0]
   // 切分查看是否有总数.平均.占比等工具查询
@@ -242,13 +244,14 @@ export function downloadStat(obj, data, opt, tableType, serverType = 'server') {
   }
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/stat/download_client?page=${opt.page}&server_type=${serverType}&page_type=${pageType}&tool_type=${toolType}&rows=20&username=${opt.username}&type=${opt.dimension.type}&org=${opt.dimension.org}&drg=${opt.dimension.drg}&time=${opt.dimension.time}&order=${opt.order.field}&order_type=${opt.order.type}`,
+    url: `http://${data[0]}:${data[1]}/stat/download_client?page=${opt.page}&server_type=${serverType}&page_type=${pageType}&tool_type=${toolType}&rows=20&username=${opt.username}&type=${opt.dimension.type}&org=${opt.dimension.org}&drg=${opt.dimension.drg}&time=${opt.dimension.time}&order=${opt.order.field}&order_type=${opt.order.type}&table_name=${tableName}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      obj.$store.commit('STAT_SET_DOWNLOAD_TABLE', res.data.stat)
-      saveFile(obj, tableName, '/stat')
+      dataDB(obj, 'local', 'stat', res.data.stat, 'insert', null, null, null)
+      dataDB(obj, 'local', 'statFile', { fileName: tableName, cUser: opt.username, uUser: opt.username, cTIme: '', uTime: '' }, 'insert', null, null, null)
+      obj.$store.commit('SET_NOTICE', `文件「${tableName}」保存成功！`)
     }
   }).catch((err) => {
     obj.$store.commit('SET_NOTICE', '连接服务器错误')
