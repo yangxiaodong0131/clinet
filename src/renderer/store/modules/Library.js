@@ -117,6 +117,9 @@ const mutations = {
   LIBRARY_SET_TABLE_INFO(state, opt) {
     state.libraryTableInfo = opt
   },
+  LIBRARY_SET_TABLE_NAME(state, opt) {
+    state.libraryTableInfo.tableName = opt
+  },
   LIBRARY_SET_LIBRARY_LIST(state, data) {
     state.libraryList = data
   },
@@ -286,6 +289,7 @@ const mutations = {
 const actions = {
   someAsyncTask({ commit }) {
     commit('LIBRARY_CLEAR_CHANGE');
+    commit('LIBRARY_SET_TABLE_NAME');
     commit('LIBRARY_SET_CHANGE_INDEX');
     commit('LIBRARY_SET_CHANGE');
     commit('LIBRARY_SET_CHANGE_VAL');

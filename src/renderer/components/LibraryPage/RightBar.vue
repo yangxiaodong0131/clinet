@@ -81,7 +81,7 @@
 </template>
 
 <script>
-  import { getLibrary, librarDown, getLibrarySerach, saveLibraryPage } from '../../utils/LibraryServerFile';
+  import { getLibrary, getLibrarySerach, saveLibraryPage } from '../../utils/LibraryServerFile';
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
   import pageSearch from '../../utils/PageSearch';
@@ -144,7 +144,7 @@
         } else if (['local', 'server', 'block'].includes(this.$store.state.Library.tableType)) {
           this.$store.commit('LIBRARY_TABLE_PAGE', [n]);
           const skip = (this.$store.state.Library.libraryTableInfo.page - 1) * 30
-          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.files[this.$store.state.Library.fileIndex] }, 'libraryFile', { type1: this.$store.state.Library.tableType, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, skip, 30)
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: this.$store.state.Library.tableType, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, skip, 30)
           this.$store.commit('SET_NOTICE', `当前${this.$store.state.Library.libraryTableInfo.page}页,共${this.$store.state.Library.libraryTableInfo.countPage}页`)
         }
       },
@@ -234,9 +234,9 @@
         share(this, [this.$store.state.System.server, this.$store.state.System.port], 'library', this.$store.state.System.shareFileName, this.$store.state.System.user.username, array)
       },
       docDown: function () {
-        if (this.$store.state.Library.tableType === 'server') {
-          const filename = this.$store.state.System.shareFileName
-          librarDown(this, [this.$store.state.System.server, this.$store.state.System.port], filename);
+        if (['server', 'block'].includes(this.$store.state.Library.tableType)) {
+          const filename = this.$store.state.Library.libraryTableInfo.tableName
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: filename }, 'downloadLibrary', null, 0, 30)
         }
       },
       updateMessage: function (e) {
