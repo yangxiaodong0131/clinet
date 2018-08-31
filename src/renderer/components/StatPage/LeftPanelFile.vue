@@ -16,7 +16,7 @@
   // import chartLine from '../../utils/ChartLine';
   // import chartBar from '../../utils/ChartBar';
   import dataDB from '../../utils/dataDB';
-  import { getStatFiles, getStat } from '../../utils/StatServerFile'
+  import { getStat } from '../../utils/StatServerFile'
   // import { sGetWt4 } from '../../utils/Server'
   export default {
     data() {
@@ -48,6 +48,8 @@
       loadFile: function (data, index) {
         // 设置文件高亮
         this.$store.commit('STAT_SET_FILE_INDEX', ['first', index]);
+        this.$store.commit('STAT_TABLE_NAME', data)
+        this.$store.commit('STAT_SET_TABLE_PAGE', 1);
         // 判断读取文件
         if (this.$store.state.Stat.tableType === 'local') {
           dataDB(this, 'local', 'stat', { fileType: data }, 'statCount', null, null, 20)
@@ -63,8 +65,9 @@
             if (this.$store.state.Stat.serverMenu.type === '二级菜单') {
               this.$store.commit('STAT_SET_SERVER_MENU', ['三级菜单', []]);
             }
-            this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-            getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, this.$store.state.Stat.tableType)
+            dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType })
+            // this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
+            // getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, this.$store.state.Stat.tableType)
           }
         }
       },

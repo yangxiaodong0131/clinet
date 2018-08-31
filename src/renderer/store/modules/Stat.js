@@ -149,7 +149,7 @@ const mutations = {
     }
   },
   STAT_SET_COUNT_PAGE(state, n) {
-    state.countPage = n
+    state.statTableInfo.countPage = n
   },
   STAT_SET_TABLE_PAGE(state, n) {
     state.statTableInfo.page = n
