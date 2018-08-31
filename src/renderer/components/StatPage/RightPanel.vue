@@ -165,6 +165,7 @@
   import LeftPanel from './LeftPanel';
   import { getStatFiles, getStat, getStatWt4 } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
+  import dataDB from '../../utils/dataDB';
   export default {
     components: { RightBar, LeftPanel, RightPanelCustom },
     data() {
@@ -443,8 +444,10 @@
         }
       },
       serverPage: function (data) {
-        this.$store.commit('STAT_SET_TABLE_PAGE', parseInt(data, 10))
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: parseInt(data, 10), username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
+        this.$store.commit('STAT_SET_TABLE_PAGE', parseInt(data, 10));
+        const skip = (parseInt(data, 10) - 1) * 20
+        dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, skip, 20)
+        this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
       },
       chart: function (data) {
         this.$store.commit('STAT_SET_CHART_OPTION', data)

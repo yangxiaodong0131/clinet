@@ -16,20 +16,8 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="stat-file-dropdown">
             <a v-for="(data, index) in fileTypes" v-bind:key='index' class="nav-link" href="#" v-on:click='statFile(data)' v-bind:id="'stat-file-'+data">{{data}}</a>
-            <!-- <a class="nav-link" href="#" title="显示本地文件" id="stat-local-file" v-on:click='loadData()'> 本地 <span class="sr-only">(current)</span></a>
-            <a class="nav-link" href="#" title="显示远程文件" id="stat-remote-file" v-on:click='serverData()'> 远程 <span class="sr-only">(current)</span></a>
-            <a class="nav-link" href="#" title="显示区块链文件" id="stat-block-file" v-on:click='blockData()'> 区块链 <span class="sr-only">(current)</span></a> -->
           </div>
         </li>
-        <!-- <li class="nav-item active" id="stat-local-doc" v-on:click='loadData()'>
-          <a class="nav-link text-light" href="#" title="显示本地文件"> 本地 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" id="stat-remote-file" v-on:click='serverData()'>
-          <a class="nav-link text-light" href="#" title="显示远程文件"> 远程 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" id="stat-block-file" v-on:click='blockData()'>
-          <a class="nav-link text-light" href="#" title="显示区块链文件"> 区块链 <span class="sr-only">(current)</span></a>
-        </li> -->
         <li class="nav-item active" v-if ="this.$store.state.Stat.tableType === 'server'" v-on:click='blockShare()'>
           <a class="nav-link text-light" href="#" title="分享选中记录"> 分享 <span class="sr-only">(current)</span></a>
         </li>
@@ -239,7 +227,6 @@
             break;
           default: type = ''; break;
         }
-        console.log(type);
         this.$store.commit('STAT_SET_TABLE_TYPE', type)
         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
         this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
@@ -319,7 +306,7 @@
         } else if (['local', 'server', 'block'].includes(this.$store.state.Stat.tableType)) {
           this.$store.commit('STAT_SET_TABLE_PAGE', this.$store.state.Stat.statTableInfo.page + n);
           const skip = (this.$store.state.Stat.statTableInfo.page - 1) * 20
-          dataDB(this, 'local', 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', null, skip, 20)
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, skip, 20)
           this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
           // switch (this.$store.state.Stat.tableType) {
           //   case 'server':

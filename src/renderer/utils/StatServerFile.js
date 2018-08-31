@@ -23,6 +23,7 @@ export function getStatFiles(obj, data, filename, username, serverType = 'server
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
+      console.log(res.data.data);
       // 菜单层级
       if (show) {
         obj.$store.commit('EDIT_SERVER_FILES', res.data.data);

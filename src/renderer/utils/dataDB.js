@@ -2,7 +2,7 @@
 // 包括local、server、block三层数据库
 // 包括cda、library、stat、system、user等等数据表
 import { getLibraryFiles, getLibrary } from './LibraryServerFile'
-import { getStatFiles } from './StatServerFile'
+import { getStatFiles, getStat } from './StatServerFile'
 function insert(obj, col, data, type) {
   obj.db[col].insert(data, (err, res) => {
     // obj.$store.commit('SET_NOTICE', `文件「${x}」保存成功！`)
@@ -117,7 +117,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
     default:
       if (obj.$store.state.System.user.login) {
         const serverConfig = [obj.$store.state.System.server, obj.$store.state.System.port]
-        const page = skip / 30
+        const page = skip / limit
         switch (type) {
           case 'libraryFiles':
             getLibraryFiles(obj, serverConfig, serverType);
@@ -128,7 +128,9 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
           case 'statFiles':
             getStatFiles(obj, serverConfig, newData.fileType, newData.username, newData.tableType)
             break
-          case 'statFile': find(obj, col, data, type, skip, limit); break
+          case 'statFile':
+            getStat(obj, serverConfig, { tableName: newData.fileType, page: page + 1, username: newData.username, dimension: newData.dimension, order: newData.order }, 'stat')
+            break
           default: break
         }
       } else {

@@ -45,16 +45,21 @@ const mutations = {
   },
   // state,[type, ]
   STAT_SET_TABLE(state, opt) {
-    const table = []
-    const keys = Object.keys(opt[0]).filter(i => !['_id', 'id', 'fileType'].includes(i))
-    // 存储表头
-    table.push(keys)
-    // 取得表内容,取不到的用-代替
-    opt.forEach((xs) => {
-      const f = keys.map(x => xs[x])
-      table.push(f)
-    })
-    state.statTable.data = table
+    if (state.tableType === 'local') {
+      const table = []
+      const keys = Object.keys(opt[0]).filter(i => !['_id', 'id', 'fileType'].includes(i))
+      // 存储表头
+      table.push(keys)
+      // 取得表内容,取不到的用-代替
+      opt.forEach((xs) => {
+        const f = keys.map(x => xs[x])
+        table.push(f)
+      })
+      state.statTable.data = table
+    } else {
+      state.statTable.data = opt[1]
+    }
+
     // if (opt[0] === 'local') {
     //   state.file = opt[1];
     //   state.table = opt[1].map(x => x.split(','))
