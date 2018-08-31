@@ -249,8 +249,8 @@ export function downloadStat(obj, data, opt, tableType, serverType = 'server') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      dataDB(obj, 'local', 'stat', res.data.stat, 'insert', null, null, null)
-      dataDB(obj, 'local', 'statFile', { fileName: tableName, cUser: opt.username, uUser: opt.username, cTIme: '', uTime: '' }, 'insert', null, null, null)
+      dataDB(obj, 'local', 'stat', res.data.stat, 'downloadStat', { fileName: tableName }, null, null)
+      dataDB(obj, 'local', 'statFile', { fileName: tableName, cUser: opt.username, uUser: opt.username, cTIme: '', uTime: '' }, 'downloadStat', { fileName: tableName }, null, null)
       obj.$store.commit('SET_NOTICE', `文件「${tableName}」保存成功！`)
     }
   }).catch((err) => {

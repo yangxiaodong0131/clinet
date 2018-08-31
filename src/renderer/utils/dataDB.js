@@ -3,18 +3,45 @@
 // 包括cda、library、stat、system、user等等数据表
 import { getLibraryFiles, getLibrary, downloadLibrary } from './LibraryServerFile'
 import { getStatFiles, getStat, downloadStat } from './StatServerFile'
-function insert(obj, col, data, type) {
-  obj.db[col].insert(data, (err, res) => {
-    // obj.$store.commit('SET_NOTICE', `文件「${x}」保存成功！`)
-    switch (type) {
-      case 'createCda':
-        obj.$store.commit('SET_NOTICE', `文件「${data.fileName}」保存成功！`)
-        break;
-      default:
-        console.log(res);
-        break;
-    }
-  })
+function insert(obj, col, data, type, newData) {
+  let query = null
+  let fileName = null
+  switch (type) {
+    case 'downloadLibrary':
+      fileName = newData.fileName
+      query = obj.db.libraryFile.count(newData)
+      break;
+    case 'downloadStat':
+      fileName = newData.fileName
+      query = obj.db.statFile.count(newData)
+      break;
+    case 'createCda':
+      fileName = data.fileName
+      query = obj.db.statFile.count({ fileName: data.fileName })
+      break;
+    default:
+      break;
+  }
+  if (query === null) {
+    obj.db[col].insert(data, (err, res) => {
+      switch (type) {
+        case 'createCda':
+          obj.$store.commit('SET_NOTICE', `文件「${fileName}」保存成功！`)
+          break;
+        default:
+          console.log(res);
+          break;
+      }
+    })
+  } else {
+    query.exec((err, res) => {
+      if (res === 0) {
+        obj.db[col].insert(data)
+      } else {
+        obj.$store.commit('SET_NOTICE', `文件「${fileName}」保存失败,文件已经存在！`)
+      }
+    })
+  }
 }
 
 function find(obj, col, data, type, skip, limit) {
@@ -107,9 +134,11 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'libraryFiles': find(obj, col, data, type, skip, limit); break
         case 'libraryFile': find(obj, col, data, type, skip, limit); break
         case 'libraryCount': count(obj, col, data, type, limit); break
+        case 'downloadLibrary': insert(obj, col, data, type, newData); break
         case 'statFiles': find(obj, col, data, type, skip, limit); break
         case 'statFile': find(obj, col, data, type, skip, limit); break
         case 'statCount': count(obj, col, data, type, limit); break
+        case 'downloadStat': insert(obj, col, data, type, newData); break
         default: break
       }
       break

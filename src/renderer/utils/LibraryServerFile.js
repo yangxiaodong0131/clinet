@@ -123,8 +123,8 @@ export function downloadLibrary(obj, url, fileName) {
     if (res.status === 200) {
       obj.$store.commit('SET_NOTICE', '下载成功')
       console.log(res.data.result);
-      dataDB(obj, 'local', 'library', res.data.result, 'insert', null, null, null)
-      dataDB(obj, 'local', 'libraryFile', { fileName: filename, cUser: username, uUser: username, cTIme: '', uTime: '' }, 'insert', null, null, null)
+      dataDB(obj, 'local', 'library', res.data.result, 'insert', { fileName: filename }, null, null)
+      dataDB(obj, 'local', 'libraryFile', { fileName: filename, cUser: username, uUser: username, cTIme: '', uTime: '' }, 'insert', { fileName: filename }, null, null)
       obj.$store.commit('SET_NOTICE', `文件「${filename}」保存成功！`)
     } else {
       obj.$store.commit('SET_NOTICE', '下载失败')
