@@ -119,7 +119,8 @@
         this.$store.commit('SET_NAVBAR', 'edit');
         this.$store.commit('HAS_DATA');
         this.$router.push('/home');
-        this.$store.commit('EDIT_LOAD_FILES');
+        // this.$store.commit('EDIT_LOAD_FILES');
+        // dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editFiles', null)
       },
     },
   };

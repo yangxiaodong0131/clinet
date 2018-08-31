@@ -38,8 +38,9 @@
   import loadFile from '../../utils/LoadFile';
   import { getLibrary } from '../../utils/LibraryServerFile'
   import { getStat, getStatFiles } from '../../utils/StatServerFile';
-  import { getEditFiles, getEdit } from '../../utils/EditServerFile'
+  import { getEdit } from '../../utils/EditServerFile'
   import { getDate, editPage } from '../../utils/EditOperation';
+  import dataDB from '../../utils/dataDB';
   export default {
     data() {
       return {
@@ -96,8 +97,8 @@
       },
       xs: {
         get() {
-          // let x = this.$store.state.Edit.files
-          let x = this.$store.state.Edit.currentFiles
+          let x = this.$store.state.Edit.files
+          // let x = this.$store.state.Edit.currentFiles
           // switch (this.$store.state.Edit.lastNav) {
           //   case '/stat':
           //     x = this.$store.state.Stat.files
@@ -166,7 +167,8 @@
             case '/edit':
               if (this.$store.state.Edit.serverType === 'file') {
                 // getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port, this.$store.state.Edit.serverType, data, this.$store.state.System.user.username])
-                getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, data, this.$store.state.Edit.rightPanel)
+                // getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, data, this.$store.state.Edit.rightPanel)
+                dataDB(this, 'local', 'cda', { fileType: 'cda', fileName: data }, 'editFile', null)
               } else if (!data.endsWith('.csv') && !data.endsWith('.cda')) {
                 getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, this.$store.state.Stat.tableType, 'edit')
               } else if (x === 'stat') {

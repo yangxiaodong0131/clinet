@@ -60,7 +60,7 @@
 </template>
 
 <script>
-  import { saveEditDoc, newEditDoc, cacheEditDoc } from '../../utils/EditOperation'
+  import { saveEditDoc, newEditDoc } from '../../utils/EditOperation'
   // import { unSaveFile } from '../../utils/SaveFile'
   // import { getDocContent } from '../../utils/EditServerFile'
   import { getStat } from '../../utils/StatServerFile'
@@ -150,9 +150,9 @@
           }
         }
       },
-      saveDoc: function () {
-        cacheEditDoc(this)
-      },
+      // saveDoc: function () {
+      //   cacheEditDoc(this)
+      // },
       save: function (data) {
         saveEditDoc(this, data)
         if (this.$store.state.Edit.fileName === '未保存病案.cda') {

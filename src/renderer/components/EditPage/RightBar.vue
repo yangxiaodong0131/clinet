@@ -138,11 +138,9 @@
         if (n === '病案文档') {
           switch (this.$store.state.Edit.dataType) {
             case '本地-文件':
-              // this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-              // this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-              // this.localData()
-              console.log('----')
-              dataDB(this, 'local', 'cda', null, 'editFiles', null)
+              this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
+              this.localData()
               break;
             case '远程-用户':
               this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
@@ -213,7 +211,7 @@
             break;
           default:
             this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-            this.$store.commit('EDIT_LOAD_FILES');
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editFiles', null)
         }
         this.$store.commit('SET_NOTICE', '读取本地文件');
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
