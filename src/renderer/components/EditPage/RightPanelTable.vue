@@ -80,15 +80,8 @@
       file: {
         get() {
           let f = []
-          // console.log(this.$store.state.Edit.file)
-          // if (this.$store.state.Edit.file.length > 0) {
-          //   if (!this.$store.state.Edit.file[0].includes('创建时间')) {
-          //     // this.isSummary = false
-          //     console.log('===')
-          //   }
-          // }
           if (this.$store.state.Edit.lastNav === '/edit' && this.$store.state.Edit.navType === '病案文档') {
-            f = this.$store.state.Edit.docSummary
+            f = this.$store.state.Edit.doc
           } else {
             const file = this.$store.state.Edit.file
             let start = 0
@@ -180,6 +173,7 @@
         this.$store.commit('EDIT_SET_DOC_STATE');
       },
       loadDoc: function (index, type) {
+        console.log(index, type)
         loadEditDoc(this, index, type)
       },
       close(data) {

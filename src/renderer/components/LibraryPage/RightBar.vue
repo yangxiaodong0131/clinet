@@ -81,7 +81,7 @@
 </template>
 
 <script>
-  import { getLibrary, librarDown, getLibrarySerach, saveLibraryPage } from '../../utils/LibraryServerFile';
+  import { getLibrary, getLibrarySerach, saveLibraryPage } from '../../utils/LibraryServerFile';
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
   import pageSearch from '../../utils/PageSearch';
@@ -131,24 +131,20 @@
           case '区块链': type = 'block'; break;
           default: type = ''; break;
         }
-        // getLibraryFile(this, n)
-        dataDB(this, type, 'libraryFile', null, 'libraryFiles', null)
         this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
         this.$store.commit('LIBRARY_SET_TABLE_TYPE', type);
         this.$store.commit('SET_NOTICE', `${n}文件`);
+        dataDB(this, type, 'libraryFile', null, 'libraryFiles', null)
       },
       page: function (n) {
         if (this.$store.state.Library.libraryTableInfo.page === 1 && n === -1) {
           this.$store.commit('SET_NOTICE', '当前已是第一页')
         } else if ((this.$store.state.Library.libraryTableInfo.page === this.$store.state.Library.libraryTableInfo.countPage && n === 1) || this.$store.state.Library.countPage === 0) {
           this.$store.commit('SET_NOTICE', '当前已是尾页');
-        } else if (this.$store.state.Library.tableType === 'server' || this.$store.state.Library.tableType === 'block') {
-          this.$store.commit('LIBRARY_TABLE_PAGE', [n]);
-          getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, this.$store.state.Library.libraryTableInfo.page, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'library', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
-        } else if (this.$store.state.Library.tableType === 'local') {
+        } else if (['local', 'server', 'block'].includes(this.$store.state.Library.tableType)) {
           this.$store.commit('LIBRARY_TABLE_PAGE', [n]);
           const skip = (this.$store.state.Library.libraryTableInfo.page - 1) * 30
-          dataDB(this, 'local', 'library', { fileType: this.$store.state.Library.files[this.$store.state.Library.fileIndex] }, 'libraryFile', null, skip, 30)
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: this.$store.state.Library.tableType, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, skip, 30)
           this.$store.commit('SET_NOTICE', `当前${this.$store.state.Library.libraryTableInfo.page}页,共${this.$store.state.Library.libraryTableInfo.countPage}页`)
         }
       },
@@ -238,9 +234,9 @@
         share(this, [this.$store.state.System.server, this.$store.state.System.port], 'library', this.$store.state.System.shareFileName, this.$store.state.System.user.username, array)
       },
       docDown: function () {
-        if (this.$store.state.Library.tableType === 'server') {
-          const filename = this.$store.state.System.shareFileName
-          librarDown(this, [this.$store.state.System.server, this.$store.state.System.port], filename);
+        if (['server', 'block'].includes(this.$store.state.Library.tableType)) {
+          const filename = this.$store.state.Library.libraryTableInfo.tableName
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: filename }, 'downloadLibrary', null, 0, 30)
         }
       },
       updateMessage: function (e) {

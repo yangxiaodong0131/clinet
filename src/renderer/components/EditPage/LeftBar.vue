@@ -24,9 +24,9 @@
         <li class="nav-item" id="edit-leftbar-newdoc1" v-on:click="show()">
           <a class="nav-link text-light" href="#" v-if="this.$store.state.Edit.leftPanel == 'table'">编辑</a>
         </li>
-        <li class="nav-item" id="edit-leftbar-cache" v-on:click="saveDoc()">
+        <!-- <li class="nav-item" id="edit-leftbar-cache" v-on:click="saveDoc()">
           <a class="nav-link text-light" href="#">缓存</a>
-        </li>
+        </li> -->
         <li class="nav-item" id="edit-leftbar-newdoc2" v-on:click="save('保存病案')">
           <a class="nav-link text-light" href="#">保存</a>
         </li>
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-  import { saveEditDoc, newEditDoc, cacheEditDoc } from '../../utils/EditOperation'
+  import { saveEditDoc, newEditDoc } from '../../utils/EditOperation'
   // import { unSaveFile } from '../../utils/SaveFile'
   // import { getDocContent } from '../../utils/EditServerFile'
   import { getStat } from '../../utils/StatServerFile'
@@ -150,9 +150,9 @@
           }
         }
       },
-      saveDoc: function () {
-        cacheEditDoc(this)
-      },
+      // saveDoc: function () {
+      //   cacheEditDoc(this)
+      // },
       save: function (data) {
         saveEditDoc(this, data)
         if (this.$store.state.Edit.fileName === '未保存病案.cda') {

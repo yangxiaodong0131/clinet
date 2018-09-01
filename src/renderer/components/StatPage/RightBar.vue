@@ -16,20 +16,8 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="stat-file-dropdown">
             <a v-for="(data, index) in fileTypes" v-bind:key='index' class="nav-link" href="#" v-on:click='statFile(data)' v-bind:id="'stat-file-'+data">{{data}}</a>
-            <!-- <a class="nav-link" href="#" title="显示本地文件" id="stat-local-file" v-on:click='loadData()'> 本地 <span class="sr-only">(current)</span></a>
-            <a class="nav-link" href="#" title="显示远程文件" id="stat-remote-file" v-on:click='serverData()'> 远程 <span class="sr-only">(current)</span></a>
-            <a class="nav-link" href="#" title="显示区块链文件" id="stat-block-file" v-on:click='blockData()'> 区块链 <span class="sr-only">(current)</span></a> -->
           </div>
         </li>
-        <!-- <li class="nav-item active" id="stat-local-doc" v-on:click='loadData()'>
-          <a class="nav-link text-light" href="#" title="显示本地文件"> 本地 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" id="stat-remote-file" v-on:click='serverData()'>
-          <a class="nav-link text-light" href="#" title="显示远程文件"> 远程 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" id="stat-block-file" v-on:click='blockData()'>
-          <a class="nav-link text-light" href="#" title="显示区块链文件"> 区块链 <span class="sr-only">(current)</span></a>
-        </li> -->
         <li class="nav-item active" v-if ="this.$store.state.Stat.tableType === 'server'" v-on:click='blockShare()'>
           <a class="nav-link text-light" href="#" title="分享选中记录"> 分享 <span class="sr-only">(current)</span></a>
         </li>
@@ -178,12 +166,9 @@
   import chartPie from '../../utils/ChartPie';
   import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
-  // import saveFile from '../../utils/SaveFile';
-  import { getStat, saveStat, getStatInfo, downloadStat, sCustom } from '../../utils/StatServerFile';
+  import { getStat, saveStat, getStatInfo, sCustom } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
   import dataDB from '../../utils/dataDB';
-  // import sGetTarget from '../../utils/Server';
-  // import getStatFile from '../../utils/StatOperation';
 
   export default {
     data() {
@@ -226,100 +211,42 @@
       statFile: function (n) {
         let type = ''
         switch (n) {
-          case '本地': type = 'local'; break;
-          case '远程': type = 'server'; break;
-          case '区块链': type = 'block'; break;
+          case '本地':
+            type = 'local';
+            break;
+          case '远程':
+            if (this.$store.state.System.user.login) {
+              this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
+            }
+            type = 'server';
+            break;
+          case '区块链':
+            type = 'block';
+            break;
           default: type = ''; break;
         }
+        this.$store.commit('STAT_SET_TABLE_TYPE', type)
         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
         this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-        this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
-        dataDB(this, type, 'statFile', null, 'statFiles', null)
-        // this.$store.commit('LIBRARY_SET_LEFT_PANEL', ['file', null]);
-        // this.$store.commit('LIBRARY_SET_TABLE_TYPE', type);
-        // this.$store.commit('SET_NOTICE', `${n}文件`);
-        // getStatFile(this, n)
-        // this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-        // this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-        // if (n === '本地') {
-        //   this.$store.commit('SET_NOTICE', '选择本地文件')
-        //   this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
-        //   this.$store.commit('STAT_LOAD_FILES');
-        //   this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-        // } else if (n === '远程') {
-        //   if (!this.$store.state.System.user.login) {
-        //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-        //   } else {
-        //     this.$store.commit('SET_NOTICE', '选择远程文件')
-        //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-        //     this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
-        //     this.$store.commit('STAT_SET_BAR_TYPE', 'server')
-        //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
-        //   }
-        // } else if (n === '区块链') {
-        //   if (!this.$store.state.System.user.login) {
-        //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-        //   } else {
-        //     this.$store.commit('SET_NOTICE', '区块链文件');
-        //     this.$store.commit('STAT_SET_TABLE_TYPE', 'block');
-        //     this.$store.commit('STAT_SET_BAR_TYPE', 'block');
-        //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-        //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.username, 'block')
-        //   }
-        // }
+        dataDB(this, type, 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: type })
       },
-      // loadData: function () {
-      //   this.$store.commit('SET_NOTICE', '选择本地文件')
-      //   this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-      //   // this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-      //   // this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
-      //   // this.$store.commit('STAT_LOAD_FILES');
-      //   // this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-      // },
-      // serverData: function () {
-      //   if (!this.$store.state.System.user.login) {
-      //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-      //   } else {
-      //     this.$store.commit('SET_NOTICE', '选择远程文件')
-      //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-      //     this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-      //     this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
-      //     this.$store.commit('STAT_SET_BAR_TYPE', 'server')
-      //     this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-      //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
-      //   }
-      // },
-      // blockData: function () {
-      //   if (!this.$store.state.System.user.login) {
-      //     this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
-      //   } else {
-      //     this.$store.commit('SET_NOTICE', '区块链文件');
-      //     this.$store.commit('STAT_SET_TABLE_TYPE', 'block');
-      //     this.$store.commit('STAT_SET_BAR_TYPE', 'block');
-      //     this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-      //     this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-      //     this.$store.commit('STAT_SET_LEFT_PANEL', ['file', null]);
-      //     getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], '', this.$store.state.System.user.username, 'block')
-      //   }
-      // },
       page: function (n) {
-        if (this.$store.state.Stat.tablePage === 1 && n === -1) {
+        if (this.$store.state.Stat.statTableInfo.page === 1 && n === -1) {
           this.$store.commit('SET_NOTICE', '当前已是第一页')
-        } else if ((this.$store.state.Stat.tablePage === this.$store.state.Stat.statTableInfo.countPage && n === 1) || this.$store.state.Stat.statTableInfo.countPage === 0) {
+        } else if ((this.$store.state.Stat.statTableInfo.page === this.$store.state.Stat.statTableInfo.countPage && n === 1) || this.$store.state.Stat.statTableInfo.countPage === 0) {
           this.$store.commit('SET_NOTICE', '当前已是尾页');
-        } else {
-          switch (this.$store.state.Stat.tableType) {
-            case 'server':
-              this.$store.commit('STAT_TABLE_PAGE', n);
-              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: this.$store.state.Stat.statTableInfo.page, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
-              break;
-            case 'local':
-              this.$store.commit('STAT_TABLE_PAGE', n);
-              this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
-              chartData(this, this.$store.state.Stat.statTable.data, this.$store.state.Stat.selectedRow, this.$store.state.Stat.selectedCol)
-              break;
-            default:
-              break;
+        } else if (['local', 'server', 'block'].includes(this.$store.state.Stat.tableType)) {
+          this.$store.commit('STAT_SET_TABLE_PAGE', this.$store.state.Stat.statTableInfo.page + n);
+          // 计算skip
+          const skip = (this.$store.state.Stat.statTableInfo.page - 1) * 20
+          // 定义查询条件
+          const data = { fileType: this.$store.state.Stat.statTableInfo.tableName }
+          const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }
+          // 调用通用方法查询
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', data, 'statFile', newData, skip, 20)
+          this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
+          if (this.$store.state.Stat.tableType) {
+            chartData(this, this.$store.state.Stat.statTable.data, this.$store.state.Stat.selectedRow, this.$store.state.Stat.selectedCol)
           }
           switch (this.$store.state.Stat.chartLeft) {
             case '柱状图':
@@ -571,7 +498,11 @@
         this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
       },
       statDownload: function () {
-        downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+        const data = { fileType: this.$store.state.Stat.statTableInfo.tableName }
+        const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }
+        // 调用通用方法查询
+        dataDB(this, this.$store.state.Stat.tableType, 'stat', data, 'downloadStat', newData, 0, 20)
+        // downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
       },
       custom: function () {
         sGetTarget(this, [this.$store.state.System.server, this.$store.state.System.port], 'list');

@@ -78,7 +78,7 @@
   import loadFile from '../../utils/LoadFile';
   import saveFile from '../../utils/SaveFile'
   import { offline } from '../../utils/Socket';
-  import { cacheEditDoc } from '../../utils/EditOperation'
+  // import { saveEditDoc } from '../../utils/EditOperation'
   // import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
   import { open } from '../../utils/BlockAccount'
   import { bcBlockchain } from '../../utils/BlockBlock'
@@ -142,7 +142,9 @@
           n = '已登录'
         }
         if (n !== '数据采集-数据采集' && n !== '未登录...' && this.$store.state.Edit.doc.length > 0) {
-          cacheEditDoc(this)
+          // cacheEditDoc(this)
+          console.log(this.$store.state.Edit.doc)
+          // saveEditDoc(this, this.$store.state.Edit.doc)
         }
         switch (n) {
           case '首页':

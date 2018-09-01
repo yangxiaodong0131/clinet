@@ -30,7 +30,7 @@ const state = {
   fileTypes: ['本地', '远程', '区块链'],
   statList: { org: [], department: [], time: [], year_time: [], half_year: [], season_time: [], month_time: [], drg: [], adrg: [], mdc: [], localList: [] },
   dimension: { org: '', time: '', drg: '', type: 'org' },
-  statTable: { data: [], compare: [], info: [], download: [] },
+  statTable: { data: [], compare: [], info: [] },
   statTableInfo: { page: 1, countPage: 0, pageList: [], tableName: '', tableSel: [], dimensionOrg: '', dimensionTime: '', dimensionDrg: '', header: [] },
   customindex: []
 };
@@ -45,16 +45,21 @@ const mutations = {
   },
   // state,[type, ]
   STAT_SET_TABLE(state, opt) {
-    const table = []
-    const keys = Object.keys(opt[0]).filter(i => !['_id', 'id', 'fileType'].includes(i))
-    // 存储表头
-    table.push(keys)
-    // 取得表内容,取不到的用-代替
-    opt.forEach((xs) => {
-      const f = keys.map(x => xs[x])
-      table.push(f)
-    })
-    state.statTable.data = table
+    if (state.tableType === 'local') {
+      const table = []
+      const keys = Object.keys(opt[0]).filter(i => !['_id', 'id', 'fileType'].includes(i))
+      // 存储表头
+      table.push(keys)
+      // 取得表内容,取不到的用-代替
+      opt.forEach((xs) => {
+        const f = keys.map(x => xs[x])
+        table.push(f)
+      })
+      state.statTable.data = table
+    } else {
+      state.statTable.data = opt[1]
+    }
+
     // if (opt[0] === 'local') {
     //   state.file = opt[1];
     //   state.table = opt[1].map(x => x.split(','))
@@ -149,7 +154,7 @@ const mutations = {
     }
   },
   STAT_SET_COUNT_PAGE(state, n) {
-    state.countPage = n
+    state.statTableInfo.countPage = n
   },
   STAT_SET_TABLE_PAGE(state, n) {
     state.statTableInfo.page = n

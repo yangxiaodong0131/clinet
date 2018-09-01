@@ -116,10 +116,11 @@ const mutations = {
   EDIT_SERVER_CDH(state, m) {
     state.serverCdh = m;
   },
-  EDIT_LOAD_FILES() {
-    const files = fs.readdirSync(global.hitbdata.path.user).filter(x => x.endsWith('.cda'))
-    state.files = files;
-    console.log(state.files.length)
+  EDIT_LOAD_FILES(state, m) {
+    state.files = m
+    // const files = fs.readdirSync(global.hitbdata.path.user).filter(x => x.endsWith('.cda'))
+    // state.files = files;
+    // console.log(state.files.length)
   },
   EDIT_LOAD_FILE(state, message) {
     state.file = message;
@@ -137,12 +138,12 @@ const mutations = {
     state.filesPage = 1;
   },
   EDIT_LOAD_DOC(state, message) {
-    const x = message.map(m => m.split(' ').filter(i => i !== ''))
-    state.doc = x;
+    // const x = message.map(m => m.split(' ').filter(i => i !== ''))
+    state.doc = message;
     if (state.lastNav !== '/edit') {
       state.idIndex = state.file[1].split(',').indexOf('ID')
     }
-    state.editBarValue = x[0]
+    state.editBarValue = message[0]
     if (global.hitbSections.length > 0 && global.hitbSections.includes(state.editBarValue)) {
       state.section = state.editBarValue[0]
     }
@@ -319,6 +320,18 @@ const mutations = {
       state.rightFolds.push(value)
     }
   },
+  EDIT_DELETE_RIGHT_FOLDS(state, value) {
+    const index = state.rightFolds.indexOf(value)
+    if (index > -1) {
+      const arr = []
+      state.rightPanels.forEach((x) => {
+        if (x !== value) {
+          arr.push(x)
+        }
+      })
+      state.rightFolds = arr
+    }
+  },
   EDIT_SET_RIGHT_TYPE(state, value) {
     state.rightType = value
   },
@@ -488,6 +501,7 @@ const mutations = {
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_DELETE_RIGHT_FOLDS');
     commit('EDIT_SET_FILES_OFFSET');
     commit('EDIT_SET_FILES_NUM');
     commit('EDIT_SET_CURRENT_SERVER_FILES');

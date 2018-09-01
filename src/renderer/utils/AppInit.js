@@ -64,6 +64,7 @@ export default function appInit() {
   };
 
   // 服务器配置文件
+  global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }
   db.server.count({}, (err, res) => {
     if (res === 0) {
       global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }
@@ -192,9 +193,12 @@ export default function appInit() {
     } else if (res > 0) {
       db.cdh.find({ fileType: 'cdh' }, (err, res) => {
         const t = {}
+        const f = []
         res.forEach((x) => {
           t[x.key] = x.value
+          f.push([x.key, x.value.join(' ')].join(' '))
         })
+        global.hitbdata.cdhFile = f
         global.hitbdata.cdh = t;
       })
       db.cdh.findOne({ fileType: 'header' }, (err, res) => {
@@ -404,7 +408,7 @@ export default function appInit() {
   // 用户本地文件
   db.cda.count({ fileType: 'cda' }, (err, res) => {
     if (res === 0) {
-      db.cda.insert({ fileType: 'cda', value: '', fileName: '未保存病案.cda' })
+      db.cda.insert({ fileType: 'cda', value: [], fileName: '未保存病案.cda', username: 'system', cTime: '', uTime: '' })
     } else if (res > 0) {
       db.cda.findOne({ fileType: 'cda' }, (err, res) => {
         global.hitbDoc = res.value

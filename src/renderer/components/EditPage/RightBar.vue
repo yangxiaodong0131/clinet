@@ -77,6 +77,7 @@
   import { rightBarHelp } from '../../utils/EditOperation'
   import getStatFile from '../../utils/StatOperation';
   import getLibraryFile from '../../utils/LibraryOperation';
+  import dataDB from '../../utils/dataDB';
   export default {
     data() {
       return {
@@ -210,7 +211,7 @@
             break;
           default:
             this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-            this.$store.commit('EDIT_LOAD_FILES');
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editFiles', null)
         }
         this.$store.commit('SET_NOTICE', '读取本地文件');
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');

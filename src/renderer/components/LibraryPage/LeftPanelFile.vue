@@ -14,7 +14,7 @@
 <script>
   // import loadFile from '../../utils/LoadFile';
   import dataDB from '../../utils/dataDB';
-  import { getLibrary } from '../../utils/LibraryServerFile'
+  // import { getLibrary } from '../../utils/LibraryServerFile'
   export default {
     data() {
       return {
@@ -35,25 +35,20 @@
     },
     methods: {
       loadFile: function (data, index) {
-        this.$store.commit('LIBRARY_SET_TABLE_PAGE', 0)
+        this.$store.commit('LIBRARY_SET_TABLE_PAGE', 1)
+        this.$store.commit('LIBRARY_SET_TABLE_NAME', data)
         // this.$store.commit('LIBRARY_SET_SERVER_TABLE_TITLE', data);
         // this.$store.commit('SYSTEM_GET_SHARE_FILE_NAME', this.$store.state.Library.files[index]);
         // this.$store.commit('LIBRARY_GET_ROW', 0);
         this.$store.commit('LIBRARY_SET_FILE_INDEX', index);
-        // this.$store.commit('LIBRARY_CLEAR_SERVER_SORT');
-        // this.$store.commit('LIBRARY_CLEAR_CHANGE')
+        this.$store.commit('LIBRARY_CLEAR_SERVER_SORT');
+        this.$store.commit('LIBRARY_CLEAR_CHANGE')
         if (this.$store.state.Library.tableType === 'search') {
           this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
-        }
-        if (this.$store.state.Library.tableType === 'local') {
+        } else if (this.$store.state.Library.tableType === 'local') {
           dataDB(this, 'local', 'library', { fileType: data }, 'libraryCount', null, null, 30)
-          dataDB(this, 'local', 'library', { fileType: data }, 'libraryFile', null, 0, 30)
-          // loadFile(this, data, 'library')
-          // this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'local');
-        } else {
-          this.$store.commit('LIBRARY_SET_TABLE_PAGE', 1);
-          getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], data, 1, null, null, 'library', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
         }
+        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: data }, 'libraryFile', { type1: this.$store.state.Library.tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
       },
     },
   };
