@@ -31,7 +31,6 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   // 去除文件名中的.csv
   const type = tableName.split('.csv')[0]
   let url = ''
-  console.log(dimensionType !== null);
   if (dimensionType !== null) {
     const keys = Object.keys(dimensionServer)
     keys.forEach((n) => {
@@ -122,9 +121,8 @@ export function downloadLibrary(obj, url, fileName) {
   }).then((res) => {
     if (res.status === 200) {
       obj.$store.commit('SET_NOTICE', '下载成功')
-      console.log(res.data.result);
-      dataDB(obj, 'local', 'library', res.data.result, 'insert', { fileName: filename }, null, null)
-      dataDB(obj, 'local', 'libraryFile', { fileName: filename, cUser: username, uUser: username, cTIme: '', uTime: '' }, 'insert', { fileName: filename }, null, null)
+      dataDB(obj, 'local', 'library', res.data.result, 'downloadLibrary', { fileName: filename }, null, null)
+      dataDB(obj, 'local', 'libraryFile', { fileName: filename, cUser: username, uUser: username, cTIme: '', uTime: '' }, 'downloadLibrary', { fileName: filename }, null, null)
       obj.$store.commit('SET_NOTICE', `文件「${filename}」保存成功！`)
     } else {
       obj.$store.commit('SET_NOTICE', '下载失败')

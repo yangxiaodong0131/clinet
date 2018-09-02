@@ -23,13 +23,12 @@ function insert(obj, col, data, type, newData) {
       break;
   }
   if (query === null) {
-    obj.db[col].insert(data, (err, res) => {
+    obj.db[col].insert(data, () => {
       switch (type) {
         case 'createCda':
           obj.$store.commit('SET_NOTICE', `文件「${fileName}」保存成功！`)
           break;
         default:
-          console.log(res);
           break;
       }
     })
