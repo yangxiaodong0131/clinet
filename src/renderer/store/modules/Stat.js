@@ -27,6 +27,7 @@ const state = {
   serverMenu: { first: [], second: [], third: [], type: '' },
   xObj: {},
   barType: '',
+  serverSort: { field: '机构', type: 'asc' },
   fileTypes: ['本地', '远程', '区块链'],
   statList: { org: [], department: [], time: [], year_time: [], half_year: [], season_time: [], month_time: [], drg: [], adrg: [], mdc: [], localList: [] },
   dimension: { org: '', time: '', drg: '', type: 'org' },

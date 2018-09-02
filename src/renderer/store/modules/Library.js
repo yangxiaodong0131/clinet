@@ -128,6 +128,9 @@ const mutations = {
   //   console.log(state.serverDimension)
   // },
   LIBRARY_SET_SERVER_DIMENSION(state, opt) {
+    if (opt[0] === '全部' || opt[0] === null) {
+      opt[0] = ''
+    }
     switch (opt[1]) {
       case 'org':
         state.serverDimension.org = opt[0]

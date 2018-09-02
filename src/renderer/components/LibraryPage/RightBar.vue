@@ -81,11 +81,9 @@
 </template>
 
 <script>
-  import { getLibrary, getLibrarySerach, saveLibraryPage } from '../../utils/LibraryServerFile';
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
   import pageSearch from '../../utils/PageSearch';
-  // import getLibraryFile from '../../utils/LibraryOperation';
   import dataDB from '../../utils/dataDB';
   export default {
     data() {
@@ -165,7 +163,8 @@
           this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
           this.$store.commit('EDIT_SERVER_FILES', f);
           this.$store.commit('EDIT_SET_FILES_INDEX', 0);
-          getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, this.$store.state.Library.libraryTableInfo.page, this.$store.state.Library.dimensionType, this.$store.state.Library.dimensionServer, 'edit', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
+          const skip = (this.$store.state.Library.libraryTableInfo.page - 1) * 30
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: 'edit', dimensionType: this.$store.state.Library.dimensionType, dimensionServer: this.$store.state.Library.dimensionServer, sort: this.$store.state.Library.serverSort }, skip, 30)
         } else {
           if (this.$store.state.Library.fileIndex !== null) {
             this.$store.commit('EDIT_LOAD_FILE', f);
@@ -204,7 +203,7 @@
           case 'server': {
             if (this.$store.state.Library.libraryTableInfo.tableName) {
               this.$store.commit('LIBRARY_SET_SERVER_DIMENSION', [value, x]);
-              getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, 1, 'filter', this.$store.state.Library.serverDimension, 'edit', 'server', this.$store.state.Library.serverSort)
+              dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, 0, 30)
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
             }
@@ -222,7 +221,7 @@
           if (type === 'page') {
             pageSearch(this, this.$store.state.Library.libraryTable.data, this.$store.state.Library.changeVal)
           } else {
-            getLibrarySerach(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, this.$store.state.Library.changeVal, 'server')
+            dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'librarySerach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, 0, 30)
           }
         } else if (type === 'return') {
           this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
@@ -271,12 +270,11 @@
             // 变化下一个高亮
             this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [dataIndex, trIndex]);
             this.$store.commit('LIBRARY_SET_CHANGE', { val: table[dataIndex][trIndex], dataIndex: dataIndex, trIndex: trIndex })
-            // console.log(data[]);
             const idIndex = table[0].indexOf('ID');
             if (data[idIndex] === '-') {
-              saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table[0], table, dataIndex, 'add')
+              dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'saveLibraryPage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'add' }, 0, 30)
             } else if (parseInt(data[idIndex], 10) > 0) {
-              saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table[0], table, dataIndex, 'change')
+              dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'saveLibraryPage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'change' }, 0, 30)
             }
           }
         } else {
@@ -302,8 +300,8 @@
         // 定义要传给后台的数据
         const table = this.$store.state.Library.libraryTable.data
         const dataIndex = this.$store.state.Library.changIndex[0]
-        const data = [table[0], table[dataIndex]]
-        saveLibraryPage(this, [this.$store.state.System.server, this.$store.state.System.port], data, table[0], table, dataIndex, 'delete')
+        const data = table[dataIndex]
+        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'saveLibraryPage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'delete' }, 0, 30)
       },
     },
   };

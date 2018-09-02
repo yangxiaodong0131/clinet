@@ -1,8 +1,26 @@
 // 统一的数据库操作入口，
 // 包括local、server、block三层数据库
 // 包括cda、library、stat、system、user等等数据表
-import { getLibraryFiles, getLibrary, downloadLibrary } from './LibraryServerFile'
+import { getLibraryFiles, getLibrary, downloadLibrary, getLibrarySerach, saveLibraryPage } from './LibraryServerFile'
 import { getStatFiles, getStat, downloadStat } from './StatServerFile'
+function count(obj, col, data, type, limit) {
+  console.log([col, data, type, limit])
+  obj.db[col].count(data, (err, res) => {
+    const countPage = Math.ceil(res / limit)
+    switch (type) {
+      case 'libraryCount':
+        obj.$store.commit('LIBRARY_SET_COUNT_PAGE', countPage)
+        break;
+      case 'statCount':
+        obj.$store.commit('STAT_SET_COUNT_PAGE', countPage)
+        break;
+      default:
+        console.log(res);
+        break;
+    }
+    obj.$store.commit('SET_NOTICE', `当前1页,共${countPage}页`)
+  })
+}
 function insert(obj, col, data, type, newData) {
   let query = null
   let fileName = null
@@ -58,12 +76,14 @@ function find(obj, col, data, type, skip, limit) {
         break;
       case 'libraryFile':
         obj.$store.commit('LIBRARY_LOAD_FILE', res);
+        count(obj, col, data, 'librarCount', limit)
         break;
       case 'statFiles':
         obj.$store.commit('STAT_LOAD_FILES', res.map(x => x.fileName));
         break;
       case 'statFile':
         obj.$store.commit('STAT_SET_TABLE', res);
+        count(obj, col, data, 'statCount', limit)
         break;
       default:
         console.log(res);
@@ -82,24 +102,6 @@ function findOne(obj, col, data, type) {
         console.log(res);
         break;
     }
-  })
-}
-
-function count(obj, col, data, type, limit) {
-  obj.db[col].count(data, (err, res) => {
-    const countPage = Math.ceil(res / limit)
-    switch (type) {
-      case 'libraryCount':
-        obj.$store.commit('LIBRARY_SET_COUNT_PAGE', countPage)
-        break;
-      case 'statCount':
-        obj.$store.commit('STAT_SET_COUNT_PAGE', countPage)
-        break;
-      default:
-        console.log(res);
-        break;
-    }
-    obj.$store.commit('SET_NOTICE', `当前1页,共${countPage}页`)
   })
 }
 
@@ -132,11 +134,9 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'saveCda': update(obj, col, data, newData, type); break
         case 'libraryFiles': find(obj, col, data, type, skip, limit); break
         case 'libraryFile': find(obj, col, data, type, skip, limit); break
-        case 'libraryCount': count(obj, col, data, type, limit); break
         case 'downloadLibrary': insert(obj, col, data, type, newData); break
         case 'statFiles': find(obj, col, data, type, skip, limit); break
         case 'statFile': find(obj, col, data, type, skip, limit); break
-        case 'statCount': count(obj, col, data, type, limit); break
         case 'downloadStat': insert(obj, col, data, type, newData); break
         default: break
       }
@@ -151,6 +151,12 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             break;
           case 'libraryFile':
             getLibrary(obj, serverConfig, data.fileType, page + 1, newData.dimensionType, newData.serverDimension, newData.type1, serverType, newData.sort)
+            break;
+          case 'librarySerach':
+            getLibrarySerach(obj, serverConfig, data.fileType, newData.val, serverType)
+            break;
+          case 'saveLibraryPage':
+            saveLibraryPage(obj, serverConfig, newData.data, newData.header, newData.table, newData.dataIndex, newData.type)
             break;
           case 'downloadLibrary':
             downloadLibrary(obj, serverConfig, data.fileType);

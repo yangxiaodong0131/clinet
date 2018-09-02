@@ -12,13 +12,13 @@
 </template>
 
 <script>
-  import { getStat } from '../../utils/StatServerFile';
   import chartLine from '../../utils/ChartLine';
   import chartScatter from '../../utils/ChartScatter';
   import chartRadar from '../../utils/ChartRadar';
   import chartBar from '../../utils/ChartBar';
   import chartPie from '../../utils/ChartPie';
   import chartData from '../../utils/ChartData';
+  import dataDB from '../../utils/dataDB';
   export default {
     data() {
       return {
@@ -40,8 +40,9 @@
           this.flag = index
           this.$store.commit('STAT_SET_DIMENSION', [this.$store.state.Stat.dimension.type, data]);
           this.$store.commit('STAT_SET_SERVER_DIMENSION', data)
-          this.$store.commit('STAT_TABLE_PAGE', 0)
-          getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+          this.$store.commit('STAT_TABLE_PAGE', 1)
+          // 调用通用方法查询
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
         } else {
           this.$store.commit('STAT_TABLE_PAGE', 0)
           this.$store.commit('SET_NOTICE', `当前页数${this.$store.state.Stat.statTableInfo.tablePage},共${this.$store.state.Stat.statTableInfo.countPage}页`)

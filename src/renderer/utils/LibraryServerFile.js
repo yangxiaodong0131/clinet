@@ -51,6 +51,7 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   if (type1 === 'edit') {
     username = obj.$store.state.System.user.username
   }
+  console.log(dimensionServer);
   axios({
     method: 'get',
     url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&username=${username}&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
@@ -201,6 +202,7 @@ export function saveLibraryPage(obj, data, content, header, table, dataIndex, ty
         const idIndex = table[0].indexOf('ID');
         const createIndex = table[0].indexOf('创建用户');
         const updateIndex = table[0].indexOf('更新用户');
+        console.log(res.data);
         table[dataIndex][idIndex] = res.data.id
         table[dataIndex][createIndex] = res.data.create_user
         table[dataIndex][updateIndex] = res.data.update_user

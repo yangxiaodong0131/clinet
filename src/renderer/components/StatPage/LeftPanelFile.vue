@@ -12,12 +12,7 @@
 </template>
 
 <script>
-  // import loadFile from '../../utils/LoadFile';
-  // import chartLine from '../../utils/ChartLine';
-  // import chartBar from '../../utils/ChartBar';
   import dataDB from '../../utils/dataDB';
-  // import { getStat } from '../../utils/StatServerFile'
-  // import { sGetWt4 } from '../../utils/Server'
   export default {
     data() {
       return {
@@ -50,24 +45,21 @@
         this.$store.commit('STAT_SET_FILE_INDEX', ['first', index]);
         this.$store.commit('STAT_TABLE_NAME', data)
         this.$store.commit('STAT_SET_TABLE_PAGE', 1);
-        // 判断读取文件
+        this.$store.commit('STAT_CLEAR_SERVER_SORT')
         if (this.$store.state.Stat.tableType === 'local') {
-          dataDB(this, 'local', 'stat', { fileType: data }, 'statCount', null, null, 20)
-          dataDB(this, 'local', 'stat', { fileType: data }, 'statFile', null, 0, 20)
-          // loadFile(this, data, 'stat');
-        } else if (this.$store.state.Stat.tableType === 'server' || this.$store.state.Stat.isServer) {
-          this.$store.commit('STAT_SET_TABLE_TYPE', 'server')
-          // 判断是否是病案
-          if (data.endsWith('.csv')) {
-            this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-            dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
-          } else {
-            if (this.$store.state.Stat.serverMenu.type === '二级菜单') {
-              this.$store.commit('STAT_SET_SERVER_MENU', ['三级菜单', []]);
-            }
-            this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
-            dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+          this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
+        } else {
+          this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
+        }
+        if (data.endsWith('.csv')) {
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', {}, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+        } else if (this.$store.state.Stat.tableType === 'local') {
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', {}, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+        } else {
+          if (this.$store.state.Stat.serverMenu.type === '二级菜单') {
+            this.$store.commit('STAT_SET_SERVER_MENU', ['三级菜单', []]);
           }
+          dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
         }
       },
     },
