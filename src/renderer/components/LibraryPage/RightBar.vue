@@ -253,7 +253,7 @@
           let dataIndex = this.$store.state.Library.changIndex[0]
           let trIndex = this.$store.state.Library.changIndex[1]
           // table[0][trIndex] === 'ID'
-          if (['ID', '创建用户', '修改用户', '创建时间', '修改时间'].includes(table[0][trIndex])) {
+          if (['ID', '创建用户', '修改用户', '创建时间', '修改时间', '_id'].includes(table[0][trIndex])) {
             this.$store.commit('SET_NOTICE', '此单元格不允许修改')
           } else {
             data[change.trIndex] = this.$store.state.Library.changeVal
@@ -270,10 +270,15 @@
             // 变化下一个高亮
             this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [dataIndex, trIndex]);
             this.$store.commit('LIBRARY_SET_CHANGE', { val: table[dataIndex][trIndex], dataIndex: dataIndex, trIndex: trIndex })
-            const idIndex = table[0].indexOf('ID');
+            let idIndex = null
+            if (table[0].includes('_id')) {
+              idIndex = table[0].indexOf('_id');
+            } else {
+              idIndex = table[0].indexOf('ID');
+            }
             if (data[idIndex] === '-') {
               dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'saveLibraryPage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'add' }, 0, 30)
-            } else if (parseInt(data[idIndex], 10) > 0) {
+            } else if ((parseInt(data[idIndex], 10) > 0 && table[0].includes('ID')) || table[0].includes('_id')) {
               dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'saveLibraryPage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'change' }, 0, 30)
             }
           }

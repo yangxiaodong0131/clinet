@@ -111,6 +111,9 @@ function findOne(obj, col, data, type) {
 }
 
 function update(obj, col, data, newData) {
+  obj.db[col].find(data, (err, res) => {
+    console.log(res);
+  })
   obj.db[col].update(data, { $set: newData }, (err, res) => {
     console.log(res)
   })
@@ -152,6 +155,27 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
               queryData.push(obj)
             })
             find(obj, col, { $or: queryData, fileType: data.fileType }, type, null, null);
+          }
+          break;
+        case 'saveLibraryPage':
+          if (newData.type) {
+            const idIndex = newData.header.indexOf('_id');
+            const id = '_id'
+            const change = {}
+            newData.header.forEach((x, i) => {
+              change[x] = newData.data[i]
+            })
+            if (newData.type === 'change') {
+              data[id] = newData.data[idIndex]
+              update(obj, col, data, change, type);
+            } else if (newData.type === 'add') {
+              delete change[id];
+              change.fileType = data.fileType
+              insert(obj, col, change, type, null)
+            } else {
+              data[id] = newData.data[idIndex]
+              remove(obj, col, data, {})
+            }
           }
           break;
         default: break

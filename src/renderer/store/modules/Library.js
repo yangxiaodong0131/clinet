@@ -41,7 +41,7 @@ const mutations = {
   },
   LIBRARY_LOAD_FILE(state, message) {
     const table = []
-    const keys = Object.keys(message[0]).filter(i => !['_id', 'id', 'fileType'].includes(i))
+    const keys = Object.keys(message[0]).filter(i => !['id', 'fileType', 'ID'].includes(i))
     // 存储表头
     table.push(keys)
     // 取得表内容,取不到的用-代替
