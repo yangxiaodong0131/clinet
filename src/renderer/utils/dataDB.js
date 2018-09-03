@@ -3,6 +3,7 @@
 // 包括cda、library、stat、system、user等等数据表
 import { getLibraryFiles, getLibrary, downloadLibrary, getLibrarySerach, saveLibraryPage } from './LibraryServerFile'
 import { getStatFiles, getStat, downloadStat } from './StatServerFile'
+import pageSearch from './PageSearch';
 function count(obj, col, data, type, limit) {
   console.log([col, data, type, limit])
   obj.db[col].count(data, (err, res) => {
@@ -122,30 +123,69 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
   switch (serverType) {
     case 'local':
       switch (type) {
-        case 'insert': insert(obj, col, data, type); break
-        case 'find': find(obj, col, data, type, skip, limit); break
-        case 'findOne': findOne(obj, col, data); break
-        case 'count': count(obj, col, data); break
-        case 'update': update(obj, col, data, newData, type); break
-        case 'remove': remove(obj, col, data, newData); break
-        case 'editFiles': find(obj, col, data, type, skip, limit); break
-        case 'editFile': findOne(obj, col, data, type); break
-        case 'createCda': insert(obj, col, data, type); break
-        case 'saveCda': update(obj, col, data, newData, type); break
-        case 'libraryFiles': find(obj, col, data, type, skip, limit); break
-        case 'libraryFile': find(obj, col, data, type, skip, limit); break
-        case 'downloadLibrary': insert(obj, col, data, type, newData); break
-        case 'statFiles': find(obj, col, data, type, skip, limit); break
-        case 'statFile': find(obj, col, data, type, skip, limit); break
-        case 'downloadStat': insert(obj, col, data, type, newData); break
+        case 'insert':
+          insert(obj, col, data, type);
+          break
+        case 'find':
+          find(obj, col, data, type, skip, limit);
+          break
+        case 'findOne':
+          findOne(obj, col, data);
+          break
+        case 'count':
+          count(obj, col, data);
+          break
+        case 'update':
+          update(obj, col, data, newData, type);
+          break
+        case 'remove':
+          remove(obj, col, data, newData);
+          break
+        case 'editFiles':
+          find(obj, col, data, type, skip, limit);
+          break
+        case 'editFile':
+          findOne(obj, col, data, type);
+          break
+        case 'createCda':
+          insert(obj, col, data, type);
+          break
+        case 'saveCda':
+          update(obj, col, data, newData, type);
+          break
+        case 'libraryFiles':
+          find(obj, col, data, type, skip, limit);
+          break
+        case 'libraryFile':
+          find(obj, col, data, type, skip, limit);
+          break
+        case 'downloadLibrary':
+          insert(obj, col, data, type, newData);
+          break
+        case 'statFiles':
+          find(obj, col, data, type, skip, limit);
+          break
+        case 'statFile':
+          find(obj, col, data, type, skip, limit);
+          break
+        case 'downloadStat':
+          insert(obj, col, data, type, newData);
+          break
+        case 'librarySerach':
+          console.log(newData);
+          // getLibrarySerach(obj, serverConfig, data.fileType, newData.val, serverType)
+          break;
         default: break
       }
       break
     default:
-      if (obj.$store.state.System.user.login) {
+      if (obj.$store.state.System.user.login || ['pageSearch'].includes(type)) {
         const serverConfig = [obj.$store.state.System.server, obj.$store.state.System.port]
         const page = skip / limit
         switch (type) {
+          case 'pageSearch':
+            pageSearch(obj, newData.data, newData.value)
+            break;
           case 'libraryFiles':
             getLibraryFiles(obj, serverConfig, serverType);
             break;
