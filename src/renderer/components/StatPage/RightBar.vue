@@ -149,10 +149,20 @@
           <a class="nav-link  text-light" href="#"> 自定义保存 <span class="sr-only"></span></a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
+      <!--<form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
         <input id="stat-right-search" class="mr-sm-2 form-control" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
       </form>
-      <button>页面上查询</button>&nbsp;&nbsp;<button>服务器查询</button>
+      <button>页面上查询</button>&nbsp;&nbsp;<button>服务器查询</button>-->
+      <div class="form-inline my-4 my-lg-0">
+        <div class="input-group">
+          <input id="stat-right-search" v-on:submit.prevent class="mr-sm-2 form-control" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" style="color:#fff">页面上查询</button>
+            <button class="btn btn-outline-secondary" type="button" style="color:#fff">服务器查询</button>
+          </div>
+        </div>
+        <!-- <input class="form-control mr-sm-2" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="librarySearch()" v-model="library">
+        <button>页面上查询</button>&nbsp;&nbsp;<button>服务器查询</button> -->
     </div>
   </nav>
 </template>
