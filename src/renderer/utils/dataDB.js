@@ -5,7 +5,6 @@ import { getLibraryFiles, getLibrary, downloadLibrary, getLibrarySerach, saveLib
 import { getStatFiles, getStat, downloadStat } from './StatServerFile'
 import pageSearch from './PageSearch';
 function count(obj, col, data, type, limit) {
-  console.log([col, data, type, limit])
   obj.db[col].count(data, (err, res) => {
     const countPage = Math.ceil(res / limit)
     switch (type) {
@@ -146,8 +145,9 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'statFiles': find(obj, col, data, type, skip, limit); break
         case 'statFile': find(obj, col, data, type, skip, limit); break
         case 'downloadStat': insert(obj, col, data, type, newData); break
-        case 'librarySerach':
+        case 'serach':
           if (newData.header.length > 0) {
+            type = newData.tableType
             const queryData = []
             newData.header.forEach((x) => {
               const obj = {}
@@ -157,8 +157,9 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             find(obj, col, { $or: queryData, fileType: data.fileType }, type, null, null);
           }
           break;
-        case 'saveLibraryPage':
+        case 'savePage':
           if (newData.type) {
+            type = newData.tableType
             const idIndex = newData.header.indexOf('_id');
             const id = '_id'
             const change = {}
@@ -195,11 +196,16 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
           case 'libraryFile':
             getLibrary(obj, serverConfig, data.fileType, page + 1, newData.dimensionType, newData.serverDimension, newData.type1, serverType, newData.sort)
             break;
-          case 'librarySerach':
-            getLibrarySerach(obj, serverConfig, data.fileType, newData.val, serverType)
+          case 'serach':
+            if (newData.tableType === 'librarySerach') {
+              getLibrarySerach(obj, serverConfig, data.fileType, newData.val, serverType)
+            }
             break;
-          case 'saveLibraryPage':
-            saveLibraryPage(obj, serverConfig, newData.data, newData.header, newData.table, newData.dataIndex, newData.type)
+          case 'savePage':
+            if (newData.tableType === 'saveLibraryPage') {
+              saveLibraryPage(obj, serverConfig, newData.data, newData.header, newData.table, newData.dataIndex, newData.type)
+            }
+            // saveLibraryPage
             break;
           case 'downloadLibrary':
             downloadLibrary(obj, serverConfig, data.fileType);

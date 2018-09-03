@@ -33,7 +33,10 @@ const state = {
   dimension: { org: '', time: '', drg: '', type: 'org' },
   statTable: { data: [], compare: [], info: [] },
   statTableInfo: { page: 1, countPage: 0, pageList: [], tableName: '', tableSel: [], dimensionOrg: '', dimensionTime: '', dimensionDrg: '', header: [] },
-  customindex: []
+  customindex: [],
+  changeVal: '',
+  change: {},
+  changIndex: [],
 };
 
 const mutations = {
@@ -423,9 +426,6 @@ const mutations = {
     }
     state.serverMenu.type = type
   },
-  // STAT_SET_CASE_TABLE(state, value) {
-  //   // state.caseTable = value
-  // },
   STAT_SET_DIMENSION_SEL(state, value) {
     const index = state.dimensionSel.indexOf(value)
     if (index === -1) {
@@ -452,18 +452,6 @@ const mutations = {
     state.caseSelectedRow = []
     state.caseSelectedCol = []
   },
-  // STAT_SET_TABLE(state, value) {
-  //   switch (value[0]) {
-  //     case 'local':
-  //       state.localTable = value[1]
-  //       break;
-  //     case 'server':
-  //       state.serverTable.data = value[1]
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // },
   STAT_SET_XOBJ(state, value) {
     const key = Object.keys(state.xObj)
     if ((!key.includes(value[0]) && value[1] === 0) || value[1] === -1) {
@@ -489,11 +477,29 @@ const mutations = {
     } else {
       state.customindex = data
     }
-  }
+  },
+  STAT_SET_CHANGE_VAL(state, val) {
+    state.changeVal = val
+  },
+  STAT_CLEAR_CHANGE(state) {
+    state.changIndex = []
+    state.change = {}
+    state.changeVal = ''
+  },
+  STAT_SET_CHANGE_INDEX(state, val) {
+    state.changIndex = val
+  },
+  STAT_SET_CHANGE(state, val) {
+    state.change = val
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('STAT_SET_CHANGE_INDEX');
+    commit('STAT_SET_CHANGE_VAL');
+    commit('STAT_CLEAR_CHANGE');
+    commit('STAT_SET_CHANGE');
     commit('STAT_LOAD_FILES');
     commit('STAT_LOAD_FILE');
     commit('STAT_SERVER_FILES');
