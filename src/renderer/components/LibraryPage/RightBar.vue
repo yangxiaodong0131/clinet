@@ -65,12 +65,12 @@
       <div class="form-inline my-4 my-lg-0">
         <div class="input-group">
           <input type="text" class="form-control" placeholder="编辑数据" aria-label="Recipient's username" aria-describedby="basic-addon2" :value="changeVal"  @input="updateMessage" @keyup.13="submit()">
-          <div class="input-group-append" v-if="this.$store.state.Library.tableType === 'server'">
-            <button class="btn btn-outline-secondary" type="button" style="color:#fff" v-on:click='librarySearch("page")'>页面上查询</button>
-            <button class="btn btn-outline-secondary" type="button" style="color:#fff" v-on:click='librarySearch("server")'>服务器查询</button>
-          </div>
           <div class="input-group-append" v-if="this.$store.state.Library.tableType === 'search'">
             <button class="btn btn-outline-secondary" type="button" style="color:#fff" v-on:click='librarySearch("return")'>返回原页面</button>
+          </div>
+          <div class="input-group-append" v-else>
+            <button class="btn btn-outline-secondary" type="button" style="color:#fff" v-on:click='librarySearch("page")'>查询本页</button>
+            <button class="btn btn-outline-secondary" type="button" style="color:#fff" v-on:click='librarySearch("server")'>查询全部</button>
           </div>
         </div>
         <!-- <input class="form-control mr-sm-2" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="librarySearch()" v-model="library">
@@ -83,7 +83,6 @@
 <script>
   import { share } from '../../utils/Server';
   import loadFile from '../../utils/LoadFile';
-  import pageSearch from '../../utils/PageSearch';
   import dataDB from '../../utils/dataDB';
   export default {
     data() {
@@ -215,17 +214,25 @@
         }
       },
       librarySearch: function (type) {
-        if (this.$store.state.Library.tableType === 'local') {
-          this.$store.commit('LIBRARY_GET_SEARCH_TABLE', this.$store.state.Library.changeVal)
-        } else if (this.$store.state.Library.tableType === 'server') {
-          if (type === 'page') {
-            pageSearch(this, this.$store.state.Library.libraryTable.data, this.$store.state.Library.changeVal)
-          } else {
-            dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'librarySerach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, 0, 30)
-          }
+        const data = this.$store.state.Library.libraryTable.data
+        if (type === 'page') {
+          dataDB(this, 'server', 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'pageSearch', { value: this.$store.state.Library.changeVal, data: data }, 0, 30)
+        } else if (type === 'server') {
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'librarySerach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort, header: data[0] }, 0, 30)
         } else if (type === 'return') {
           this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
         }
+        // if (this.$store.state.Library.tableType === 'local') {
+        //   this.$store.commit('LIBRARY_GET_SEARCH_TABLE', this.$store.state.Library.changeVal)
+        // } else if (this.$store.state.Library.tableType === 'server') {
+        //   if (type === 'page') {
+        //     pageSearch(this, this.$store.state.Library.libraryTable.data, this.$store.state.Library.changeVal)
+        //   } else {
+        //     dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'librarySerach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, 0, 30)
+        //   }
+        // } else if (type === 'return') {
+        //   this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
+        // }
       },
       blockShare: function () {
         let array = []
