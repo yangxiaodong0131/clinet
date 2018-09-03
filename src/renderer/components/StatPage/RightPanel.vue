@@ -163,8 +163,8 @@
   import RightBar from './RightBar';
   import RightPanelCustom from './RightPanelCustom';
   import LeftPanel from './LeftPanel';
-  import { getStatFiles, getStat, getStatWt4 } from '../../utils/StatServerFile';
-  import loadFile from '../../utils/LoadFile';
+  import { getStatWt4 } from '../../utils/StatServerFile';
+  // import loadFile from '../../utils/LoadFile';
   import dataDB from '../../utils/dataDB';
   export default {
     components: { RightBar, LeftPanel, RightPanelCustom },
@@ -325,7 +325,6 @@
     mounted: function () {
       if (this.$store.state.Stat.chartData.length > 0) {
         this.onClick()
-        // this.onClickTd()
       }
     },
     methods: {
@@ -465,17 +464,12 @@
           this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
         }
         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-        if (this.$store.state.Stat.isServer) {
-          if (data.endsWith('.csv')) {
-            this.$store.commit('STAT_CLEAR_SERVER_DIMENSION');
-            this.$store.commit('STAT_CLEAR_SERVER_SORT');
-            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat', this.$store.state.Stat.tableType)
-          } else {
-            getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.usernamee, this.$store.state.Stat.tableType)
-          }
+        if (data.endsWith('.csv')) {
+          this.$store.commit('STAT_CLEAR_SERVER_DIMENSION');
+          this.$store.commit('STAT_CLEAR_SERVER_SORT');
+          dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
         } else {
-          loadFile(this, data, 'stat')
-          this.$store.commit('STAT_SET_TABLE_TYPE', 'local');
+          dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
         }
       },
       selX: function (data, value) {
@@ -503,12 +497,12 @@
       clearSelX: function (type) {
         this.$store.commit('STAT_SET_FILE_FLAG');
         this.$store.commit('STAT_SERVER_DIMENSION', [type, '-']);
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
+        dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
       },
       onClickSort: function (field, type) {
         this.$store.commit('STAT_SET_SERVER_SORT', [field, type])
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
-      }
+        dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+      },
     },
   };
 </script>

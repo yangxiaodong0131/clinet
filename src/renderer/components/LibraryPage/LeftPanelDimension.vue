@@ -34,7 +34,6 @@
           this.$store.commit('LIBRARY_SET_SERVER_DIMENSION', data)
           this.$store.commit('LIBRARY_TABLE_PAGE', 0)
           getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Library.libraryTableInfo.tableName, 1, this.$store.state.Library.dimensionType, data, 'edit', 'server', this.$store.state.Library.serverSort)
-          // getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.tableName, page: 0, username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.$store.state.Stat.dimensionServer })
         } else {
           this.$store.commit('LIBRARY_TABLE_PAGE', 0)
           this.flag = index

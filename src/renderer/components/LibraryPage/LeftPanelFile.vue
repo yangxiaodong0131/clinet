@@ -37,9 +37,6 @@
       loadFile: function (data, index) {
         this.$store.commit('LIBRARY_SET_TABLE_PAGE', 1)
         this.$store.commit('LIBRARY_SET_TABLE_NAME', data)
-        // this.$store.commit('LIBRARY_SET_SERVER_TABLE_TITLE', data);
-        // this.$store.commit('SYSTEM_GET_SHARE_FILE_NAME', this.$store.state.Library.files[index]);
-        // this.$store.commit('LIBRARY_GET_ROW', 0);
         this.$store.commit('LIBRARY_SET_FILE_INDEX', index);
         this.$store.commit('LIBRARY_CLEAR_SERVER_SORT');
         this.$store.commit('LIBRARY_CLEAR_CHANGE')

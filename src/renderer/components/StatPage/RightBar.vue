@@ -166,7 +166,7 @@
   import chartPie from '../../utils/ChartPie';
   import chartData from '../../utils/ChartData';
   import addContrast from '../../utils/StatContrast';
-  import { getStat, saveStat, getStatInfo, sCustom } from '../../utils/StatServerFile';
+  import { saveStat, getStatInfo, sCustom } from '../../utils/StatServerFile';
   import loadFile from '../../utils/LoadFile';
   import dataDB from '../../utils/dataDB';
 
@@ -334,7 +334,11 @@
             if (this.$store.state.Stat.statTable.data.length > 0) {
               this.$store.commit('STAT_SERVER_DIMENSION', [selType, x])
               this.$store.commit('STAT_SERVER_DIMENSION', ['type', type])
-              getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+              // 定义查询条件
+              const data = { fileType: this.$store.state.Stat.statTableInfo.tableName }
+              const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }
+              // 调用通用方法查询
+              dataDB(this, this.$store.state.Stat.tableType, 'stat', data, 'statFile', newData, 0, 20)
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
             }
@@ -448,7 +452,8 @@
             }
             break;
           case 'server':
-            getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 0, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+            // 调用通用方法查询
+            dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
             break;
           default:
         }
@@ -511,7 +516,7 @@
       },
       customselece: function () {
         this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-        getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: 'defind__.csv', page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
+        // getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: 'defind__.csv', page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
         // this.$store.commit('STAT_SET_CHART_IS_SHOW', 'custom');
         if (this.customs) {
           this.customs = false
