@@ -220,19 +220,12 @@
         } else if (type === 'server') {
           dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'librarySerach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort, header: data[0] }, 0, 30)
         } else if (type === 'return') {
-          this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
+          if (this.$store.state.Library.isServer) {
+            this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
+          } else {
+            this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'local')
+          }
         }
-        // if (this.$store.state.Library.tableType === 'local') {
-        //   this.$store.commit('LIBRARY_GET_SEARCH_TABLE', this.$store.state.Library.changeVal)
-        // } else if (this.$store.state.Library.tableType === 'server') {
-        //   if (type === 'page') {
-        //     pageSearch(this, this.$store.state.Library.libraryTable.data, this.$store.state.Library.changeVal)
-        //   } else {
-        //     dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'librarySerach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, 0, 30)
-        //   }
-        // } else if (type === 'return') {
-        //   this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
-        // }
       },
       blockShare: function () {
         let array = []

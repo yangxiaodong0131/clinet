@@ -79,6 +79,10 @@ function find(obj, col, data, type, skip, limit) {
         obj.$store.commit('LIBRARY_LOAD_FILE', res);
         count(obj, col, data, 'librarCount', limit)
         break;
+      case 'librarySerach':
+        obj.$store.commit('LIBRARY_SET_TABLE_TYPE', 'search')
+        obj.$store.commit('LIBRARY_SET_SEARCH_TABLE', res)
+        break;
       case 'statFiles':
         obj.$store.commit('STAT_LOAD_FILES', res.map(x => x.fileName));
         break;
@@ -123,57 +127,32 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
   switch (serverType) {
     case 'local':
       switch (type) {
-        case 'insert':
-          insert(obj, col, data, type);
-          break
-        case 'find':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'findOne':
-          findOne(obj, col, data);
-          break
-        case 'count':
-          count(obj, col, data);
-          break
-        case 'update':
-          update(obj, col, data, newData, type);
-          break
-        case 'remove':
-          remove(obj, col, data, newData);
-          break
-        case 'editFiles':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'editFile':
-          findOne(obj, col, data, type);
-          break
-        case 'createCda':
-          insert(obj, col, data, type);
-          break
-        case 'saveCda':
-          update(obj, col, data, newData, type);
-          break
-        case 'libraryFiles':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'libraryFile':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'downloadLibrary':
-          insert(obj, col, data, type, newData);
-          break
-        case 'statFiles':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'statFile':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'downloadStat':
-          insert(obj, col, data, type, newData);
-          break
+        case 'insert': insert(obj, col, data, type); break
+        case 'find': find(obj, col, data, type, skip, limit); break
+        case 'findOne': findOne(obj, col, data); break
+        case 'count': count(obj, col, data); break
+        case 'update': update(obj, col, data, newData, type); break
+        case 'remove': remove(obj, col, data, newData); break
+        case 'editFiles': find(obj, col, data, type, skip, limit); break
+        case 'editFile': findOne(obj, col, data, type); break
+        case 'createCda': insert(obj, col, data, type); break
+        case 'saveCda': update(obj, col, data, newData, type); break
+        case 'libraryFiles': find(obj, col, data, type, skip, limit); break
+        case 'libraryFile': find(obj, col, data, type, skip, limit); break
+        case 'downloadLibrary': insert(obj, col, data, type, newData); break
+        case 'statFiles': find(obj, col, data, type, skip, limit); break
+        case 'statFile': find(obj, col, data, type, skip, limit); break
+        case 'downloadStat': insert(obj, col, data, type, newData); break
         case 'librarySerach':
-          console.log(newData);
-          // getLibrarySerach(obj, serverConfig, data.fileType, newData.val, serverType)
+          if (newData.header.length > 0) {
+            const queryData = []
+            newData.header.forEach((x) => {
+              const obj = {}
+              obj[x] = newData.val
+              queryData.push(obj)
+            })
+            find(obj, col, { $or: queryData, fileType: data.fileType }, type, null, null);
+          }
           break;
         default: break
       }

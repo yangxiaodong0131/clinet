@@ -31,6 +31,7 @@ const state = {
   changeVal: '',
   change: {},
   changIndex: [],
+  isServer: false
 };
 
 const mutations = {
@@ -229,13 +230,31 @@ const mutations = {
     state.fileIndex = index;
   },
   LIBRARY_SET_TABLE_TYPE(state, index) {
+    if (index === 'local') {
+      state.isServer = true
+    } else {
+      state.isServer = false
+    }
     state.tableType = index;
   },
   LIBRARY_SET_SERVER_TABLE(state, opt) {
     state.libraryTable.data = opt
   },
   LIBRARY_SET_SEARCH_TABLE(state, opt) {
-    state.libraryTable.search = opt
+    if (state.serverType === 'local') {
+      const table = []
+      const keys = Object.keys(opt[0]).filter(i => !['_id', 'id', 'fileType'].includes(i))
+      // 存储表头
+      table.push(keys)
+      // 取得表内容,取不到的用-代替
+      opt.forEach((xs) => {
+        const f = keys.map(x => xs[x])
+        table.push(f)
+      })
+      state.libraryTable.search = table
+    } else {
+      state.libraryTable.search = opt
+    }
   },
   LIBRARY_GET_SEARCH_TABLE(state, data) {
     state.localTables = {}
