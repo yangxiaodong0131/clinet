@@ -33,6 +33,7 @@ export function saveEditDoc(obj, data) {
     fileName = getDate().replace(/[ :-]/g, '')
     fileName = `${obj.$store.state.Edit.docType}${fileName}`
   }
+  console.log(fileName)
   if (data === '保存模板') {
     if (!obj.$store.state.Edit.modelName) {
       const modelName = getDate().replace(/[ :-]/g, '')
@@ -43,7 +44,7 @@ export function saveEditDoc(obj, data) {
       dataDB(obj, 'local', 'cda', { fileType: 'modal', fileName, value: doc }, 'createCda', null)
     }
   } else if (fileName.includes('@')) {
-    dataDB(obj, 'server', 'cda', { fileType: 'cda', fileName, value: doc }, 'createCda', null)
+    dataDB(obj, 'server', 'cda', { fileType: 'cda', fileName, value: doc }, 'createCda', { fileName, content: doc, username: obj.$store.state.System.user.username, docType: obj.$store.state.Edit.docType, mouldtype: '病案' })
   } else {
     dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName, value: doc }, 'createCda', null)
     obj.$store.commit('EDIT_SET_DELETE_LOCAL', obj.$store.state.Edit.fileIndex)

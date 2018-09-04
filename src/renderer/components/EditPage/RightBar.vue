@@ -229,7 +229,6 @@
           this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');
         }
         getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'block')
-        // this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'block');
       },
       rightEnter(e) {
