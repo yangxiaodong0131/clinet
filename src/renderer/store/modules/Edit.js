@@ -332,9 +332,6 @@ const mutations = {
       state.rightFolds = arr
     }
   },
-  EDIT_SET_RIGHT_TYPE(state, value) {
-    state.rightType = value
-  },
   EDIT_SET_LOAD_FILENAME(state, value) {
     state.loadFileName = value
   },
@@ -526,7 +523,6 @@ const actions = {
     commit('EDIT_SET_DOC_STATE');
     commit('EDIT_SET_DOC_HEADER');
     commit('EDIT_SERVER_ID');
-    commit('EDIT_SET_RIGHT_TYPE');
     commit('EDIT_SET_RIGHT_FOLDS');
     commit('EDIT_SET_RIGHT_CDH');
     commit('EDIT_DELETE_RIGHT_PANELS');

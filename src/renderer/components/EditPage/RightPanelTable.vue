@@ -34,7 +34,7 @@
 <script>
   import { saveEdit } from '../../utils/EditServerFile'
   import saveFile from '../../utils/SaveFile';
-  import { loadEditDoc, getDate } from '../../utils/EditOperation'
+  import { getDate } from '../../utils/EditOperation'
   export default {
     data() {
       return {
@@ -174,7 +174,6 @@
       },
       loadDoc: function (index, type) {
         console.log(index, type)
-        loadEditDoc(this, index, type)
       },
       close(data) {
         this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);

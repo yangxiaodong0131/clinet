@@ -109,9 +109,6 @@
         height: window.innerHeight - 120,
       };
     },
-    // created: function () {
-    //   this.getDocState()
-    // },
     computed: {
       title: {
         get() {
@@ -160,11 +157,6 @@
         this.$store.commit('EDIT_SET_DOC_INDEX', [parseInt(index, 10), 'set']);
         document.getElementById('edit-editbar-input').focus()
       },
-      // getDocState: function () {
-      //   const doc = this.$store.state.Edit.doc
-      //   editDocState(this, doc)
-      //   this.$store.commit('EDIT_SET_DOC_STATE')
-      // }
       close(data) {
         this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);
       }
