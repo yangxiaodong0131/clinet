@@ -42,7 +42,7 @@
           this.$store.commit('STAT_SET_SERVER_DIMENSION', data)
           this.$store.commit('STAT_TABLE_PAGE', 1)
           // 调用通用方法查询
-          dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
         } else {
           this.$store.commit('STAT_TABLE_PAGE', 0)
           this.$store.commit('SET_NOTICE', `当前页数${this.$store.state.Stat.statTableInfo.tablePage},共${this.$store.state.Stat.statTableInfo.countPage}页`)

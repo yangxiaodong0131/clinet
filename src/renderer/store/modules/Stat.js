@@ -45,13 +45,27 @@ const mutations = {
     state.files = value
   },
   STAT_SET_FILE_NAME(state, value) {
-    state.fileName = value;
+    state.statTableInfo.tableName = value;
   },
   // state,[type, ]
   STAT_SET_TABLE(state, opt) {
     if (state.tableType === 'local') {
+      console.log(opt[0]);
+      console.log(opt[0]['"org"']);
+      // opt = opt.map
+      const tableKeys = Object.keys(opt[0])
       const table = []
-      const keys = Object.keys(opt[0]).filter(i => !['_id', 'id', 'fileType'].includes(i))
+      let keys = []
+      if (tableKeys.includes('org') || tableKeys.includes('time')) {
+        keys = ['org', 'time']
+      } else {
+        keys = ['机构', '时间']
+      }
+      tableKeys.sort().forEach((x) => {
+        if (keys.length <= 10 && !['_id', 'id', 'fileType'].includes(x)) {
+          keys.push(x)
+        }
+      })
       // 存储表头
       table.push(keys)
       // 取得表内容,取不到的用-代替
@@ -196,7 +210,11 @@ const mutations = {
     state.serverSort.type = opt[1]
   },
   STAT_CLEAR_SERVER_SORT(state) {
-    state.serverSort = { field: '机构', type: 'asc' }
+    if (state.serverType === 'local') {
+      state.serverSort = { field: '_id', type: 'asc' }
+    } else {
+      state.serverSort = { field: '机构', type: 'asc' }
+    }
   },
   STAT_SET_DIMENSION(state, opt) {
     switch (opt[0]) {

@@ -62,7 +62,7 @@ function insert(obj, col, data, type, newData) {
 
 function find(obj, col, data, type, skip, limit, newData) {
   let query = obj.db[col].find(data)
-  if (newData.sort.field && newData.sort.type) {
+  if (newData && newData.sort && newData.sort.field && newData.sort.type) {
     const sortQuery = {}
     if (newData.sort.type === 'asc') {
       sortQuery[newData.sort.field] = 1
@@ -222,10 +222,10 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             getStatFiles(obj, serverConfig, newData.fileType, newData.username, newData.tableType)
             break;
           case 'statFile':
-            getStat(obj, serverConfig, { tableName: newData.fileType, page: page + 1, username: newData.username, dimension: newData.dimension, order: newData.order }, 'stat')
+            getStat(obj, serverConfig, { tableName: newData.fileType, page: page + 1, username: newData.username, dimension: newData.dimension, sort: newData.sort }, 'stat')
             break;
           case 'downloadStat':
-            downloadStat(obj, serverConfig, { tableName: newData.fileType, page: 1, username: newData.username, dimension: newData.dimension, order: newData.order }, 'stat')
+            downloadStat(obj, serverConfig, { tableName: newData.fileType, page: 1, username: newData.username, dimension: newData.dimension, sort: newData.sort }, 'stat')
             break;
           default: break
         }

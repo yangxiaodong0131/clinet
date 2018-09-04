@@ -252,7 +252,7 @@
           const skip = (this.$store.state.Stat.statTableInfo.page - 1) * 20
           // 定义查询条件
           const data = { fileType: this.$store.state.Stat.statTableInfo.tableName }
-          const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }
+          const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }
           // 调用通用方法查询
           dataDB(this, this.$store.state.Stat.tableType, 'stat', data, 'statFile', newData, skip, 20)
           this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
@@ -347,7 +347,7 @@
               this.$store.commit('STAT_SERVER_DIMENSION', ['type', type])
               // 定义查询条件
               const data = { fileType: this.$store.state.Stat.statTableInfo.tableName }
-              const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }
+              const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }
               // 调用通用方法查询
               dataDB(this, this.$store.state.Stat.tableType, 'stat', data, 'statFile', newData, 0, 20)
             } else {
@@ -464,7 +464,7 @@
             break;
           case 'server':
             // 调用通用方法查询
-            dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+            dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
             break;
           default:
         }
@@ -515,10 +515,10 @@
       },
       statDownload: function () {
         const data = { fileType: this.$store.state.Stat.statTableInfo.tableName }
-        const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }
+        const newData = { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }
         // 调用通用方法查询
         dataDB(this, this.$store.state.Stat.tableType, 'stat', data, 'downloadStat', newData, 0, 20)
-        // downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.tableSort }, 'stat')
+        // downloadStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.statTableInfo.tableName, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.tableSort }, 'stat')
       },
       custom: function () {
         sGetTarget(this, [this.$store.state.System.server, this.$store.state.System.port], 'list');
