@@ -16,7 +16,6 @@ const state = {
   fieldIndex: [],
   fileIndex: null,
   tableType: 'local',
-  // serverTable: { page: 1, countPage: 0, data: [], pageList: [], tableName: '' },
   dimensionSearch: { time: 0, version: 0, org: 0 },
   rowHeight: null,
   dimensionServer: '',
@@ -36,7 +35,6 @@ const state = {
 
 const mutations = {
   LIBRARY_LOAD_FILES(state, files) {
-    // state.files = fs.readdirSync(global.hitbdata.path.library).filter(x => x.endsWith('.csv'))
     state.files = files
   },
   LIBRARY_LOAD_FILE(state, message) {
@@ -49,49 +47,8 @@ const mutations = {
       const f = keys.map(x => xs[x])
       table.push(f)
     })
+    state.libraryTableInfo.header = keys
     state.libraryTable.data = table
-    // state.file = message;
-    // state.table = message.map(x => x.split(','))
-    // state.libraryTableInfo.header = state.table.slice(0, 1)
-    // state.tableSel = state.table
-    // state.tableSel.splice(0, 1)
-    // let time = null
-    // let version = null
-    // let org = null
-    // state.dimensionOrg = [...new Set(state.table.map(a => a[org]))]
-    // if (state.libraryTableInfo.header[0].includes('year')) {
-    //   time = state.libraryTableInfo.header[0].indexOf('year')
-    //   version = state.libraryTableInfo.header[0].indexOf('version')
-    //   org = state.libraryTableInfo.header[0].indexOf('org')
-    // } else if (state.libraryTableInfo.header[0].includes('年份')) {
-    //   time = state.libraryTableInfo.header[0].indexOf('年份')
-    //   version = state.libraryTableInfo.header[0].indexOf('版本')
-    //   org = state.libraryTableInfo.header[0].indexOf('机构')
-    // }
-    // state.dimensionSearch.time = time
-    // state.dimensionSearch.version = version
-    // state.dimensionSearch.org = org
-    // state.dimensionOrg = [...new Set(state.table.map(a => a[org]))]
-    // state.dimensionTime = [...new Set(state.table.map(a => a[time]))]
-    // state.dimensionVersion = [...new Set(state.table.map(a => a[version]))]
-    // state.notice = [
-    //   `术语总数：${state.tableSel.length - 1}`,
-    //   `机构总数：${state.dimensionOrg.length - 1}`,
-    //   `时间维度总数：${state.dimensionTime.length - 1}`,
-    //   `版本维度总数：${state.dimensionVersion.length - 1}`,
-    // ]
-    // state.tablePage = 1;
-    // const page = Math.ceil(state.tableSel.length / 35)
-    // state.countPage = page
-    // for (let i = 1; i <= page; i += 1) {
-    //   const f = []
-    //   f.push(state.libraryTableInfo.header[0])
-    //   for (let j = 1; j <= 35; j += 1) {
-    //     f.push(state.tableSel[(i) * j])
-    //   }
-    //   state.localTables[i] = f
-    // }
-    // state.libraryTable.data = state.localTables[state.tablePage]
   },
   LIBRARY_SERVER_FILES(state, opt) {
     state.files = opt.data;
@@ -102,18 +59,6 @@ const mutations = {
     } else {
       state.libraryTableInfo.page += m[0];
     }
-    // const page = Math.ceil(state.tableSel.length / 35)
-    // if (state.libraryTableInfo.page > page && state.tableType !== 'server') {
-    //   state.libraryTableInfo.page = page
-    // } else if (state.libraryTableInfo.page < 1) {
-    //   state.libraryTableInfo.page = 1
-    // }
-    // .slice(1)
-    // if (state.localTables[state.libraryTableInfo.page] !== undefined) {
-    //   state.libraryTable.data = state.localTables[state.libraryTableInfo.page]
-    // }
-    // console.log(state.localTables[state.libraryTableInfo.page])
-    // state.libraryTable.data = state.localTables[state.libraryTableInfo.page]
   },
   LIBRARY_SET_TABLE_INFO(state, opt) {
     state.libraryTableInfo = opt
@@ -124,10 +69,6 @@ const mutations = {
   LIBRARY_SET_LIBRARY_LIST(state, data) {
     state.libraryList = data
   },
-  // STAT_CLEAR_SERVER_DIMENSION(state, value) {
-  //   state.serverDimension[value[1]] = value[0]
-  //   console.log(state.serverDimension)
-  // },
   LIBRARY_SET_SERVER_DIMENSION(state, opt) {
     if (opt[0] === '全部' || opt[0] === null) {
       opt[0] = ''
@@ -175,16 +116,12 @@ const mutations = {
   LIBRARY_SET_DIMENSION(state, opt) {
     switch (opt[0]) {
       case 'org':
-        // state.dimensionOrg.push(opt[1])
-        // console.log(opt)
         state.tableSel = state.table.filter(x => x[0] === opt[1])
         break;
       case 'year':
         state.tableSel = state.table.filter(x => x[state.dimensionSearch.time] === opt[1])
         break;
       case 'version':
-        // console.log(opt)
-        // state.dimensionDrg.push(opt[1])
         state.tableSel = state.table.filter(x => x[state.dimensionSearch.version] === opt[1])
         break;
       default:

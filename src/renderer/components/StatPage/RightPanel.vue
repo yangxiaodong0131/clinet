@@ -461,7 +461,7 @@
       loadFile: function (data, index) {
         this.$store.commit('STAT_SET_FILE_FLAG');
         // this.flag = index
-        this.$store.commit('STAT_SET_FILE_NAME', data);
+        this.$store.commit('STAT_TABLE_NAME', data);
         this.$store.commit('STAT_SET_FILE_INDEX', index);
         // 图表
         if (index[0] === 'third') {
