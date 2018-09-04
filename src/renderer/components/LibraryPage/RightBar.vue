@@ -216,23 +216,16 @@
       librarySearch: function (type) {
         const data = this.$store.state.Library.libraryTable.data
         if (type === 'page') {
-          dataDB(this, 'server', 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'pageSearch', { value: this.$store.state.Library.changeVal, data: data }, 0, 30)
+          dataDB(this, 'server', 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'search', { value: this.$store.state.Library.changeVal, data: data, tableType: 'librarySerach' }, 0, 30)
         } else if (type === 'server') {
-          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'librarySerach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort, header: data[0] }, 0, 30)
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'serach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort, header: data[0], tableType: 'librarySerach' }, 0, 30)
         } else if (type === 'return') {
-          this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
+          if (this.$store.state.Library.isServer) {
+            this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
+          } else {
+            this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'local')
+          }
         }
-        // if (this.$store.state.Library.tableType === 'local') {
-        //   this.$store.commit('LIBRARY_GET_SEARCH_TABLE', this.$store.state.Library.changeVal)
-        // } else if (this.$store.state.Library.tableType === 'server') {
-        //   if (type === 'page') {
-        //     pageSearch(this, this.$store.state.Library.libraryTable.data, this.$store.state.Library.changeVal)
-        //   } else {
-        //     dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'librarySerach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, 0, 30)
-        //   }
-        // } else if (type === 'return') {
-        //   this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')
-        // }
       },
       blockShare: function () {
         let array = []
@@ -260,7 +253,7 @@
           let dataIndex = this.$store.state.Library.changIndex[0]
           let trIndex = this.$store.state.Library.changIndex[1]
           // table[0][trIndex] === 'ID'
-          if (['ID', '创建用户', '修改用户', '创建时间', '修改时间'].includes(table[0][trIndex])) {
+          if (['ID', '创建用户', '修改用户', '创建时间', '修改时间', '_id'].includes(table[0][trIndex])) {
             this.$store.commit('SET_NOTICE', '此单元格不允许修改')
           } else {
             data[change.trIndex] = this.$store.state.Library.changeVal
@@ -277,11 +270,16 @@
             // 变化下一个高亮
             this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [dataIndex, trIndex]);
             this.$store.commit('LIBRARY_SET_CHANGE', { val: table[dataIndex][trIndex], dataIndex: dataIndex, trIndex: trIndex })
-            const idIndex = table[0].indexOf('ID');
+            let idIndex = null
+            if (table[0].includes('_id')) {
+              idIndex = table[0].indexOf('_id');
+            } else {
+              idIndex = table[0].indexOf('ID');
+            }
             if (data[idIndex] === '-') {
-              dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'saveLibraryPage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'add' }, 0, 30)
-            } else if (parseInt(data[idIndex], 10) > 0) {
-              dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'saveLibraryPage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'change' }, 0, 30)
+              dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'add', tableType: 'saveLibraryPage' }, 0, 30)
+            } else if ((parseInt(data[idIndex], 10) > 0 && table[0].includes('ID')) || table[0].includes('_id')) {
+              dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'change', tableType: 'saveLibraryPage' }, 0, 30)
             }
           }
         } else {
@@ -308,7 +306,7 @@
         const table = this.$store.state.Library.libraryTable.data
         const dataIndex = this.$store.state.Library.changIndex[0]
         const data = table[dataIndex]
-        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'saveLibraryPage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'delete' }, 0, 30)
+        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'delete', tableType: 'saveLibraryPage' }, 0, 30)
       },
     },
   };

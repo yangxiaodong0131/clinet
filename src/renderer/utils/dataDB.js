@@ -5,7 +5,6 @@ import { getLibraryFiles, getLibrary, downloadLibrary, getLibrarySerach, saveLib
 import { getStatFiles, getStat, downloadStat } from './StatServerFile'
 import pageSearch from './PageSearch';
 function count(obj, col, data, type, limit) {
-  console.log([col, data, type, limit])
   obj.db[col].count(data, (err, res) => {
     const countPage = Math.ceil(res / limit)
     switch (type) {
@@ -16,7 +15,6 @@ function count(obj, col, data, type, limit) {
         obj.$store.commit('STAT_SET_COUNT_PAGE', countPage)
         break;
       default:
-        console.log(res);
         break;
     }
     obj.$store.commit('SET_NOTICE', `当前1页,共${countPage}页`)
@@ -62,8 +60,17 @@ function insert(obj, col, data, type, newData) {
   }
 }
 
-function find(obj, col, data, type, skip, limit) {
+function find(obj, col, data, type, skip, limit, newData) {
   let query = obj.db[col].find(data)
+  if (newData.sort.field && newData.sort.type) {
+    const sortQuery = {}
+    if (newData.sort.type === 'asc') {
+      sortQuery[newData.sort.field] = 1
+    } else {
+      sortQuery[newData.sort.field] = -1
+    }
+    query = query.sort(sortQuery)
+  }
   if (skip !== null && limit !== null) {
     query = query.skip(skip).limit(limit)
   }
@@ -78,6 +85,10 @@ function find(obj, col, data, type, skip, limit) {
       case 'libraryFile':
         obj.$store.commit('LIBRARY_LOAD_FILE', res);
         count(obj, col, data, 'librarCount', limit)
+        break;
+      case 'librarySerach':
+        obj.$store.commit('LIBRARY_SET_TABLE_TYPE', 'search')
+        obj.$store.commit('LIBRARY_SET_SEARCH_TABLE', res)
         break;
       case 'statFiles':
         obj.$store.commit('STAT_LOAD_FILES', res.map(x => x.fileName));
@@ -107,6 +118,9 @@ function findOne(obj, col, data, type) {
 }
 
 function update(obj, col, data, newData) {
+  obj.db[col].find(data, (err, res) => {
+    console.log(res);
+  })
   obj.db[col].update(data, { $set: newData }, (err, res) => {
     console.log(res)
   })
@@ -123,57 +137,55 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
   switch (serverType) {
     case 'local':
       switch (type) {
-        case 'insert':
-          insert(obj, col, data, type);
-          break
-        case 'find':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'findOne':
-          findOne(obj, col, data);
-          break
-        case 'count':
-          count(obj, col, data);
-          break
-        case 'update':
-          update(obj, col, data, newData, type);
-          break
-        case 'remove':
-          remove(obj, col, data, newData);
-          break
-        case 'editFiles':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'editFile':
-          findOne(obj, col, data, type);
-          break
-        case 'createCda':
-          insert(obj, col, data, type);
-          break
-        case 'saveCda':
-          update(obj, col, data, newData, type);
-          break
-        case 'libraryFiles':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'libraryFile':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'downloadLibrary':
-          insert(obj, col, data, type, newData);
-          break
-        case 'statFiles':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'statFile':
-          find(obj, col, data, type, skip, limit);
-          break
-        case 'downloadStat':
-          insert(obj, col, data, type, newData);
-          break
-        case 'librarySerach':
-          console.log(newData);
-          // getLibrarySerach(obj, serverConfig, data.fileType, newData.val, serverType)
+        case 'insert': insert(obj, col, data, type); break
+        case 'find': find(obj, col, data, type, skip, limit, newData); break
+        case 'findOne': findOne(obj, col, data); break
+        case 'count': count(obj, col, data); break
+        case 'update': update(obj, col, data, newData, type); break
+        case 'remove': remove(obj, col, data, newData); break
+        case 'editFiles': find(obj, col, data, type, skip, limit, newData); break
+        case 'editFile': findOne(obj, col, data, type); break
+        case 'createCda': insert(obj, col, data, type); break
+        case 'saveCda': update(obj, col, data, newData, type); break
+        case 'libraryFiles': find(obj, col, data, type, skip, limit, newData); break
+        case 'libraryFile': find(obj, col, data, type, skip, limit, newData); break
+        case 'downloadLibrary': insert(obj, col, data, type, newData); break
+        case 'statFiles': find(obj, col, data, type, skip, limit, newData); break
+        case 'statFile': find(obj, col, data, type, skip, limit, newData); break
+        case 'downloadStat': insert(obj, col, data, type, newData); break
+        case 'serach':
+          if (newData.header.length > 0) {
+            type = newData.tableType
+            const queryData = []
+            newData.header.forEach((x) => {
+              const obj = {}
+              obj[x] = newData.val
+              queryData.push(obj)
+            })
+            find(obj, col, { $or: queryData, fileType: data.fileType }, type, null, null, newData);
+          }
+          break;
+        case 'savePage':
+          if (newData.type) {
+            type = newData.tableType
+            const idIndex = newData.header.indexOf('_id');
+            const id = '_id'
+            const change = {}
+            newData.header.forEach((x, i) => {
+              change[x] = newData.data[i]
+            })
+            if (newData.type === 'change') {
+              data[id] = newData.data[idIndex]
+              update(obj, col, data, change, type);
+            } else if (newData.type === 'add') {
+              delete change[id];
+              change.fileType = data.fileType
+              insert(obj, col, change, type, null)
+            } else {
+              data[id] = newData.data[idIndex]
+              remove(obj, col, data, {})
+            }
+          }
           break;
         default: break
       }
@@ -192,11 +204,16 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
           case 'libraryFile':
             getLibrary(obj, serverConfig, data.fileType, page + 1, newData.dimensionType, newData.serverDimension, newData.type1, serverType, newData.sort)
             break;
-          case 'librarySerach':
-            getLibrarySerach(obj, serverConfig, data.fileType, newData.val, serverType)
+          case 'serach':
+            if (newData.tableType === 'librarySerach') {
+              getLibrarySerach(obj, serverConfig, data.fileType, newData.val, serverType)
+            }
             break;
-          case 'saveLibraryPage':
-            saveLibraryPage(obj, serverConfig, newData.data, newData.header, newData.table, newData.dataIndex, newData.type)
+          case 'savePage':
+            if (newData.tableType === 'saveLibraryPage') {
+              saveLibraryPage(obj, serverConfig, newData.data, newData.header, newData.table, newData.dataIndex, newData.type)
+            }
+            // saveLibraryPage
             break;
           case 'downloadLibrary':
             downloadLibrary(obj, serverConfig, data.fileType);

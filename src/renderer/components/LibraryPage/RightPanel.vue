@@ -4,10 +4,10 @@
     <div v-bind:style="{ height: height + 'px', overflow: 'auto' }">
       <table>
         <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index" class="library-rightpanel">
-          <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex" v-if="tableType === 'local' || tableType === 'block'">
+          <!--<th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex" v-if="tableType === 'local' || tableType === 'block'">
             {{data}}
-          </th>
-          <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex" v-if="tableType === 'server'">
+          </th>-->
+          <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex">
             <a class="oi oi-sort-ascending" v-if="serverSort.type === 'asc' && serverSort.field == data" ></a>
             <a class="oi oi-sort-ascending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'asc')" v-bind:id="'library-table-asc'+xindex"></a>
             &nbsp;&nbsp;&nbsp;&nbsp;{{data}}&nbsp;&nbsp;&nbsp;&nbsp;

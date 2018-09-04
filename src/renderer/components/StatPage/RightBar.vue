@@ -527,8 +527,6 @@
       },
       customselece: function () {
         this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-        // getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: 'defind__.csv', page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'stat')
-        // this.$store.commit('STAT_SET_CHART_IS_SHOW', 'custom');
         if (this.customs) {
           this.customs = false
         } else {
@@ -537,7 +535,73 @@
       },
       customInsert: function () {
         sCustom(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Stat.customindex, this.$store.state.System.user.username)
-      }
+      },
+      submit: function () {
+        // 判断是否可以修改
+        if (this.$store.state.Stat.changIndex.length === 2) {
+          // 定义要传给后台的数据
+          const change = this.$store.state.Stat.change
+          const table = this.$store.state.Stat.statTable.data
+          const data = table[change.dataIndex]
+          // 判断下一个高亮是那个
+          let dataIndex = this.$store.state.Stat.changIndex[0]
+          let trIndex = this.$store.state.Stat.changIndex[1]
+          // table[0][trIndex] === 'ID'
+          if (['ID', '创建用户', '修改用户', '创建时间', '修改时间', '_id'].includes(table[0][trIndex])) {
+            this.$store.commit('SET_NOTICE', '此单元格不允许修改')
+          } else {
+            data[change.trIndex] = this.$store.state.Stat.changeVal
+            if (trIndex === data[0].length - 1) {
+              dataIndex += 1
+              trIndex = 0
+            } else {
+              trIndex += 1
+            }
+            // 存储修改
+            table[dataIndex] = data
+            // 修改输出框值
+            this.$store.commit('STAT_SET_CHANGE_VAL', table[dataIndex][trIndex])
+            // 变化下一个高亮
+            this.$store.commit('STAT_SET_CHANGE_INDEX', [dataIndex, trIndex]);
+            this.$store.commit('STAT_SET_CHANGE', { val: table[dataIndex][trIndex], dataIndex: dataIndex, trIndex: trIndex })
+            let idIndex = null
+            if (table[0].includes('_id')) {
+              idIndex = table[0].indexOf('_id');
+            } else {
+              idIndex = table[0].indexOf('ID');
+            }
+            if (data[idIndex] === '-') {
+              dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'add', tableType: 'saveStatPage' }, 0, 30)
+            } else if ((parseInt(data[idIndex], 10) > 0 && table[0].includes('ID')) || table[0].includes('_id')) {
+              dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'change', tableType: 'saveStatPage' }, 0, 30)
+            }
+          }
+        } else {
+          this.$store.commit('SET_NOTICE', '请先选中后,再提交修改')
+        }
+      },
+      // 新建
+      add: function () {
+        const table = this.$store.state.Stat.statTable.data
+        const index = table.length + 1
+        const data = table[0].map(() => '-')
+        table[index] = data
+        this.$store.commit('STAT_SET_SERVER_TABLE', []);
+        this.$store.commit('STAT_SET_SERVER_TABLE', table);
+        // 修改输出框值
+        this.$store.commit('STAT_SET_CHANGE_VAL', '-')
+        // 变化下一个高亮
+        this.$store.commit('STAT_SET_CHANGE_INDEX', [index, 0]);
+        this.$store.commit('STAT_SET_CHANGE', { val: '-', dataIndex: index, trIndex: 0 })
+      },
+      // 删除
+      del: function () {
+        // 定义要传给后台的数据
+        const table = this.$store.state.Stat.statTable.data
+        const dataIndex = this.$store.state.Stat.changIndex[0]
+        const data = table[dataIndex]
+        dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'delete', tableType: 'saveStatPage' }, 0, 30)
+      },
     },
   };
 </script>
