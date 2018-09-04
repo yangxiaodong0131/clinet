@@ -50,8 +50,6 @@ const mutations = {
   // state,[type, ]
   STAT_SET_TABLE(state, opt) {
     if (state.tableType === 'local') {
-      console.log(opt[0]);
-      console.log(opt[0]['"org"']);
       // opt = opt.map
       const tableKeys = Object.keys(opt[0])
       const table = []

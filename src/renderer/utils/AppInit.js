@@ -299,14 +299,6 @@ export default function appInit() {
       db.libraryFile.insert(libraryFile)
     }
   })
-  axios.get('/static/test_stat_2.json')
-    .then((res) => {
-      console.log(res);
-      // db.stat.insert(res.data)
-    })
-    .catch((error) => {
-      console.log(error);
-    });
   // stat分析文件
   db.statFile.count({}, (err, res) => {
     if (res === 0) {
