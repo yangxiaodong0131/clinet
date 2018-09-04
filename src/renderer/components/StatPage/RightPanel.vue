@@ -449,7 +449,7 @@
       serverPage: function (data) {
         this.$store.commit('STAT_SET_TABLE_PAGE', parseInt(data, 10));
         const skip = (parseInt(data, 10) - 1) * 20
-        dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, skip, 20)
+        dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, skip, 20)
         this.$store.commit('SET_NOTICE', `当前${this.$store.state.Stat.statTableInfo.page}页,共${this.$store.state.Stat.statTableInfo.countPage}页`)
       },
       chart: function (data) {
@@ -461,7 +461,7 @@
       loadFile: function (data, index) {
         this.$store.commit('STAT_SET_FILE_FLAG');
         // this.flag = index
-        this.$store.commit('STAT_SET_FILE_NAME', data);
+        this.$store.commit('STAT_TABLE_NAME', data);
         this.$store.commit('STAT_SET_FILE_INDEX', index);
         // 图表
         if (index[0] === 'third') {
@@ -471,9 +471,9 @@
         if (data.endsWith('.csv')) {
           this.$store.commit('STAT_CLEAR_SERVER_DIMENSION');
           this.$store.commit('STAT_CLEAR_SERVER_SORT');
-          dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+          dataDB(this, this.$store.state.Stat.tableType, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
         } else {
-          dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+          dataDB(this, this.$store.state.Stat.tableType, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
         }
       },
       selX: function (data, value) {
@@ -501,11 +501,11 @@
       clearSelX: function (type) {
         this.$store.commit('STAT_SET_FILE_FLAG');
         this.$store.commit('STAT_SERVER_DIMENSION', [type, '-']);
-        dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+        dataDB(this, this.$store.state.Stat.tableType, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
       },
       onClickSort: function (field, type) {
         this.$store.commit('STAT_SET_SERVER_SORT', [field, type])
-        dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+        dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
       },
     },
   };

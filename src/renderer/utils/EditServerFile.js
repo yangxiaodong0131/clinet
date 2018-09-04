@@ -20,7 +20,6 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
       obj.$store.commit('EDIT_SET_FILES_OFFSET', 20)
       obj.$store.commit('EDIT_CLEAR_FILES_PAGE')
       obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', res.data.cda.slice(0, 20))
-      console.log(res.data.cda.slice(0, 20))
       if (type === 'user') {
         obj.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
       } else {
@@ -52,11 +51,11 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      res.data.cda.header.split(';').forEach((x, index) => {
-        if (x.includes('创建时间')) {
-          docSummary.push([index, x])
-        }
-      })
+      // res.data.cda.header.split(';').forEach((x, index) => {
+      //   if (x.includes('创建时间')) {
+      //     docSummary.push([index, x])
+      //   }
+      // })
       // const arr = []
       if (docSummary.length === 0) {
         const value = res.data.cda.content.split(',')
@@ -71,7 +70,7 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
       }
       obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
       obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
-      obj.$store.commit('EDIT_LOAD_FILE', [res.data.cda.content])
+      obj.$store.commit('EDIT_LOAD_DOC', [res.data.cda.content])
       obj.$store.commit('SET_NOTICE', res.data.info);
     } else {
       obj.$store.commit('EDIT_LOAD_FILE', [])
@@ -83,14 +82,14 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
   })
 }
 
-export function saveEdit(obj, data, fileName, content, username, saveType, doctype, mouldtype, id) {
+export function saveEdit(obj, data, fileName, content, username, doctype, mouldtype) {
   content = content[0]
   const url = `http://${data[0]}:${data[1]}/edit/cda`
   const header = obj.$store.state.Edit.docHeader
   axios({
     method: 'post',
     url: url,
-    data: qs.stringify({ id: id, file_name: fileName, content: content, username: username, doctype: doctype, mouldtype: mouldtype, header: header, save_type: saveType }),
+    data: qs.stringify({ file_name: fileName, content: content, username: username, doctype: doctype, mouldtype: mouldtype, header: header }),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -236,40 +235,6 @@ export function getCaseHistory(obj, data, name, username) {
   })
 }
 
-export function editDocState(obj, doc) {
-  if (doc[0] !== undefined && doc[0][0]) {
-    const value = doc[0][0].split(';')
-    const header = value.map((x) => {
-      const a = x.split(':')
-      if (a[0] && a[0].includes('时间')) {
-        const b = `${a[1]}:${a[2]}:${a[3]}`
-        a[1] = b
-        a.splice(2, 2)
-      }
-      return a
-    })
-    // 未缓存 修改时间》缓存时间
-    // 未保存 缓存时间》保存时间
-    // 已保存 保存时间》缓存时间
-    const keys = []
-    const values = []
-    header.forEach((x) => {
-      keys.push(x[0])
-      values.push(x[1])
-    })
-    const obj1 = {}
-    keys.forEach((x, key) => {
-      if (values[key] && values.includes('　')) {
-        obj1[x] = values[key].replace(/　/g, ' ')
-      } else {
-        obj1[x] = ''
-      }
-    })
-  }
-  // obj.$store.commit('EDIT_SET_DOC_HEADER', obj1)
-  // console.log(obj1)
-}
-
 // 病案历史
 export function editDocShow(obj, data, value) {
   // const value2 = value.join(' ')
@@ -282,13 +247,11 @@ export function editDocShow(obj, data, value) {
     data: qs.stringify({ item: value, server_type: 'server' }),
     responseType: 'json'
   }).then((res) => {
-    console.log(res.data.cda)
     obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda)
   }).catch((err) => {
     console.log(err);
     obj.$store.commit('SET_NOTICE', '病案历史查询失败')
   })
-  // console.log(diag)
 }
 
 // 病案质控
@@ -322,7 +285,6 @@ export function getExpertHint(obj, data, value, section) {
     data: qs.stringify({ symptom: `["${arr}"]`, section }),
     responseType: 'json'
   }).then((res) => {
-    // console.log(res.data.result)
     if (Object.keys(res.data.result).length === 0) {
       obj.$store.commit('SET_NOTICE', '当前内容无专家提示')
     } else {

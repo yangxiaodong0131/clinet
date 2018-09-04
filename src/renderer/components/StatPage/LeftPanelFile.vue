@@ -52,14 +52,14 @@
           this.$store.commit('STAT_SET_CHART_IS_SHOW', 'menu');
         }
         if (data.endsWith('.csv')) {
-          dataDB(this, this.$store.state.Stat.tableType, 'stat', {}, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: data }, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
         } else if (this.$store.state.Stat.tableType === 'local') {
-          dataDB(this, this.$store.state.Stat.tableType, 'stat', {}, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: data }, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
         } else {
           if (this.$store.state.Stat.serverMenu.type === '二级菜单') {
             this.$store.commit('STAT_SET_SERVER_MENU', ['三级菜单', []]);
           }
-          dataDB(this, this.$store.state.Stat.tableType, 'statFile', {}, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 0, 20)
+          dataDB(this, this.$store.state.Stat.tableType, 'statFile', { fileType: data }, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
         }
       },
     },

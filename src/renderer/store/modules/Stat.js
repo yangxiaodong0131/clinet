@@ -41,115 +41,38 @@ const state = {
 
 const mutations = {
   STAT_LOAD_FILES(state, value) {
-    // state.files = fs.readdirSync(global.hitbdata.path.stat).filter(x => x.endsWith('.csv')).filter(x => !x.startsWith('wt4'))
     state.files = value
   },
-  STAT_SET_FILE_NAME(state, value) {
-    state.fileName = value;
-  },
-  // state,[type, ]
   STAT_SET_TABLE(state, opt) {
     if (state.tableType === 'local') {
+      const tableKeys = Object.keys(opt[0])
       const table = []
-      const keys = Object.keys(opt[0]).filter(i => !['_id', 'id', 'fileType'].includes(i))
+      let header = []
+      if (tableKeys.includes('org') || tableKeys.includes('time')) {
+        header = ['org', 'time']
+      } else {
+        header = ['机构', '时间']
+      }
+      tableKeys.sort().forEach((x) => {
+        if (header.length <= 10 && !['_id', 'id', 'fileType'].includes(x)) {
+          header.push(x)
+        }
+      })
+      state.statTableInfo.header = header
       // 存储表头
-      table.push(keys)
+      table.push(header)
       // 取得表内容,取不到的用-代替
       opt.forEach((xs) => {
-        const f = keys.map(x => xs[x])
+        const f = header.map(x => xs[x])
         table.push(f)
       })
       state.statTable.data = table
     } else {
       state.statTable.data = opt[1]
     }
-
-    // if (opt[0] === 'local') {
-    //   state.file = opt[1];
-    //   state.table = opt[1].map(x => x.split(','))
-    //   state.statTableInfo.header = state.table.slice(0, 1)
-    //   // state.statTable = opt[1]
-    //   state.tableSel = state.table
-    //   state.tableSel.splice(0, 1)
-    //   state.statList.org = [...new Set(state.table.map(a => a[0]))]
-    //   state.statList.time = [...new Set(state.table.map(a => a[1]))]
-    //   state.statList.drg = [...new Set(state.table.map(a => a[2]))]
-    //   state.notice = [
-    //     `病案总数：${state.tableSel.length - 1}`,
-    //     `机构总数：${state.statList.org.length}`,
-    //     `时间维度总数：${state.statList.time.length - 1}`,
-    //     `病种维度总数：${state.statList.drg.length - 1}`,
-    //   ]
-    //   const page = Math.ceil(state.tableSel.length / 20)
-    //   // const page = 1
-    //   state.countPage = page
-    //   for (let i = 1; i < page; i += 1) {
-    //     const f = []
-    //     f.push(state.statTableInfo.header[0])
-    //     for (let j = 1; j < 20; j += 1) {
-    //       f.push(state.tableSel[i * j])
-    //     }
-    //     state.localTables[i] = f
-    //   }
-    //   state.statTable.data = state.localTables[state.statTableInfo.page]
-    //   if (state.statTableInfo.header[0].length > 10) {
-    //     state.haveRight = true
-    //     state.colNum = 10
-    //     const table = []
-    //     const indexs = [...Array(10)].map((v, k) => k)
-    //     state.statTable.data.forEach((xs) => {
-    //       table.push(indexs.map(x => xs[x]))
-    //     })
-    //     state.statTable.data = table
-    //   }
-    // } else if (opt[0] === 'server') {
-    //   state.statTable.data = opt[1]
-    // }
-    // } else if ()
-    // state.statTable = opt[1]
   },
   STAT_SET_TABLE_INFO(state, opt) {
     state.statTableInfo = opt
-  },
-  STAT_LOAD_FILE(state, message) {
-    state.isServer = false
-    state.file = message;
-    state.table = message.map(x => x.split(','))
-    state.tableHeader = state.table.slice(0, 1)
-    state.tableSel = state.table
-    state.tableSel.splice(0, 1)
-    state.dimensionOrg = [...new Set(state.table.map(a => a[0]))]
-    state.dimensionTime = [...new Set(state.table.map(a => a[1]))]
-    state.dimensionDrg = [...new Set(state.table.map(a => a[2]))]
-    state.notice = [
-      `病案总数：${state.tableSel.length - 1}`,
-      `机构总数：${state.dimensionOrg.length}`,
-      `时间维度总数：${state.dimensionTime.length - 1}`,
-      `病种维度总数：${state.dimensionDrg.length - 1}`,
-    ]
-    const page = Math.ceil(state.tableSel.length / 20)
-    // const page = 1
-    state.countPage = page
-    for (let i = 1; i < page; i += 1) {
-      const f = []
-      f.push(state.tableHeader[0])
-      for (let j = 1; j < 20; j += 1) {
-        f.push(state.tableSel[i * j])
-      }
-      state.localTables[i] = f
-    }
-    state.localTable = state.localTables[state.tablePage]
-    if (state.tableHeader[0].length > 10) {
-      state.haveRight = true
-      state.colNum = 10
-      const table = []
-      const indexs = [...Array(10)].map((v, k) => k)
-      state.localTable.forEach((xs) => {
-        table.push(indexs.map(x => xs[x]))
-      })
-      state.localTable = table
-    }
-    // console.log(state.localTables);
   },
   STAT_TABLE_PAGE(state, n) {
     if (state.countPage !== n) {
@@ -169,7 +92,6 @@ const mutations = {
   STAT_SET_LEFT_PANEL(state, opt) {
     if (state.tableType === 'local') {
       state.leftPanel = opt[0];
-      // state.dimensionType = opt[1];
       switch (opt[1]) {
         case '机构':
           state.statList.localList = state.statList.org
@@ -196,7 +118,11 @@ const mutations = {
     state.serverSort.type = opt[1]
   },
   STAT_CLEAR_SERVER_SORT(state) {
-    state.serverSort = { field: '机构', type: 'asc' }
+    if (state.serverType === 'local') {
+      state.serverSort = { field: '_id', type: 'asc' }
+    } else {
+      state.serverSort = { field: '机构', type: 'asc' }
+    }
   },
   STAT_SET_DIMENSION(state, opt) {
     switch (opt[0]) {
@@ -254,7 +180,6 @@ const mutations = {
   },
   STAT_SET_COMPARE_TABLE(state, data) {
     state.statTable.compare = data
-    // const compare = this.$store.state.Stat.compareTable
     // 取得所有对比行中所有的key并去重
     let keys = []
     keys = keys.concat.apply([], data.map(x => Object.keys(x)))
@@ -275,10 +200,6 @@ const mutations = {
     })
   },
   STAT_SET_SERVER_TABLE(state, opt) {
-    // state.tableSel = opt.tableSel
-    // state.dimensionOrg = opt.dimensionOrg
-    // state.dimensionTime = opt.dimensionTime
-    // state.dimensionDrg = opt.dimensionDrg
     state.notice = [
       `病案总数：${opt.tableSel}`,
       `机构总数：${opt.dimensionOrg}`,
@@ -356,22 +277,6 @@ const mutations = {
   STAT_SET_FILE_FLAG(state) {
     state.selectedRow = [];
     state.selectedCol = [];
-  },
-  STAT_GET_FILE_SEARCH(state, values) {
-    state.localTables = {}
-    const a = state.tableSel.filter(n => n[1] === values || n[0] === values || n[2] === values)
-    //   return n[1] === values || n[0] === values || n[2] === values);
-    const page = Math.ceil(a.length / 20)
-    // const page = 1
-    for (let i = 0; i < page; i += 1) {
-      const f = []
-      f.push(state.statTableInfo.header[0])
-      for (let j = 0; j < 19; j += 1) {
-        f.push(a[(i + 1) * j])
-      }
-      state.localTables[i] = f
-    }
-    state.statTable.data = state.localTables[state.statTableInfo.page]
   },
   STAT_SET_COL_NUM(state, num) {
     if (state.tableType === 'local') {
@@ -501,7 +406,6 @@ const actions = {
     commit('STAT_CLEAR_CHANGE');
     commit('STAT_SET_CHANGE');
     commit('STAT_LOAD_FILES');
-    commit('STAT_LOAD_FILE');
     commit('STAT_SERVER_FILES');
     commit('STAT_SET_CHART_OPTION');
     commit('STAT_SET_LEFT_PANEL');
@@ -524,7 +428,6 @@ const actions = {
     commit('STAT_SET_SERVER_DIMENSION');
     commit('STAT_SET_SERVER_TABLE');
     commit('STAT_SET_TABLE_PAGE');
-    commit('STAT_SET_FILE_NAME');
     commit('STAT_SET_COUNT_PAGE');
     commit('STAT_SET_COL_NUM');
     commit('STAT_SET_TITLE_PAGE');

@@ -44,26 +44,6 @@
             <a class="dropdown-item" href="#" v-on:click="blockData('区块链-文档')">区块链-文档</a>
           </div>
         </li>
-
-        <!-- <li class="nav-item active" v-on:click='localData()' id="edit-rightbar-local">
-          <a class="nav-link text-light" href="#"> 本地 <span class="sr-only">(current)</span>
-            <span style="color: red"><b>{{isSaveLocal}}</b></span>
-          </a>
-        </li>
-        <li class="nav-item active" v-on:click='serverData()' id="edit-rightbar-server">
-          <a class="nav-link text-light" href="#"> 远程 {{isSaveServer}}<span class="sr-only">(current)</span>
-            <span style="color: red"><b>{{isSaveServer}}</b></span>
-          </a>
-        </li>
-        <li class="nav-item active" v-on:click='blockData()' id="edit-rightbar-block">
-          <a class="nav-link text-light" href="#"> 区块链 <span class="sr-only">(current)</span></a>
-        </li> -->
-        <!-- <li class="nav-item active">
-          <a class="nav-link text-light" href="#" v-on:click='page(-1)' id="edit-rightbar-uppage"> 前页 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link text-light" href="#" v-on:click='page(1)' id="edit-rightbar-downpage"> 后页 <span class="sr-only">(current)</span></a>
-        </li> -->
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>
         <input class="form-control mr-sm-2" type="search" placeholder="模糊查询" aria-label="Search" v-on:keyup.enter="rightEnter" v-model="rightItem">
@@ -211,7 +191,7 @@
             break;
           default:
             this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editFiles', null)
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editFiles', null, null)
         }
         this.$store.commit('SET_NOTICE', '读取本地文件');
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
@@ -249,7 +229,6 @@
           this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');
         }
         getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'block')
-        // this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'block');
       },
       rightEnter(e) {
@@ -274,13 +253,6 @@
           }
         }
       },
-      // newFiles: function () {
-      //   const x = new Date().toLocaleDateString()
-      //   const p = this.$store.state.Edit.lastNav
-      //   saveFile(this, x, p)
-      //   this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-      //   // this.$store.commit('EDIT_NEW_FILES');
-      // },
     },
   };
 </script>

@@ -37,8 +37,8 @@
   import { share } from '../../utils/Server';
   // import loadFile from '../../utils/LoadFile';
   import { getLibrary } from '../../utils/LibraryServerFile'
-  import { getStat, getStatFiles } from '../../utils/StatServerFile';
-  import { getEdit } from '../../utils/EditServerFile'
+  import { getStat } from '../../utils/StatServerFile';
+  // import { getEdit } from '../../utils/EditServerFile'
   import { getDate, editPage } from '../../utils/EditOperation';
   import dataDB from '../../utils/dataDB';
   export default {
@@ -135,10 +135,6 @@
         // document.getElementById('aaa').scrollIntoView(true)
       },
       loadFile: function (data, index) {
-        // console.log(this.$store.state.Edit.navType)
-        // if (this.$store.state.Edit.navType === '数据分析') {
-        //   loadFile(this, data, 'stat');
-        // }
         this.$store.commit('EDIT_SET_FILES_INDEX', index)
         if (data.endsWith('.cda')) {
           this.$store.commit('EDIT_SET_FILE_TYPE', 'cda')
@@ -161,24 +157,30 @@
         } else if (this.$store.state.Edit.lastNav === '/library' || this.$store.state.Edit.navType === '数据字典') {
           x = 'library'
         }
+        let tableType = ''
+        if (this.$store.state.Edit.dataType.includes('远程')) {
+          tableType = 'server'
+        } else {
+          tableType = 'block'
+        }
         if (this.$store.state.Edit.rightPanel === 'server' || this.$store.state.Edit.rightPanel === 'block') {
-          this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
           switch (this.$store.state.Edit.lastNav) {
             case '/edit':
-              if (this.$store.state.Edit.serverType === 'file') {
-                // getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port, this.$store.state.Edit.serverType, data, this.$store.state.System.user.username])
-                // getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, data, this.$store.state.Edit.rightPanel)
-                dataDB(this, 'local', 'cda', { fileType: 'cda', fileName: data }, 'editFile', null)
-              } else if (!data.endsWith('.csv') && !data.endsWith('.cda')) {
-                getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, this.$store.state.Stat.tableType, 'edit')
+              if (this.$store.state.Edit.serverType === 'file' || this.$store.state.Edit.serverType === 'user') {
+                dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
+                // dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFile', null)
+              // } else if (!data.endsWith('.csv') && !data.endsWith('.cda')) {
+              //   getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, tableType, 'edit')
               } else if (x === 'stat') {
                 this.$store.commit('STAT_CLEAR_SERVER_SORT');
                 getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'edit', 'server')
               } else if (x === 'library') {
                 this.$store.commit('LIBRARY_CLEAR_SERVER_SORT');
-                getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], data, 1, null, null, 'library', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
+                getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], data, 1, null, null, 'library', tableType, this.$store.state.Library.serverSort)
+              } else if (data.includes('@')) {
+                dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFile', { fileName: data })
               } else {
-                getEdit(this, [this.$store.state.System.server, this.$store.state.System.port], data)
+                dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
               }
               break;
             case '/library':
@@ -201,7 +203,6 @@
           //   this.$store.commit('EDIT_DELETE_RIGHT_PANELS', '编辑病案');
           // }
           // this.$store.commit('EDIT_SET_LOAD_FILENAME', data);
-          // this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
           // loadFile(this, data, x, 'edit')
           const name = this.$store.state.Edit.files[index]
           dataDB(this, 'local', 'cda', { fileName: name }, 'editFile', null)
