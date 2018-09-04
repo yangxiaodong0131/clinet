@@ -13,7 +13,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="table-active" v-for="record in records">
+            <tr class="table-active" v-for="(record, i) in records" v-bind:key='i'>
               <td>{{record.datetime}}</td>
               <td>{{record.type}}-{{record.mode}}</td>
               <td>{{record.value}}</td>

@@ -169,11 +169,6 @@
           this.$store.commit('EDIT_SET_SECTION', section.split(',')[1])
         }
       },
-      // getDocState: function () {
-      //   const doc = this.$store.state.Edit.doc
-      //   editDocState(this, doc)
-      //   this.$store.commit('EDIT_SET_DOC_STATE')
-      // }
     },
   };
 </script>

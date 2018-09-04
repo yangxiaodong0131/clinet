@@ -20,7 +20,6 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
       obj.$store.commit('EDIT_SET_FILES_OFFSET', 20)
       obj.$store.commit('EDIT_CLEAR_FILES_PAGE')
       obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', res.data.cda.slice(0, 20))
-      console.log(res.data.cda.slice(0, 20))
       if (type === 'user') {
         obj.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
       } else {
@@ -234,40 +233,6 @@ export function getCaseHistory(obj, data, name, username) {
     console.log(err);
     obj.$store.commit('SET_NOTICE', '病案历史查询失败')
   })
-}
-
-export function editDocState(obj, doc) {
-  if (doc[0] !== undefined && doc[0][0]) {
-    const value = doc[0][0].split(';')
-    const header = value.map((x) => {
-      const a = x.split(':')
-      if (a[0] && a[0].includes('时间')) {
-        const b = `${a[1]}:${a[2]}:${a[3]}`
-        a[1] = b
-        a.splice(2, 2)
-      }
-      return a
-    })
-    // 未缓存 修改时间》缓存时间
-    // 未保存 缓存时间》保存时间
-    // 已保存 保存时间》缓存时间
-    const keys = []
-    const values = []
-    header.forEach((x) => {
-      keys.push(x[0])
-      values.push(x[1])
-    })
-    const obj1 = {}
-    keys.forEach((x, key) => {
-      if (values[key] && values.includes('　')) {
-        obj1[x] = values[key].replace(/　/g, ' ')
-      } else {
-        obj1[x] = ''
-      }
-    })
-  }
-  // obj.$store.commit('EDIT_SET_DOC_HEADER', obj1)
-  // console.log(obj1)
 }
 
 // 病案历史
