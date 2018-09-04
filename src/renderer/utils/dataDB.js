@@ -15,7 +15,6 @@ function count(obj, col, data, type, limit) {
         obj.$store.commit('STAT_SET_COUNT_PAGE', countPage)
         break;
       default:
-        console.log(res);
         break;
     }
     obj.$store.commit('SET_NOTICE', `当前1页,共${countPage}页`)
@@ -61,8 +60,17 @@ function insert(obj, col, data, type, newData) {
   }
 }
 
-function find(obj, col, data, type, skip, limit) {
+function find(obj, col, data, type, skip, limit, newData) {
   let query = obj.db[col].find(data)
+  if (newData.sort.field && newData.sort.type) {
+    const sortQuery = {}
+    if (newData.sort.type === 'asc') {
+      sortQuery[newData.sort.field] = 1
+    } else {
+      sortQuery[newData.sort.field] = -1
+    }
+    query = query.sort(sortQuery)
+  }
   if (skip !== null && limit !== null) {
     query = query.skip(skip).limit(limit)
   }
@@ -130,20 +138,20 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
     case 'local':
       switch (type) {
         case 'insert': insert(obj, col, data, type); break
-        case 'find': find(obj, col, data, type, skip, limit); break
+        case 'find': find(obj, col, data, type, skip, limit, newData); break
         case 'findOne': findOne(obj, col, data); break
         case 'count': count(obj, col, data); break
         case 'update': update(obj, col, data, newData, type); break
         case 'remove': remove(obj, col, data, newData); break
-        case 'editFiles': find(obj, col, data, type, skip, limit); break
+        case 'editFiles': find(obj, col, data, type, skip, limit, newData); break
         case 'editFile': findOne(obj, col, data, type); break
         case 'createCda': insert(obj, col, data, type); break
         case 'saveCda': update(obj, col, data, newData, type); break
-        case 'libraryFiles': find(obj, col, data, type, skip, limit); break
-        case 'libraryFile': find(obj, col, data, type, skip, limit); break
+        case 'libraryFiles': find(obj, col, data, type, skip, limit, newData); break
+        case 'libraryFile': find(obj, col, data, type, skip, limit, newData); break
         case 'downloadLibrary': insert(obj, col, data, type, newData); break
-        case 'statFiles': find(obj, col, data, type, skip, limit); break
-        case 'statFile': find(obj, col, data, type, skip, limit); break
+        case 'statFiles': find(obj, col, data, type, skip, limit, newData); break
+        case 'statFile': find(obj, col, data, type, skip, limit, newData); break
         case 'downloadStat': insert(obj, col, data, type, newData); break
         case 'serach':
           if (newData.header.length > 0) {
@@ -154,7 +162,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
               obj[x] = newData.val
               queryData.push(obj)
             })
-            find(obj, col, { $or: queryData, fileType: data.fileType }, type, null, null);
+            find(obj, col, { $or: queryData, fileType: data.fileType }, type, null, null, newData);
           }
           break;
         case 'savePage':
