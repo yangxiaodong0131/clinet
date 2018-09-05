@@ -42,25 +42,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row" v-show="this.$store.state.Stat.chartIsShow === 'chart'">
-      <div class="col">
-        <left-panel></left-panel>
-      </div>
-      <div class="col">
-        <div id="chartLeft" style="width: 600px; height:400px;" v-on:dblclick="chart('left')"></div>
-      </div>
-      <div class="col">
-        <div id="chartRight" style="width: 600px; height:400px;" v-on:dblclick="chart('right')"></div>
-      </div>
-      <div class="col">
-        <div class="alert alert-danger" id="stat-right-prompt" role="alert" style="height:100%; overflow-y:auto;">
-          <h4 class="alert-heading">数据分析提示</h4>
-          <ol class="">
-            <li v-for="(data, index) in notice" v-bind:key='index'>{{data}}</li>
-          </ol>
-        </div>
-      </div>
-    </div> -->
     <div class="row" v-if="this.$store.state.Stat.chartIsShow === 'menu'">
       <div class="col">
         <left-panel></left-panel>
@@ -117,23 +98,8 @@
       </div>
     </div>
     <div>
-      <table v-if="this.$store.state.Stat.tableType === 'server'">
-        <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index">
-          <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex">
-            <a class="oi oi-sort-ascending" v-if="serverSort.type === 'asc' && serverSort.field == data" ></a>
-            <a class="oi oi-sort-ascending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'asc')" v-bind:id="'stat-table-asc'+xindex"></a>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span v-on:click="onClickTd(x, xindex)">{{data}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a class="oi oi-sort-descending"  v-if="serverSort.type === 'desc' && serverSort.field == data"></a>
-            <a class="oi oi-sort-descending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'desc')" v-bind:id="'stat-table-desc'+xindex"></a>
-          </th>
-        </tr>
-        <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===index)}" v-if="index > 0">
-          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" v-on:click="onClickTd(data, index)" class="stat-right-table-td"  v-if="index < 11">{{data[index]}}</td>
-        </tr>
-      </table>
-
-      <table v-else>
-        <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index">
+      <table>
+        <tr v-for="(x, index) in xs"  v-if="index === 0" v-bind:key="index">
           <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex">
             <a class="oi oi-sort-ascending" v-if="serverSort.type === 'asc' && serverSort.field == data" ></a>
             <a class="oi oi-sort-ascending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'asc')" v-bind:id="'stat-table-asc'+xindex"></a>
@@ -334,7 +300,8 @@
     methods: {
       onClickTd: function (data, index) {
         this.$store.commit('STAT_SET_XOBJ', [data[index], 0]);
-        const header = this.$store.state.Stat.statTable.data[0]
+        const table = this.$store.state.Stat.statTable.data
+        const header = table[0]
         let cindex = 0
         let oindex = 0
         let tindex = 0
@@ -345,7 +312,7 @@
         }
         if (index !== undefined) {
           this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-          const value = this.$store.state.Stat.tableSel.map((x) => {
+          const value = table.map((x) => {
             let isType = false
             if (x[index] === '-' || x[index] === '') {
               isType = false
@@ -356,7 +323,7 @@
           })
           if (this.$store.state.Stat.tableType === 'local') {
             if (value.includes(true)) {
-              const a = this.$store.state.Stat.statTable.data[0]
+              const a = this.$store.state.Stat.statTableInfo.header
               if (a.includes(data[index])) {
                 this.$store.commit('STAT_SET_COL', index);
               }
@@ -387,6 +354,8 @@
           } else if (data[0] === 'id') {
             this.$store.commit('STAT_SET_COL', index);
           }
+          this.pageChart('chartLeft', this.$store.state.Stat.chartLeft, table)
+          this.pageChart('chartRight', this.$store.state.Stat.chartRight, table)
         }
       },
       onClick: function (data, index) {
@@ -397,54 +366,9 @@
           this.$store.commit('STAT_GET_FIELD_INDEX', index);
         }
         this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
-        const id = 'chartLeft';
-        const type = this.$store.state.Stat.chartLeft;
         const table = this.$store.state.Stat.statTable.data;
-        chartData(this, table, this.flag, this.flagTd)
-        let chartdata = []
-        if (this.$store.state.Stat.chartData.length === 0) {
-          chartdata = null
-        } else {
-          chartdata = this.$store.state.Stat.chartData
-        }
-        switch (type) {
-          case '柱状图':
-            chartBar(id, chartdata)
-            break;
-          case '折线图':
-            chartLine(id, chartdata)
-            break;
-          case '雷达图':
-            chartRadar(id, chartdata)
-            break;
-          case '散点图':
-            chartScatter(id, chartdata)
-            break;
-          case '饼图':
-            chartPie(id, chartdata)
-            break;
-          default: break;
-        }
-        const idRight = 'chartRight'
-        const typeRight = this.$store.state.Stat.chartRight
-        switch (typeRight) {
-          case '柱状图':
-            chartBar(idRight, chartdata)
-            break;
-          case '折线图':
-            chartLine(idRight, chartdata)
-            break;
-          case '雷达图':
-            chartRadar(idRight, chartdata)
-            break;
-          case '散点图':
-            chartScatter(idRight, chartdata)
-            break;
-          case '饼图':
-            chartPie(idRight, chartdata)
-            break;
-          default: break;
-        }
+        this.pageChart('chartLeft', this.$store.state.Stat.chartLeft, table)
+        this.pageChart('chartRight', this.$store.state.Stat.chartRight, table)
       },
       serverPage: function (data) {
         this.$store.commit('STAT_SET_TABLE_PAGE', parseInt(data, 10));
@@ -506,6 +430,33 @@
       onClickSort: function (field, type) {
         this.$store.commit('STAT_SET_SERVER_SORT', [field, type])
         dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
+      },
+      pageChart: function (id, type, table) {
+        chartData(this, table, this.flag, this.flagTd)
+        let chartdata = []
+        if (this.$store.state.Stat.chartData.length === 0) {
+          chartdata = null
+        } else {
+          chartdata = this.$store.state.Stat.chartData
+        }
+        switch (type) {
+          case '柱状图':
+            chartBar(id, chartdata)
+            break;
+          case '折线图':
+            chartLine(id, chartdata)
+            break;
+          case '雷达图':
+            chartRadar(id, chartdata)
+            break;
+          case '散点图':
+            chartScatter(id, chartdata)
+            break;
+          case '饼图':
+            chartPie(id, chartdata)
+            break;
+          default: break;
+        }
       },
     },
   };

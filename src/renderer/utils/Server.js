@@ -140,7 +140,7 @@ export function sGetCompRule(obj, data, table, rule) {
   }
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/library/server_rule?table=${table}&code=${code}`,
+    url: `http://127.0.0.1:3001/library/server_rule?table=${table}&code=${code}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -162,16 +162,16 @@ export function sCompDrg(obj, data, dataWt4, version, type = '') {
   let url = ''
   switch (version) {
     case 'BJ':
-      url = `http://${data[0]}:${data[1]}/drgserverbj/comp_drg/`
+      url = 'http://127.0.0.1:3001/drgserverbj/comp_drg/'
       break;
     case 'GB':
-      url = `http://${data[0]}:${data[1]}/drgservergb/comp_drg/`
+      url = 'http://127.0.0.1:3001/drgservergb/comp_drg/'
       break;
     case 'CN':
-      url = `http://${data[0]}:${data[1]}/drgserver/comp_drg/`
+      url = 'http://127.0.0.1:3001/drgserver/comp_drg/'
       break;
     default:
-      url = `http://${data[0]}:${data[1]}/drgserver/comp_drg/`
+      url = 'http://127.0.0.1:3001/drgserver/comp_drg/'
   }
   if (dataWt4) {
     if (type !== '') {
