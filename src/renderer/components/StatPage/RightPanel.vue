@@ -42,25 +42,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row" v-show="this.$store.state.Stat.chartIsShow === 'chart'">
-      <div class="col">
-        <left-panel></left-panel>
-      </div>
-      <div class="col">
-        <div id="chartLeft" style="width: 600px; height:400px;" v-on:dblclick="chart('left')"></div>
-      </div>
-      <div class="col">
-        <div id="chartRight" style="width: 600px; height:400px;" v-on:dblclick="chart('right')"></div>
-      </div>
-      <div class="col">
-        <div class="alert alert-danger" id="stat-right-prompt" role="alert" style="height:100%; overflow-y:auto;">
-          <h4 class="alert-heading">数据分析提示</h4>
-          <ol class="">
-            <li v-for="(data, index) in notice" v-bind:key='index'>{{data}}</li>
-          </ol>
-        </div>
-      </div>
-    </div> -->
     <div class="row" v-if="this.$store.state.Stat.chartIsShow === 'menu'">
       <div class="col">
         <left-panel></left-panel>
@@ -117,27 +98,13 @@
       </div>
     </div>
     <div>
-      <table v-if="this.$store.state.Stat.tableType === 'server'">
-        <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index">
+      <table>
+        <!-- v-on:click="onClickTd(x, xindex)" -->
+        <tr v-for="(x, index) in xs"  v-if="index === 0" v-bind:key="index">
           <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex">
             <a class="oi oi-sort-ascending" v-if="serverSort.type === 'asc' && serverSort.field == data" ></a>
             <a class="oi oi-sort-ascending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'asc')" v-bind:id="'stat-table-asc'+xindex"></a>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span v-on:click="onClickTd(x, xindex)">{{data}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a class="oi oi-sort-descending"  v-if="serverSort.type === 'desc' && serverSort.field == data"></a>
-            <a class="oi oi-sort-descending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'desc')" v-bind:id="'stat-table-desc'+xindex"></a>
-          </th>
-        </tr>
-        <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===index)}" v-if="index > 0">
-          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" v-on:click="onClickTd(data, index)" class="stat-right-table-td"  v-if="index < 11">{{data[index]}}</td>
-        </tr>
-      </table>
-
-      <table v-else>
-        <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index">
-          <th class="text-center" v-for="(data, xindex) in x" v-bind:key="xindex">
-            <a class="oi oi-sort-ascending" v-if="serverSort.type === 'asc' && serverSort.field == data" ></a>
-            <a class="oi oi-sort-ascending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'asc')" v-bind:id="'stat-table-asc'+xindex"></a>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span v-on:click="onClickTd(x, xindex)">{{data}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;<span v-on:click="onClick(data, index)">{{data}}--1</span>&nbsp;&nbsp;&nbsp;&nbsp;
             <a class="oi oi-sort-descending"  v-if="serverSort.type === 'desc' && serverSort.field == data"></a>
             <a class="oi oi-sort-descending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'desc')" v-bind:id="'stat-table-desc'+xindex"></a>
           </th>
@@ -344,6 +311,7 @@
           tindex = header.indexOf('时间')
         }
         if (index !== undefined) {
+          console.log('sssssssssssssssssssssss');
           this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
           const value = this.$store.state.Stat.tableSel.map((x) => {
             let isType = false
@@ -355,8 +323,12 @@
             return isType
           })
           if (this.$store.state.Stat.tableType === 'local') {
+            console.log(this.$store.state.Stat.statTableInfo.header);
+            console.log(data[index]);
             if (value.includes(true)) {
-              const a = this.$store.state.Stat.statTable.data[0]
+              const a = this.$store.state.Stat.statTableInfo.header
+              console.log(a);
+              console.log(data[index]);
               if (a.includes(data[index])) {
                 this.$store.commit('STAT_SET_COL', index);
               }
@@ -390,6 +362,7 @@
         }
       },
       onClick: function (data, index) {
+        console.log('sssssss');
         if (index !== undefined) {
           this.flag = index
           this.$store.commit('STAT_SET_ROW', index);

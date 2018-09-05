@@ -45,7 +45,7 @@ const mutations = {
   },
   STAT_SET_TABLE(state, opt) {
     if (state.tableType === 'local') {
-      const tableKeys = Object.keys(opt[0])
+      let tableKeys = Object.keys(opt[0])
       const table = []
       let header = []
       if (tableKeys.includes('org') || tableKeys.includes('time')) {
@@ -53,6 +53,7 @@ const mutations = {
       } else {
         header = ['机构', '时间']
       }
+      tableKeys = tableKeys.filter(x => !['org', 'time', '时间', '机构', 'stat_type'].includes(x))
       tableKeys.sort().forEach((x) => {
         if (header.length <= 10 && !['_id', 'id', 'fileType'].includes(x)) {
           header.push(x)
