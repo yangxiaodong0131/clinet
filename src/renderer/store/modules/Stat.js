@@ -120,7 +120,7 @@ const mutations = {
   },
   STAT_CLEAR_SERVER_SORT(state) {
     if (state.serverType === 'local') {
-      state.serverSort = { field: '_id', type: 'asc' }
+      state.serverSort = { field: 'org', type: 'asc' }
     } else {
       state.serverSort = { field: '机构', type: 'asc' }
     }

@@ -253,11 +253,11 @@
           let dataIndex = this.$store.state.Library.changIndex[0]
           let trIndex = this.$store.state.Library.changIndex[1]
           // table[0][trIndex] === 'ID'
-          if (['ID', '创建用户', '修改用户', '创建时间', '修改时间', '_id'].includes(table[0][trIndex])) {
+          if (['ID', '创建用户', '修改用户', '创建时间', '修改时间', '_id', '更新用户'].includes(table[0][trIndex])) {
             this.$store.commit('SET_NOTICE', '此单元格不允许修改')
           } else {
             data[change.trIndex] = this.$store.state.Library.changeVal
-            if (trIndex === data[0].length - 1) {
+            if (trIndex === table[0].length - 1) {
               dataIndex += 1
               trIndex = 0
             } else {
