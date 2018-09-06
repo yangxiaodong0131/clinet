@@ -6,7 +6,7 @@
         <main>
           <div class="left-side">
             <div class="jumbotron">
-              <h2>登录系统(V1.0.0-817)</h2>
+              <h2>登录系统(V1.0.0-907)</h2>
                 <form>
                   <div class="form-group">
                     <label for="exampleInputEmail1" class="text-danger">用户名（电子邮箱）</label>
@@ -48,7 +48,7 @@
             <p>
               本系统适用于4个应用场景：
               <ul>
-                <li>作为单机版使用，数据以CSV文件（完全结构化，用于系统配置、数据分析、术语字典）、CDA文件（半结构化，用于临床文档）保存在本地</li>
+                <li>作为单机版使用，数据以完全结构化（用于系统配置、数据分析、术语字典）、半结构化（用于临床文档）保存在本地数据库中</li>
                 <li>使用互联网上的远程服务，数据上传到服务器</li>
                 <li>使用互联网上的区块链服务，数据发布到区块链</li>
                 <li>

@@ -24,7 +24,7 @@ const state = {
   hint: [],
   helpType: '编辑器使用帮助',
   helpTypes: ['输入框提示', '病案参考', '病案历史', '相似病案', '在线交流', 'DRG分析', 'HIS接口', '病案质控', '专家提示'],
-  dataType: '本地-文件',
+  dataType: '本地-文档',
   navType: '病案文档',
   serverType: 'user',
   docType: '自定义文档',

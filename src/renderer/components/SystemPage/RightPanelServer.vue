@@ -111,7 +111,7 @@
         textPower: '',
         confirmPassword: '',
         userInfo: 'info',
-        serverInput: { name: '', host: '', port: '', setting: '' }
+        serverInput: { name: '', host: '', port: '80', setting: '' }
       }
     },
     created: function () {
