@@ -7,6 +7,7 @@
     <left-panel-table v-if="rightPanel == 'left'"></left-panel-table> -->
     <right-panel-local v-if="rightPanels.includes('本地文件') || rightPanels.includes('远程文件')"></right-panel-local>
     <right-panel-help v-if="rightPanels.includes('编辑器使用帮助') || rightPanels.includes('病案历史') || rightPanels.includes('输入框提示') || rightPanels.includes('病案参考') || rightPanels.includes('病案质控') || rightPanels.includes('专家提示') || rightPanels.includes('在线交流')"></right-panel-help>
+    <right-panel-table v-if="rightType == 'table'"></right-panel-table>
   </div>
 </template>
 
@@ -32,6 +33,11 @@
       rightPanel: {
         get() {
           return this.$store.state.Edit.rightPanel
+        }
+      },
+      rightType: {
+        get() {
+          return this.$store.state.Edit.rightType
         }
       },
     },

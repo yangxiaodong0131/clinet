@@ -111,9 +111,10 @@
       },
       login() {
         // dataDB(this, 'local', 'test', null, null, null)
-        const server = global.hitbdata.server['远程测试服务器'][0];
+        this.$store.commit('SYSTEM_SET_SERVERS', global.hitbdata.server)
+        const server = global.hitbdata.server[0];
         if (this.loginName && this.loginPassword) {
-          socketConnect(this, [server[0], server[1]], { username: this.loginName, password: this.loginPassword });
+          socketConnect(this, [server.host, server.port, 0], { username: this.loginName, password: this.loginPassword });
         }
         sectionFile(this)
         this.$store.commit('SET_NAVBAR', 'edit');

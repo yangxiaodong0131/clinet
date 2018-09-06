@@ -198,7 +198,6 @@ export function sCreateDepart(obj, data, user, department) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
-    console.log(res)
     if (res.status === 201) {
       if (res.data.success) {
         obj.$store.commit('SYSTEM_NEW_DEPARTMENT', [res.data, '科室创建成功', true])

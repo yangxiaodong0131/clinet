@@ -34,7 +34,7 @@
 <script>
   import { saveEdit } from '../../utils/EditServerFile'
   import saveFile from '../../utils/SaveFile';
-  import { getDate } from '../../utils/EditOperation'
+  import { getDate, loadEditDoc } from '../../utils/EditOperation'
   export default {
     data() {
       return {
@@ -79,29 +79,39 @@
       },
       file: {
         get() {
-          let f = []
-          if (this.$store.state.Edit.lastNav === '/edit' && this.$store.state.Edit.navType === '病案文档') {
-            f = this.$store.state.Edit.doc
+          let file = []
+          const navType = this.$store.state.Edit.navType
+          if (navType === '数据分析') {
+            file = this.$store.state.Stat.file
+          } else if (navType === '数据分析') {
+            file = this.$store.state.Library.file
           } else {
-            const file = this.$store.state.Edit.file
-            let start = 0
-            let fileLen = this.$store.state.Edit.file.length;
-            if (fileLen > 100) {
-              if (this.$store.state.Edit.filePage > 0) {
-                start = 100 * this.$store.state.Edit.filePage
-                fileLen = start + 100
-              } else {
-                fileLen = 100
-              }
-            }
-            for (let i = start; i < fileLen; i += 1) {
-              f.push(file[i])
-            }
-            const type = typeof file[0]
-            if ((this.$store.state.Edit.lastNav !== '/edit' || this.$store.state.Edit.navType !== '病案文档') && type !== 'object') {
-              f = f.map(n => n.split(','))
+            file = this.$store.state.Edit.file
+          }
+          console.log(file)
+          let f = []
+          // if (this.$store.state.Edit.lastNav === '/edit' && this.$store.state.Edit.navType === '病案文档') {
+          //   f = this.$store.state.Edit.doc
+          // } else {
+          // const file = this.$store.state.Edit.file
+          let start = 0
+          let fileLen = file.length;
+          if (fileLen > 100) {
+            if (this.$store.state.Edit.filePage > 0) {
+              start = 100 * this.$store.state.Edit.filePage
+              fileLen = start + 100
+            } else {
+              fileLen = 100
             }
           }
+          for (let i = start; i < fileLen; i += 1) {
+            f.push(file[i])
+          }
+          // const type = typeof file[0]
+          // if ((this.$store.state.Edit.lastNav !== '/edit' || this.$store.state.Edit.navType !== '病案文档') && type !== 'object') {
+          f = f.map(n => n.split(','))
+          // }
+          // }
           return f
         }
       },
@@ -174,6 +184,7 @@
       },
       loadDoc: function (index, type) {
         console.log(index, type)
+        loadEditDoc(this, index, type)
       },
       close(data) {
         this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);

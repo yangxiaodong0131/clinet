@@ -2,10 +2,39 @@
   <div>
     <div v-if="this.toolbar === 'getServers'" id="system-server-port">
       <table>
-        <tr v-for="(data, index) in file" v-bind:key='index' v-on:click="connect(data, index)" v-bind:class="{'table-danger':flag == index && index !== 0}" class="server-rightpanel-tr" v-bind:id="'system-td-tr'+index">
-          <td v-for="(field, index) in data" v-bind:key='index'>{{data[index]}}</td>
+        <tr><td>服务器名称</td><td>地址</td><td>端口</td><td>连接状态</td><td>操作</td></tr>
+        <tr v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-danger':flag == index}" class="server-rightpanel-tr" v-bind:id="'system-td-tr'+index">
+          <td>{{data.name}}</td>
+          <td>{{data.host}}</td>
+          <td>{{data.port}}</td>
+          <td>{{data.connect}}</td>
+          <td>
+            <a href="#" v-on:click="connect(data, index)">连接</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="#" v-on:click="setFirst(data, index)" v-if="data.setting !== '1'">设为默认</a>
+          </td>
         </tr>
       </table>
+      <button id = "server-server-add" v-on:click="addServer()">添加配置</button>
+    </div>
+    <div v-if="this.toolbar === 'sddServers'" id="system-server-sdd">
+      <form>
+        <div class="form-group">
+          <label>服务器名称</label>
+          <input type="text" class="form-control" v-model="serverInput.name">
+          <small class="form-text text-muted"></small>
+        </div>
+        <div class="form-group">
+          <label>地址</label>
+          <input type="text" class="form-control" v-model="serverInput.host">
+          <small class="form-text text-muted"></small>
+        </div>
+        <div class="form-group">
+          <label>端口</label>
+          <input type="text" class="form-control" v-model="serverInput.port">
+          <small class="form-text text-muted"></small>
+        </div>
+      </form>
+      <button id = "server-server-submit-add" v-on:click="addServerSubmit()">确定</button>
     </div>
     <!-- 连接服务器状态 -->
     <!-- <div v-if="this.$store.state.System.connectInfo == true" > -->
@@ -73,6 +102,7 @@
   import CreateDepartments from './RightPanelServer/CreateDepartments';
   import GetPersons from './RightPanelServer/GetPersons';
   import { sConnect } from '../../utils/Server'
+  import dataDB from '../../utils/dataDB';
   export default {
     components: { GetUsers, GetOrgs, CreateOrgs, CreateDepartments, GetPersons, LoginRegister },
     data() {
@@ -81,7 +111,7 @@
         textPower: '',
         confirmPassword: '',
         userInfo: 'info',
-
+        serverInput: { name: '', host: '', port: '', setting: '' }
       }
     },
     created: function () {
@@ -90,14 +120,10 @@
     computed: {
       file: {
         get() {
-          const f = []
-          let fileLen = this.$store.state.System.file.length;
+          let f = []
           switch (this.$store.state.System.toolbar) {
             case 'getServers':
-              if (fileLen > 99) { fileLen = 99 }
-              for (let i = 0; i < fileLen; i += 1) {
-                f.push(this.$store.state.System.file[i].split(','))
-              }
+              f = this.$store.state.System.servers
               break;
             case 'getUsers':
               break;
@@ -131,16 +157,36 @@
     },
     methods: {
       connect: function (data, index) {
+        data = [data.host, data.port]
         this.flag = index
         this.$store.commit('SYSTEM_SET_SERVER', data)
-        if (this.toolbar === 'getServers' && index !== 0) {
-          sConnect(this, [data[1], data[2]], index)
+        if (this.toolbar === 'getServers') {
+          sConnect(this, data, index)
         }
       },
-      // updateUser: function () {
-      //   const b = { org: this.upUserInfo.org, password: this.upUserInfo.password }
-      //   this.$store.commit('SYSTEM_UPDATE_USER', b)
-      // },
+      setFirst: function (data, index) {
+        this.file.forEach((x, i) => {
+          let setting = ''
+          if (i === index) {
+            setting = '1'
+          } else {
+            setting = ''
+          }
+          const id = '_id'
+          dataDB(this, 'local', 'server', { _id: x[id] }, 'update', { setting: setting })
+        })
+        dataDB(this, 'local', 'server', {}, 'serverConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
+      },
+      addServer: function () {
+        this.$store.commit('SYSTEM_SET_TOOLBAR', 'sddServers')
+      },
+      addServerSubmit: function () {
+        if (this.serverInput.name !== '' && this.serverInput.host !== '' && this.serverInput.port !== '') {
+          dataDB(this, 'local', 'server', this.serverInput, 'addServerConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
+        } else {
+          this.$store.commit('SET_NOTICE', '请填写完整后再点击确认按钮')
+        }
+      },
     },
   };
 </script>

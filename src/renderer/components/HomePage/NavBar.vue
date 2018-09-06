@@ -82,6 +82,7 @@
   // import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
   import { open } from '../../utils/BlockAccount'
   import { bcBlockchain } from '../../utils/BlockBlock'
+  import dataDB from '../../utils/dataDB';
   export default {
     data() {
       return {
@@ -195,6 +196,7 @@
             break;
           case '系统服务-远程服务器设置':
             this.$router.push('/system');
+            dataDB(this, 'local', 'server', {}, 'serverConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
             this.$store.commit('SYSTEM_SET_TOOLBAR', 'getServers');
             break;
           case '系统服务-DRG分组服务':
