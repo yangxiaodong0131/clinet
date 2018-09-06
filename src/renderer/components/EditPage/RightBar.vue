@@ -55,8 +55,6 @@
 <script>
   import { getEditFiles, getEdit, getDocTypes, getHelpTypes } from '../../utils/EditServerFile'
   import { rightBarHelp } from '../../utils/EditOperation'
-  import getStatFile from '../../utils/StatOperation';
-  import getLibraryFile from '../../utils/LibraryOperation';
   import dataDB from '../../utils/dataDB';
   export default {
     data() {
@@ -143,14 +141,14 @@
           this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
           switch (this.$store.state.Edit.dataType) {
             case '本地-文件':
-              getStatFile(this, '本地', 'edit')
+              dataDB(this, 'local', 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: 'local' })
               break;
             case '远程-文档': case '远程-用户':
               this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
-              getStatFile(this, '远程', 'edit')
+              dataDB(this, 'server', 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: 'server' })
               break;
             case '区块链-用户': case '区块链-文档':
-              getStatFile(this, '区块链', 'edit')
+              dataDB(this, 'block', 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: 'block' })
               break;
             default:
               break;
@@ -158,14 +156,14 @@
         } else if (n === '数据字典') {
           switch (this.$store.state.Edit.dataType) {
             case '本地-文件':
-              getLibraryFile(this, '本地', 'edit')
+              dataDB(this, 'local', 'libraryFile', null, 'libraryFiles', null)
               break;
             case '远程-文档': case '远程-用户':
               this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server');
-              getLibraryFile(this, '远程', 'edit')
+              dataDB(this, 'server', 'libraryFile', null, 'libraryFiles', null)
               break;
             case '区块链-用户': case '区块链-文档':
-              getLibraryFile(this, '区块链', 'edit')
+              dataDB(this, 'block', 'libraryFile', null, 'libraryFiles', null)
               break;
             default:
               break;
@@ -198,7 +196,6 @@
       },
       serverData: function (x) {
         this.$store.commit('EDIT_SET_DATA_TYPE', x);
-        // this.$store.commit('EDIT_SET_DOC_TYPES',)
         getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
         getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
         this.$store.commit('EDIT_SET_CHAT_TYPE', false);
@@ -216,7 +213,6 @@
           this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
           this.$store.commit('SET_NOTICE', '读取远程文件');
           getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
-          // this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
         }
       },
       blockData: function (x) {

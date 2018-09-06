@@ -309,13 +309,7 @@ const mutations = {
   EDIT_SET_RIGHT_FOLDS(state, value) {
     const index = state.rightFolds.indexOf(value)
     if (index > -1) {
-      const arr = []
-      state.rightPanels.forEach((x) => {
-        if (x !== value) {
-          arr.push(x)
-        }
-      })
-      state.rightFolds = arr
+      state.rightFolds.splice(index, 1)
     } else {
       state.rightFolds.push(value)
     }
@@ -493,11 +487,15 @@ const mutations = {
   },
   EDIT_SET_FILES_OFFSET(state, value) {
     state.filesOffset = value
-  }
+  },
+  EDIT_SET_RIGHT_TYPE(state, value) {
+    state.rightType = value
+  },
 };
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_SET_RIGHT_TYPE');
     commit('EDIT_DELETE_RIGHT_FOLDS');
     commit('EDIT_SET_FILES_OFFSET');
     commit('EDIT_SET_FILES_NUM');

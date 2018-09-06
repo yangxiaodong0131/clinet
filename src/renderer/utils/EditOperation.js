@@ -226,3 +226,20 @@ export function editPage(obj, n) {
     }
   }
 }
+
+export function loadEditDoc(obj, index, type) {
+  console.log(index, type)
+  const file = obj.$store.state.Edit.file
+  const r = []
+  const h = file[index]
+  h.split(',').forEach((key) => {
+    const value = key.split(' ')
+    // r.push(`${key} ${data[i]}`)
+    if (value[1] === undefined) {
+      r.push(`${value[0]}`)
+    } else {
+      r.push(`${value[0]} ${value[1]}`)
+    }
+  });
+  obj.$store.commit('EDIT_LOAD_DOC', r)
+}

@@ -20,11 +20,12 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
       obj.$store.commit('EDIT_SET_FILES_OFFSET', 20)
       obj.$store.commit('EDIT_CLEAR_FILES_PAGE')
       obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', res.data.cda.slice(0, 20))
-      if (type === 'user') {
-        obj.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
-      } else {
-        obj.$store.commit('EDIT_SET_SERVER_TYPE', 'show');
-      }
+      // if (type === 'user') {
+      //   console.log('===')
+      //   obj.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
+      // } else {
+      //   obj.$store.commit('EDIT_SET_SERVER_TYPE', 'show');
+      // }
       obj.$store.commit('SET_NOTICE', res.data.info);
     } else {
       obj.$store.commit('EDIT_SERVER_FILES', [])
@@ -68,6 +69,7 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
         })
         docSummary.push(arr)
       }
+      console.log(res.data.cda)
       obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
       obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
       obj.$store.commit('EDIT_LOAD_DOC', [res.data.cda.content])
