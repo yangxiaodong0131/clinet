@@ -15,7 +15,13 @@
         <!-- <li class="nav-item active" v-on:click='test()' id="server-user-setup">
           <a class="nav-link text-light" href="#"> statCdaTest <span class="sr-only">(current)</span></a>
         </li> -->
-        <li class="nav-item dropdown" v-on:click='getOrgs()' id="server-org-setup">
+        <li class="nav-item active" v-on:click="orgInfos('机构信息')" id="orgInfos1">
+          <a class="nav-link text-light" href="#"> 机构信息 <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active" v-on:click="orgInfos('科室信息')" id="orgInfos2">
+          <a class="nav-link text-light" href="#"> 科室信息 <span class="sr-only">(current)</span></a>
+        </li>
+        <!-- <li class="nav-item dropdown" v-on:click='getOrgs()' id="server-org-setup">
           <a class="nav-link text-light dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> 机构设置 <span class="sr-only">(current)</span></a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#" id="orgInfos1" v-on:click="orgInfos('机构信息')">机构信息</a>
@@ -23,7 +29,7 @@
             <a class="dropdown-item" href="#" id="orgInfos2" v-on:click="orgInfos('科室信息')">科室信息</a>
             <div class="dropdown-divider"></div>
           </div>
-        </li>
+        </li> -->
         <li class="nav-item active" v-if="toolbar === 'createDepartments' && orgPage === 'getDepartment' && orgName ==='updateDep'">
           <a class="nav-link text-light" href="#" v-on:click="updateDep()"> 科室修改 <span class="sr-only">(current)</span></a>
         </li>
@@ -168,6 +174,9 @@
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'getServerFunctions');
       },
       orgInfos: function (value) {
+        sGetProvince(this, [this.server, this.port])
+        this.$store.commit('SYSTEM_SET_ORG_NAME', null);
+        this.$store.commit('SYSTEM_SET_TOOLBAR', 'getOrgs');
         if (!this.$store.state.System.user.login) {
           this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
         } else {
