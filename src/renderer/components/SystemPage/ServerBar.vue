@@ -12,9 +12,9 @@
         <li class="nav-item active" v-on:click='getUsers()' id="server-user-setup">
           <a class="nav-link text-light" href="#"> 用户设置 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click='test()' id="server-user-setup">
+        <!-- <li class="nav-item active" v-on:click='test()' id="server-user-setup">
           <a class="nav-link text-light" href="#"> statCdaTest <span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
         <li class="nav-item dropdown" v-on:click='getOrgs()' id="server-org-setup">
           <a class="nav-link text-light dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> 机构设置 <span class="sr-only">(current)</span></a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -24,21 +24,6 @@
             <div class="dropdown-divider"></div>
           </div>
         </li>
-        <!--<li class="nav-item active" v-if="toolbar === 'getOrgs' && orgPage === 'getOrg'" id = "server-user-neworg"  v-on:click="insertOrgPage()">
-          <a class="nav-link text-light" href="#"> 新建机构 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" v-if="toolbar === 'createOrgs' && orgPage === 'getOrg' && orgName ==='insert'" id = "server-user-addorg"  v-on:click="insertOrg()">
-          <a class="nav-link text-light" href="#"> 添加机构 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" v-if="toolbar === 'createOrgs' && orgPage === 'getOrg' && orgName ==='update'" v-on:click="updateOrg()">
-          <a class="nav-link text-light" href="#"> 机构修改 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" v-if="toolbar === 'getOrgs' && orgPage === 'getDepartment'">
-          <a class="nav-link text-light" href="#" id="newsection" v-on:click="insertDepPage()"> 新建科室 <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active" v-if="toolbar === 'createDepartments' && orgPage === 'getDepartment' && orgName ==='insertDep'">
-          <a class="nav-link text-light" href="#" id="addsection" v-on:click="insertDep()"> 添加科室 <span class="sr-only">(current)</span></a>
-        </li>-->
         <li class="nav-item active" v-if="toolbar === 'createDepartments' && orgPage === 'getDepartment' && orgName ==='updateDep'">
           <a class="nav-link text-light" href="#" v-on:click="updateDep()"> 科室修改 <span class="sr-only">(current)</span></a>
         </li>
@@ -48,16 +33,10 @@
         <li class="nav-item active" v-if="this.$store.state.System.userPower === 1 && toolbar === 'getPersons' && orgPage === 'getPerson'" v-on:click="updatePerson()">
           <a class="nav-link text-light" href="#"> 人员修改 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" id="sever-help-section" v-on:click='upHelp()'>
+        <!-- <li class="nav-item active" id="sever-help-section" v-on:click='upHelp()'>
           <a class="nav-link text-light" href="#"> 增加帮助功能 <span class="sr-only">(current)</span></a>
-        </li>
-        <!-- <li class="nav-item active" v-on:click='getServerFunctions' id="server-remote-function-setup">
-          <a class="nav-link text-light" href="#"> 远程服务功能设置 <span class="sr-only">(current)</span></a>
         </li> -->
       </ul>
-      <!-- <div class="form-inline my-2 my-lg-0" v-if="['getPersons', 'getOrgs'].includes(this.$store.state.System.toolbar)">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="server-search">
-      </div> -->
     </div>
   </nav>
 </template>
