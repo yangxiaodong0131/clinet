@@ -20,7 +20,6 @@ export function sConnect(obj, data, index) {
   }).then((res) => {
     if (res.status === 200) {
       if (res.data.success) {
-        console.log('sss');
         if (obj.$store.state.System.user.username !== '') {
           offline(obj, obj.$store.state.System.user.username)
         }
