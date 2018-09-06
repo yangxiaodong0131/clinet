@@ -220,7 +220,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             downloadLibrary(obj, serverConfig, data.fileType);
             break;
           case 'statFiles':
-            getStatFiles(obj, serverConfig, newData.fileType, newData.username, newData.tableType)
+            getStatFiles(obj, serverConfig, newData.fileType, newData.username, serverType)
             break;
           case 'statFile':
             getStat(obj, serverConfig, { tableName: newData.fileType, page: page + 1, username: newData.username, dimension: newData.dimension, sort: newData.sort }, newData.tableType, serverType)
