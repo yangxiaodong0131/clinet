@@ -166,16 +166,16 @@ export function sUpdateOrg(obj, data, id, org) {
 }
 // 获取科室列表([url,port,user])
 export function sGetDepart(obj, data, org, page) {
-  const userOrg = org.org
-  const userType = org.type
-  let url = ''
+  // const userOrg = org.org
+  // const userType = org.type
+  // let url = ''
   // 根据用户权限判断取值
-  if (userType === 1) {
-    url = `http://${data[0]}:${data[1]}/servers/customize_department?page=${page}`
-  } else {
-    url = `http://${data[0]}:${data[1]}/servers/customize_department?name=${userOrg}&page=${page}`
-  }
-  axios.get(url)
+  // if (userType === 1) {
+  //   url = `http://${data[0]}:${data[1]}/servers/customize_department?page=${page}`
+  // } else {
+  //   url = `http://${data[0]}:${data[1]}/servers/customize_department?name=${userOrg}&page=${page}`
+  // }
+  axios.get(`http://${data[0]}:${data[1]}/servers/customize_department?page=${page}`)
     .then((res) => {
       if (res.status === 200) {
         obj.$store.commit('SYSTEM_GET_DEPARTMENTS', res.data)
