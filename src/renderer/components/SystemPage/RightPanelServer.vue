@@ -9,7 +9,8 @@
           <td>{{data.port}}</td>
           <td>{{data.connect}}</td>
           <td>
-            <a href="#" v-on:click="connect(data, index)">连接</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="#" v-on:click="connect(data, index)" v-if="data.connect !== '连接成功'">连接</a>
+            <span v-if="data.connect !== '连接成功'">&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <a href="#" v-on:click="setFirst(data, index)" v-if="data.setting !== '1'">设为默认</a>
           </td>
         </tr>
