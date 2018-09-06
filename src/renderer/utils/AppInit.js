@@ -64,22 +64,13 @@ export default function appInit() {
   };
 
   // 服务器配置文件
-  global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }
+  global.hitbdata.server = [{ name: '远程测试服务器', host: 'www.jiankanglaifu.com', port: '80', setting: '' }]
   db.server.count({}, (err, res) => {
     if (res === 0) {
-      global.hitbdata.server = { 远程测试服务器: ['www.jiankanglaifu.com', '80', ''] }
       db.server.insert({ name: '远程测试服务器', host: 'www.jiankanglaifu.com', port: '80', setting: '' })
     } else {
-      db.server.find({}, (err, res) => {
-        const t = {}
-        res.forEach((x) => {
-          if (t[x.name]) {
-            t[x.name].push([x.host, x.port, x.setting])
-          } else {
-            t[x.name] = [[x.host, x.port, x.setting]]
-          }
-        })
-        global.hitbdata.server = t;
+      db.server.find({}).sort({ setting: -1 }, (err, res) => {
+        global.hitbdata.server = res;
       })
     }
   })

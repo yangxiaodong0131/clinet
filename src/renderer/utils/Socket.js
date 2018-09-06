@@ -15,7 +15,8 @@ export function socketConnect(obj, data, user) {
       username = user.username
       obj.$store.commit('SET_NOTICE', '远程服务用户登录成功')
       obj.$store.commit('EDIT_SET_RIGHT_PANEL', 'server')
-      obj.$store.commit('SYSTEM_SET_SERVER', ['', data[0], data[1]])
+      obj.$store.commit('SYSTEM_SET_SERVER', [data[0], data[1]])
+      obj.$store.commit('SYSTEM_SET_SERVER_STATUS', '连接成功')
       obj.$store.commit('SYSTEM_SET_CONNECT_INFO', true)
     })
     .receive('error', (err) => {
@@ -28,7 +29,7 @@ export function socketConnect(obj, data, user) {
   channel2.on('用户信息', (res) => {
     if (obj.$store.state.System.user.login === false) {
       obj.$store.commit('SYSTEM_SET_USER', ['用户登录成功', res.user])
-      obj.$store.commit('SYSTEM_SET_SERVER', ['', data[0], data[1]])
+      obj.$store.commit('SYSTEM_SET_SERVER', [data[0], data[1]])
       obj.$store.commit('SYSTEM_SET_CONNECT_INFO', true)
     }
   })

@@ -98,6 +98,9 @@ function find(obj, col, data, type, skip, limit, newData) {
         obj.$store.commit('STAT_SET_TABLE', res);
         count(obj, col, data, 'statCount', limit)
         break;
+      case 'serverConfig':
+        obj.$store.commit('SYSTEM_SET_SERVERS', res)
+        break;
       default:
         console.log(res);
         break;
@@ -119,9 +122,6 @@ function findOne(obj, col, data, type) {
 }
 
 function update(obj, col, data, newData) {
-  obj.db[col].find(data, (err, res) => {
-    console.log(res);
-  })
   obj.db[col].update(data, { $set: newData }, (err, res) => {
     console.log(res)
   })
@@ -154,6 +154,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'statFiles': find(obj, col, data, type, skip, limit, newData); break
         case 'statFile': find(obj, col, data, type, skip, limit, newData); break
         case 'downloadStat': insert(obj, col, data, type, newData); break
+        case 'serverConfig': find(obj, col, data, type, skip, limit, newData); break
         case 'serach':
           if (newData.header.length > 0) {
             type = newData.tableType

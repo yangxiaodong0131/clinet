@@ -53,6 +53,7 @@
   // import { open } from '../../utils/BlockAccount'
   import loadFile from '../../utils/LoadFile';
   import statCda from '../../utils/StatCda';
+  // import dataDB from '../../utils/dataDB';
   export default {
     data() {
       return {
@@ -141,7 +142,7 @@
         statCda(this)
       },
       getServers: function () {
-        loadFile(this, 'hitb_server.csv', 'system')
+        // dataDB(this, 'local', 'server', {}, 'serverConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'getServers');
         this.$store.commit('SET_NOTICE', '远程服务器列表');
       },

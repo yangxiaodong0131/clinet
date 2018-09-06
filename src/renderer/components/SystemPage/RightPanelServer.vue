@@ -2,8 +2,16 @@
   <div>
     <div v-if="this.toolbar === 'getServers'" id="system-server-port">
       <table>
-        <tr v-for="(data, index) in file" v-bind:key='index' v-on:click="connect(data, index)" v-bind:class="{'table-danger':flag == index && index !== 0}" class="server-rightpanel-tr" v-bind:id="'system-td-tr'+index">
-          <td v-for="(field, index) in data" v-bind:key='index'>{{data[index]}}</td>
+        <tr><td>服务器名称</td><td>地址</td><td>端口</td><td>连接状态</td><td>操作</td></tr>
+        <tr v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-danger':flag == index}" class="server-rightpanel-tr" v-bind:id="'system-td-tr'+index">
+          <td>{{data.name}}</td>
+          <td>{{data.host}}</td>
+          <td>{{data.port}}</td>
+          <td>{{data.connect}}</td>
+          <td>
+            <a href="#" v-on:click="connect(data, index)">连接</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="#" v-on:click="setFirst(data, index)" v-if="index !== 0">设为默认</a>
+          </td>
         </tr>
       </table>
     </div>
@@ -73,6 +81,7 @@
   import CreateDepartments from './RightPanelServer/CreateDepartments';
   import GetPersons from './RightPanelServer/GetPersons';
   import { sConnect } from '../../utils/Server'
+  import dataDB from '../../utils/dataDB';
   export default {
     components: { GetUsers, GetOrgs, CreateOrgs, CreateDepartments, GetPersons, LoginRegister },
     data() {
@@ -90,14 +99,10 @@
     computed: {
       file: {
         get() {
-          const f = []
-          let fileLen = this.$store.state.System.file.length;
+          let f = []
           switch (this.$store.state.System.toolbar) {
             case 'getServers':
-              if (fileLen > 99) { fileLen = 99 }
-              for (let i = 0; i < fileLen; i += 1) {
-                f.push(this.$store.state.System.file[i].split(','))
-              }
+              f = this.$store.state.System.servers
               break;
             case 'getUsers':
               break;
@@ -131,16 +136,26 @@
     },
     methods: {
       connect: function (data, index) {
+        data = [data.host, data.port]
         this.flag = index
         this.$store.commit('SYSTEM_SET_SERVER', data)
-        if (this.toolbar === 'getServers' && index !== 0) {
-          sConnect(this, [data[1], data[2]], index)
+        if (this.toolbar === 'getServers') {
+          sConnect(this, data, index)
         }
       },
-      // updateUser: function () {
-      //   const b = { org: this.upUserInfo.org, password: this.upUserInfo.password }
-      //   this.$store.commit('SYSTEM_UPDATE_USER', b)
-      // },
+      setFirst: function (data, index) {
+        this.file.forEach((x, i) => {
+          let setting = ''
+          if (i === index) {
+            setting = '1'
+          } else {
+            setting = ''
+          }
+          const id = '_id'
+          dataDB(this, 'local', 'server', { _id: x[id] }, 'update', { setting: setting })
+        })
+        dataDB(this, 'local', 'server', {}, 'serverConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
+      },
     },
   };
 </script>

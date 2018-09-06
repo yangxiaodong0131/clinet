@@ -1,3 +1,4 @@
+import { offline } from './Socket'
 const axios = require('axios');
 const qs = require('qs');
 // 正则表达式
@@ -9,7 +10,6 @@ const ChartBar = require('./ChartBar');
 const ChartLine = require('./ChartLine');
 const ChartPie = require('./ChartPie');
 const ChartData = require('./ChartData');
-
 //  测试连接服务器
 export function sConnect(obj, data, index) {
   axios({
@@ -20,19 +20,24 @@ export function sConnect(obj, data, index) {
   }).then((res) => {
     if (res.status === 200) {
       if (res.data.success) {
-        obj.$store.commit('SYSTEM_SET_SERVER_STATUS', [index, '连接成功'])
+        console.log('sss');
+        if (obj.$store.state.System.user.username !== '') {
+          offline(obj, obj.$store.state.System.user.username)
+        }
+        obj.$store.commit('SYSTEM_SET_SERVER_INDEX', index)
+        obj.$store.commit('SYSTEM_SET_SERVER_STATUS', '连接成功')
         obj.$store.commit('SET_NOTICE', '连接成功')
       } else {
-        obj.$store.commit('SYSTEM_SET_SERVER_STATUS', [index, '连接失败'])
+        obj.$store.commit('SYSTEM_SET_SERVER_STATUS', '连接失败')
         obj.$store.commit('SET_NOTICE', '连接失败')
       }
     } else {
-      obj.$store.commit('SYSTEM_SET_SERVER_STATUS', [index, '连接失败'])
+      obj.$store.commit('SYSTEM_SET_SERVER_STATUS', '连接失败')
       obj.$store.commit('SET_NOTICE', '连接失败')
     }
   }).catch((err) => {
     console.log(err)
-    obj.$store.commit('SYSTEM_SET_SERVER_STATUS', [index, '连接失败'])
+    obj.$store.commit('SYSTEM_SET_SERVER_STATUS', '连接失败')
     obj.$store.commit('SET_NOTICE', '连接失败')
   })
 }

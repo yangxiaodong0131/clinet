@@ -81,8 +81,8 @@ const state = {
   targetDimension: [],
   serverStat: { wt4: [], index: [], dimension: [] },
   serverTable: '',
-
-
+  servers: [],
+  serverIndex: 0
 };
 
 const mutations = {
@@ -96,19 +96,32 @@ const mutations = {
     state.toolbar = toolbar;
   },
   SYSTEM_SET_SERVER(state, m) {
-    state.server = m[1];
-    state.port = m[2];
+    state.server = m[0];
+    state.port = m[1];
+  },
+  SYSTEM_SET_SERVERS(state, m) {
+    state.servers = m
   },
   SYSTEM_SET_SERVER_STATUS(state, m) {
-    const a = state.file[m[0]]
-    const b = a.split(',')
-    b.splice(3, 1, m[1])
-    state.file.splice(m[0], 1, b.join(','))
-    if (m[1] === '连接成功') {
+    if (m === '连接成功') {
       state.connectInfo = true
     } else {
       state.connectInfo = false
     }
+    const servers = []
+    state.servers.forEach((x, i) => {
+      if (i === state.serverIndex) {
+        x.connect = m
+      } else {
+        x.connect = ''
+      }
+      servers.push(x)
+    })
+    state.servers = servers
+  },
+  SYSTEM_SET_SERVER_INDEX(state, m) {
+    state.user = { username: '', org: '', type: 2, login: false }
+    state.serverIndex = m
   },
   SYSTEM_SET_CONNECT_INFO(state, r) {
     state.connectInfo = r
@@ -413,6 +426,8 @@ const actions = {
     commit('SYSTEM_SET_SERVER');
     commit('SYSTEM_SET_SERVER_STATUS');
     // 用户设置模块
+    commit('SYSTEM_SET_SERVERS');
+    commit('SYSTEM_SET_SERVER_INDEX');
     commit('SYSTEM_LOGIN_USER');
     commit('SYSTEM_REGISTER_USER');
     commit('SYSTEM_SET_USER');
