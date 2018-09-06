@@ -223,7 +223,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             getStatFiles(obj, serverConfig, newData.fileType, newData.username, newData.tableType)
             break;
           case 'statFile':
-            getStat(obj, serverConfig, { tableName: newData.fileType, page: page + 1, username: newData.username, dimension: newData.dimension, sort: newData.sort }, newData.tableType)
+            getStat(obj, serverConfig, { tableName: newData.fileType, page: page + 1, username: newData.username, dimension: newData.dimension, sort: newData.sort }, newData.tableType, serverType)
             break;
           case 'downloadStat':
             downloadStat(obj, serverConfig, { tableName: newData.fileType, page: 1, username: newData.username, dimension: newData.dimension, sort: newData.sort }, 'stat')
