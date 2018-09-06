@@ -28,8 +28,6 @@ export function getLibraryFiles(obj, data, serverType = 'server', show = null) {
 }
 
 export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensionServer, type1, serverType = 'server', sort) {
-  // 去除文件名中的.csv
-  const type = tableName.split('.csv')[0]
   let url = ''
   if (dimensionType !== null) {
     const keys = Object.keys(dimensionServer)
@@ -53,7 +51,7 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   }
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&username=${username}&tab_type=${type}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
+    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&username=${username}&tab_type=${tableName}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -89,12 +87,9 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
 }
 // this, url, tableName, type, username, serverType
 export function getList(obj, url, tableName, type, username, serverType = 'server') {
-  let file = tableName
-  // 去除文件名中的.csv
-  file = tableName.split('.csv')[0]
   axios({
     method: 'get',
-    url: `http://${url[0]}:${url[1]}/library/rule_client?tab_type=${file}&server_type=${serverType}&type=${type}&username=${username}`,
+    url: `http://${url[0]}:${url[1]}/library/rule_client?tab_type=${tableName}&server_type=${serverType}&type=${type}&username=${username}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -112,18 +107,17 @@ export function getList(obj, url, tableName, type, username, serverType = 'serve
 
 export function downloadLibrary(obj, url, fileName) {
   const username = obj.$store.state.System.user.username
-  const filename = fileName.split('.csv')[0]
   axios({
     method: 'get',
-    url: `http://${url[0]}:${url[1]}/library/rule_down?filename=${filename}&`,
+    url: `http://${url[0]}:${url[1]}/library/rule_down?filename=${fileName}&`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
       obj.$store.commit('SET_NOTICE', '下载成功')
-      dataDB(obj, 'local', 'library', res.data.result, 'downloadLibrary', { fileName: filename }, null, null)
-      dataDB(obj, 'local', 'libraryFile', { fileName: filename, cUser: username, uUser: username, cTIme: '', uTime: '' }, 'downloadLibrary', { fileName: filename }, null, null)
-      obj.$store.commit('SET_NOTICE', `文件「${filename}」保存成功！`)
+      dataDB(obj, 'local', 'library', res.data.result, 'downloadLibrary', { fileName: fileName }, null, null)
+      dataDB(obj, 'local', 'libraryFile', { fileName: fileName, cUser: username, uUser: username, cTIme: '', uTime: '' }, 'downloadLibrary', { fileName: fileName }, null, null)
+      obj.$store.commit('SET_NOTICE', `文件「${fileName}」保存成功！`)
     } else {
       obj.$store.commit('SET_NOTICE', '下载失败')
     }
@@ -134,10 +128,9 @@ export function downloadLibrary(obj, url, fileName) {
 }
 
 export function getLibrarySerach(obj, url, fileName, value, servertype) {
-  const filename = fileName.split('.csv')[0]
   axios({
     method: 'get',
-    url: `http://${url[0]}:${url[1]}/library/rule_search?filename=${filename}&value=${value}&servertype=${servertype}`,
+    url: `http://${url[0]}:${url[1]}/library/rule_search?filename=${fileName}&value=${value}&servertype=${servertype}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -160,12 +153,10 @@ export function saveLibrary(obj, data, content) {
   const pageNum = obj.$store.state.Library.libraryTableInfo.page;
   const serverType = 'server'
   const sort = obj.$store.state.Library.serverSort;
-  // 去除文件名中的.csv
-  const type = tableName.split('.csv')[0]
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/library/client_save`,
-    data: qs.stringify({ data: JSON.stringify(content), username: user.username, tab_type: type, rows: 30, page: pageNum, order: sort.field, order_type: sort.type, server_type: serverType }),
+    data: qs.stringify({ data: JSON.stringify(content), username: user.username, tab_type: tableName, rows: 30, page: pageNum, order: sort.field, order_type: sort.type, server_type: serverType }),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -186,13 +177,11 @@ export function saveLibraryPage(obj, data, content, header, table, dataIndex, ty
   const pageNum = obj.$store.state.Library.libraryTableInfo.page;
   const serverType = 'server'
   const sort = obj.$store.state.Library.serverSort;
-  // 去除文件名中的.csv
-  const tabType = tableName.split('.csv')[0]
   obj.$store.commit('LIBRARY_SET_SERVER_TABLE', []);
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/library/client_save2`,
-    data: qs.stringify({ data: JSON.stringify(content), header: JSON.stringify(header), page: pageNum, username: user.username, tab_type: tabType, rows: 30, order: sort.field, order_type: sort.type, server_type: serverType, type: type }),
+    data: qs.stringify({ data: JSON.stringify(content), header: JSON.stringify(header), page: pageNum, username: user.username, tab_type: tableName, rows: 30, order: sort.field, order_type: sort.type, server_type: serverType, type: type }),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
