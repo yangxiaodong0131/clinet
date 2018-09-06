@@ -21,45 +21,6 @@ function count(obj, col, data, type, limit) {
     obj.$store.commit('SET_NOTICE', `当前1页,共${countPage}页`)
   })
 }
-function insert(obj, col, data, type, newData) {
-  let query = null
-  let fileName = null
-  switch (type) {
-    case 'downloadLibrary':
-      fileName = newData.fileName
-      query = obj.db.libraryFile.count(newData)
-      break;
-    case 'downloadStat':
-      fileName = newData.fileName
-      query = obj.db.statFile.count(newData)
-      break;
-    case 'createCda':
-      fileName = data.fileName
-      query = obj.db.statFile.count({ fileName: data.fileName })
-      break;
-    default:
-      break;
-  }
-  if (query === null) {
-    obj.db[col].insert(data, () => {
-      switch (type) {
-        case 'createCda':
-          obj.$store.commit('SET_NOTICE', `文件「${fileName}」保存成功！`)
-          break;
-        default:
-          break;
-      }
-    })
-  } else {
-    query.exec((err, res) => {
-      if (res === 0) {
-        obj.db[col].insert(data)
-      } else {
-        obj.$store.commit('SET_NOTICE', `文件「${fileName}」保存失败,文件已经存在！`)
-      }
-    })
-  }
-}
 
 function find(obj, col, data, type, skip, limit, newData) {
   let query = obj.db[col].find(data)
@@ -106,6 +67,49 @@ function find(obj, col, data, type, skip, limit, newData) {
         break;
     }
   })
+}
+function insert(obj, col, data, type, newData) {
+  let query = null
+  let fileName = null
+  switch (type) {
+    case 'downloadLibrary':
+      fileName = newData.fileName
+      query = obj.db.libraryFile.count(newData)
+      break;
+    case 'downloadStat':
+      fileName = newData.fileName
+      query = obj.db.statFile.count(newData)
+      break;
+    case 'createCda':
+      fileName = data.fileName
+      query = obj.db.statFile.count({ fileName: data.fileName })
+      break;
+    default:
+      break;
+  }
+  if (query === null) {
+    obj.db[col].insert(data, () => {
+      switch (type) {
+        case 'createCda':
+          obj.$store.commit('SET_NOTICE', `文件「${fileName}」保存成功！`)
+          break;
+        case 'addServerConfig':
+          find(obj, 'server', {}, 'serverConfig', null, null, newData)
+          obj.$store.commit('SYSTEM_SET_TOOLBAR', 'getServers')
+          break;
+        default:
+          break;
+      }
+    })
+  } else {
+    query.exec((err, res) => {
+      if (res === 0) {
+        obj.db[col].insert(data)
+      } else {
+        obj.$store.commit('SET_NOTICE', `文件「${fileName}」保存失败,文件已经存在！`)
+      }
+    })
+  }
 }
 
 function findOne(obj, col, data, type) {
@@ -155,6 +159,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'statFile': find(obj, col, data, type, skip, limit, newData); break
         case 'downloadStat': insert(obj, col, data, type, newData); break
         case 'serverConfig': find(obj, col, data, type, skip, limit, newData); break
+        case 'addServerConfig': insert(obj, col, data, type, newData); break
         case 'serach':
           if (newData.header.length > 0) {
             type = newData.tableType

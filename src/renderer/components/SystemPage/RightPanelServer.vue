@@ -10,10 +10,31 @@
           <td>{{data.connect}}</td>
           <td>
             <a href="#" v-on:click="connect(data, index)">连接</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="#" v-on:click="setFirst(data, index)" v-if="index !== 0">设为默认</a>
+            <a href="#" v-on:click="setFirst(data, index)" v-if="data.setting !== '1'">设为默认</a>
           </td>
         </tr>
       </table>
+      <button id = "server-server-add" v-on:click="addServer()">添加配置</button>
+    </div>
+    <div v-if="this.toolbar === 'sddServers'" id="system-server-sdd">
+      <form>
+        <div class="form-group">
+          <label>服务器名称</label>
+          <input type="text" class="form-control" v-model="serverInput.name">
+          <small class="form-text text-muted"></small>
+        </div>
+        <div class="form-group">
+          <label>地址</label>
+          <input type="text" class="form-control" v-model="serverInput.host">
+          <small class="form-text text-muted"></small>
+        </div>
+        <div class="form-group">
+          <label>端口</label>
+          <input type="text" class="form-control" v-model="serverInput.port">
+          <small class="form-text text-muted"></small>
+        </div>
+      </form>
+      <button id = "server-server-submit-add" v-on:click="addServerSubmit()">确定</button>
     </div>
     <!-- 连接服务器状态 -->
     <!-- <div v-if="this.$store.state.System.connectInfo == true" > -->
@@ -90,7 +111,7 @@
         textPower: '',
         confirmPassword: '',
         userInfo: 'info',
-
+        serverInput: { name: '', host: '', port: '', setting: '' }
       }
     },
     created: function () {
@@ -155,6 +176,16 @@
           dataDB(this, 'local', 'server', { _id: x[id] }, 'update', { setting: setting })
         })
         dataDB(this, 'local', 'server', {}, 'serverConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
+      },
+      addServer: function () {
+        this.$store.commit('SYSTEM_SET_TOOLBAR', 'sddServers')
+      },
+      addServerSubmit: function () {
+        if (this.serverInput.name !== '' && this.serverInput.host !== '' && this.serverInput.port !== '') {
+          dataDB(this, 'local', 'server', this.serverInput, 'addServerConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
+        } else {
+          this.$store.commit('SET_NOTICE', '请填写完整后再点击确认按钮')
+        }
       },
     },
   };
