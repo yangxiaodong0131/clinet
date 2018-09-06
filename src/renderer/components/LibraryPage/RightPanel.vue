@@ -1,6 +1,5 @@
 <template>
   <div>
-    <right-bar></right-bar>
     <div v-bind:style="{ height: height + 'px', overflow: 'auto' }">
       <table>
         <tr v-for="(x, index) in xs"  v-if="index === 0" v-on:click="onClick(x, index)" v-bind:key="index" class="library-rightpanel">
@@ -32,10 +31,9 @@
 </template>
 
 <script>
-  import RightBar from './RightBar';
   import dataDB from '../../utils/dataDB';
   export default {
-    components: { RightBar },
+    components: { },
     data() {
       return {
         // flag: null
