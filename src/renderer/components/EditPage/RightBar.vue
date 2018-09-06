@@ -35,7 +35,7 @@
             {{dataType}}
           </a>
           <div class="dropdown-menu" id="edit-rightbar-sel" aria-labelledby="edit-rightbar-choice">
-            <a class="dropdown-item" href="#" v-on:click="localData()">本地-文件</a>
+            <a class="dropdown-item" href="#" v-on:click="localData()">本地-文档</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#" v-on:click="serverData('远程-用户')">远程-用户</a>
             <a class="dropdown-item" href="#" v-on:click="serverData('远程-文档')">远程-文档</a>
@@ -115,7 +115,7 @@
         this.$store.commit('EDIT_SET_NAV_TYPE', n);
         if (n === '病案文档') {
           switch (this.$store.state.Edit.dataType) {
-            case '本地-文件':
+            case '本地-文档':
               this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
               this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
               this.localData()
@@ -140,7 +140,7 @@
         } else if (n === '数据分析') {
           this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
           switch (this.$store.state.Edit.dataType) {
-            case '本地-文件':
+            case '本地-文档':
               dataDB(this, 'local', 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: 'local' })
               break;
             case '远程-文档': case '远程-用户':
@@ -155,7 +155,7 @@
           }
         } else if (n === '数据字典') {
           switch (this.$store.state.Edit.dataType) {
-            case '本地-文件':
+            case '本地-文档':
               dataDB(this, 'local', 'libraryFile', null, 'libraryFiles', null)
               break;
             case '远程-文档': case '远程-用户':
@@ -171,7 +171,7 @@
         }
       },
       localData: function () {
-        this.$store.commit('EDIT_SET_DATA_TYPE', '本地-文件');
+        this.$store.commit('EDIT_SET_DATA_TYPE', '本地-文档');
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
         this.$store.commit('EDIT_SET_DOC_TYPES', ['自定义文档', '病案首页（卫统四CSV）', '入院申请', '首次病程', '病程记录', '病案首页', '门诊病案', '健康体检']);
         this.$store.commit('EDIT_SET_HELP_TYPES', ['输入框提示', '病案参考', '病案历史', '在线交流', '病案质控', '专家提示', 'DRG分析', 'HIS接口'])
