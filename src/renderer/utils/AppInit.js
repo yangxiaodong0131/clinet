@@ -67,7 +67,7 @@ export default function appInit() {
   global.hitbdata.server = [{ name: '远程测试服务器', host: 'www.jiankanglaifu.com', port: '80', setting: '' }]
   db.server.count({}, (err, res) => {
     if (res === 0) {
-      db.server.insert({ name: '远程测试服务器', host: 'www.jiankanglaifu.com', port: '80', setting: '' })
+      db.server.insert({ name: '远程测试服务器', host: 'www.jiankanglaifu.com', port: '80', setting: '1' })
     } else {
       db.server.find({}).sort({ setting: -1 }, (err, res) => {
         global.hitbdata.server = res;
