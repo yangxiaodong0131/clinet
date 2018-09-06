@@ -276,7 +276,6 @@ export function sCustom(obj, data, value, username) {
   })
 }
 export function sGetCustom(obj, data, username, tableName) {
-  console.log(tableName)
   axios({
     method: 'get',
     url: `http://${data[0]}:${data[1]}/stat/custom_select?username=${username}&tableName=${tableName}`,

@@ -392,7 +392,7 @@
           this.$store.commit('STAT_SET_CHART_IS_SHOW', 'chart');
         }
         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-        if (data.endsWith('.csv')) {
+        if (this.$store.state.Stat.serverMenu.type === '三级菜单') {
           this.$store.commit('STAT_CLEAR_SERVER_DIMENSION');
           this.$store.commit('STAT_CLEAR_SERVER_SORT');
           dataDB(this, this.$store.state.Stat.tableType, 'statFile', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
