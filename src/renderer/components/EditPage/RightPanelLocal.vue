@@ -160,15 +160,16 @@
         } else {
           tableType = 'local'
         }
-        console.log(this.$store.state.Edit.serverType)
         if (this.$store.state.Edit.rightPanel === 'server' || this.$store.state.Edit.rightPanel === 'block') {
           switch (this.$store.state.Edit.lastNav) {
             case '/edit':
-              if (this.$store.state.Edit.serverType === 'file') {
+              if (this.$store.state.Edit.serverType === 'file' && this.$store.state.Edit.navType === '病案文档') {
                 // this.$store.commit('EDIT_SET_SERVER_TYPE', 'show');
-                dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
-              } else if (this.$store.state.Edit.serverType === 'user') {
+                dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: data })
+                this.$store.commit('EDIT_SET_RIGHT_TYPE', 'doc');
+              } else if (this.$store.state.Edit.serverType === 'user' && this.$store.state.Edit.navType === '病案文档') {
                 this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
+                this.$store.commit('EDIT_SET_RIGHT_TYPE', 'doc');
                 dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
               } else if (this.$store.state.Edit.navType === '数据分析') {
                 if (this.$store.state.Stat.serverMenu.type === '三级菜单') {
@@ -179,6 +180,9 @@
                 } else {
                   dataDB(this, tableType, 'statFile', { fileType: data }, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: 'edit', dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
                 }
+              } else if (this.$store.state.Edit.navType === '数据字典') {
+                this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
+                dataDB(this, tableType, 'library', { fileType: data }, 'libraryFile', { type1: tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
               }
               break;
             default:
@@ -186,86 +190,22 @@
           }
         } else {
           const name = this.$store.state.Edit.files[index]
-          dataDB(this, 'local', 'cda', { fileName: name }, 'editFile', null)
+          switch (this.$store.state.Edit.lastNav) {
+            case '/edit':
+              if (this.$store.state.Edit.navType === '数据分析') {
+                dataDB(this, tableType, 'stat', { fileType: data }, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
+              } else if (this.$store.state.Edit.navType === '数据字典') {
+                dataDB(this, tableType, 'library', { fileType: data }, 'libraryFile', { type1: tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
+              } else {
+                this.$store.commit('EDIT_SET_RIGHT_TYPE', 'doc');
+                dataDB(this, 'local', 'cda', { fileName: name }, 'editFile', null)
+              }
+              break;
+            default:
+              break;
+          }
         }
       },
-      // loadFile: function (data, index) {
-      //   this.$store.commit('EDIT_SET_FILES_INDEX', index)
-      //   if (data.endsWith('.cda')) {
-      //     this.$store.commit('EDIT_SET_FILE_TYPE', 'cda')
-      //   } else {
-      //     this.$store.commit('EDIT_SET_FILE_TYPE', 'csv')
-      //   }
-      //   let x = 'user'
-      //   // switch (this.$store.state.Edit.lastNav) {
-      //   //   case '/stat':
-      //   //     x = 'stat'
-      //   //     break;
-      //   //   case '/library':
-      //   //     x = 'library'
-      //   //     break;
-      //   //   default:
-      //   //     break
-      //   // }
-      //   if (this.$store.state.Edit.lastNav === '/stat' || this.$store.state.Edit.navType === '数据分析') {
-      //     x = 'stat'
-      //   } else if (this.$store.state.Edit.lastNav === '/library' || this.$store.state.Edit.navType === '数据字典') {
-      //     x = 'library'
-      //   }
-      //   let tableType = ''
-      //   if (this.$store.state.Edit.dataType.includes('远程')) {
-      //     tableType = 'server'
-      //   } else {
-      //     tableType = 'block'
-      //   }
-      //   if (this.$store.state.Edit.rightPanel === 'server' || this.$store.state.Edit.rightPanel === 'block') {
-      //     switch (this.$store.state.Edit.lastNav) {
-      //       case '/edit':
-      //         if (this.$store.state.Edit.serverType === 'file') {
-      //           this.$store.commit('EDIT_SET_SERVER_TYPE', 'show');
-      //           dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
-      //         // } else if (!data.endsWith('.csv') && !data.endsWith('.cda')) {
-      //         //   getStatFiles(this, [this.$store.state.System.server, this.$store.state.System.port], data, this.$store.state.System.user.username, tableType, 'edit')
-      //         } else if (this.$store.state.Edit.serverType === 'user') {
-      //           this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
-      //           dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
-      //         } else if (x === 'stat') {
-      //           this.$store.commit('STAT_CLEAR_SERVER_SORT');
-      //           getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: data, page: 1, username: this.$store.state.System.user.username, dimension: this.$store.state.Stat.dimension, order: this.$store.state.Stat.serverSort }, 'edit', 'server')
-      //         } else if (x === 'library') {
-      //           this.$store.commit('LIBRARY_CLEAR_SERVER_SORT');
-      //           getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], data, 1, null, null, 'library', tableType, this.$store.state.Library.serverSort)
-      //         } else if (data.includes('@')) {
-      //           dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFile', { fileName: data })
-      //         } else {
-      //           dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
-      //         }
-      //         break;
-      //       case '/library':
-      //         this.$store.commit('LIBRARY_SET_TABLE_PAGE', 1);
-      //         this.$store.commit('LIBRARY_CLEAR_SERVER_SORT');
-      //         getLibrary(this, [this.$store.state.System.server, this.$store.state.System.port], data, 1, null, null, 'edit', this.$store.state.Library.tableType, this.$store.state.Library.serverSort)
-      //         break;
-      //       case '/stat':
-      //         this.$store.commit('STAT_SET_TABLE_PAGE', 1)
-      //         getStat(this, [this.$store.state.System.server, this.$store.state.System.port], { tableName: this.$store.state.Stat.serverTable.tableName, page: this.$store.state.Stat.tablePage, username: this.$store.state.System.user.username, type: this.$store.state.Stat.dimensionType, value: this.$store.state.Stat.dimensionServer }, 'edit', 'server')
-      //         break;
-      //       default:
-      //         break;
-      //     }
-      //     if (this.$store.state.Edit.rightPanels.includes('编辑病案')) {
-      //       this.$store.commit('EDIT_DELETE_RIGHT_PANELS', '编辑病案');
-      //     }
-      //   } else {
-      //     // if (this.$store.state.Edit.rightPanels.includes('编辑病案')) {
-      //     //   this.$store.commit('EDIT_DELETE_RIGHT_PANELS', '编辑病案');
-      //     // }
-      //     // this.$store.commit('EDIT_SET_LOAD_FILENAME', data);
-      //     // loadFile(this, data, x, 'edit')
-      //     const name = this.$store.state.Edit.files[index]
-      //     dataDB(this, 'local', 'cda', { fileName: name }, 'editFile', null)
-      //   }
-      // },
       close(data) {
         this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);
       },
@@ -280,6 +220,7 @@
         this.$store.commit('EDIT_SET_DOC_STATE');
       },
       page: function (n) {
+        console.log(n)
         editPage(this, n)
       },
       delDoc: function (index) {
