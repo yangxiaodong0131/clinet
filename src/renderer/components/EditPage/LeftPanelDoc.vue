@@ -3,31 +3,14 @@
     <div class="card">
       <table><tr class="table-warning">当前病案状态：{{docState}}</tr></table>
       <div class="card-body" v-for="(section, key) of doc" v-bind:key='key'>
-        <!-- <div v-if="lastNav === '/library'">
-          <table>
-            <tr>
-              <td class="table-info" v-for="(item, index) in libraryHead" v-bind:key='index'>
-                <span v-if="item === 'ID'" class="disabled">{{item}}</span>
-                <span v-if="item !== 'ID'">{{item}}</span>
-              </td>
-            </tr>
-            <td v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item)">
-              <span class="disabled" v-if="index === idIndex" >{{item[1]}}</span>
-              <span v-if="index !== idIndex">{{item[1]}}</span>
-            </td>
-          </table>
-        </div> -->
-        <!-- 个人信息 -->
-        <div v-if="lastNav === '/stat' || lastNav === '/system' || lastNav === '/library'">
-          <table>
-            <tr class="table-warning"><td>{{key}}</td><td></td></tr>
-            <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item)">
-              <td><b>{{ item[1] }}</b></td>
-              <td>{{ item[2] }}{{ item[3] }}{{ item[4] }}{{ item[5] }}{{ item[6] }}{{ item[7] }}{{ item[8] }}</td>
+        <div v-if="lastNav === '/stat' || lastNav === '/system' || lastNav === '/library' || navType === '数据分析' || navType === '数据字典'">
+          <table >
+            <tr v-for="(item, index) of section" v-bind:key='index'>
+              <td v-for="(item1, index1) of item" v-bind:key='index1' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item)">{{item1}}</td>
             </tr>
           </table>
         </div>
-        <div v-if="lastNav === '/edit'">
+        <div v-if="lastNav === '/edit' && navType === '病案文档'">
           <table v-if="key.split(',')[1] === '个人信息'">
             <tr class="table-warning" v-bind:class="{'table-danger':flag == key.split(',')[0]}" v-on:click="changeIndex(key, '', true)"><td colspan="4">{{key.split(',')[1]}}</td></tr>
             <tr rowspan="2" v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item, key)">
@@ -129,9 +112,17 @@
       },
       doc: {
         get() {
-          const doc = this.$store.state.Edit.doc
+          let doc = []
+          let doc1 = null
           const systemSection = this.$store.state.System.systemSection
-          const doc1 = editDoc(doc, systemSection)
+          if (this.$store.state.Edit.navType === '数据分析') {
+            doc = this.$store.state.Stat.statTable.data
+          } else if (this.$store.state.Edit.navType === '数据字典') {
+            doc = this.$store.state.Library.libraryTable.data
+          } else {
+            doc = this.$store.state.Edit.doc
+          }
+          doc1 = editDoc(doc, systemSection)
           return doc1
         }
       },
@@ -156,7 +147,12 @@
         get() {
           return this.$store.state.Edit.idIndex - 2
         }
-      }
+      },
+      navType: {
+        get() {
+          return this.$store.state.Edit.navType
+        }
+      },
     },
     methods: {
       changeIndex: function (v, section, isSect = false) {
