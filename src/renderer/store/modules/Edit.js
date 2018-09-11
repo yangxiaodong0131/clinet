@@ -118,7 +118,6 @@ const mutations = {
     state.serverCdh = m;
   },
   EDIT_LOAD_FILES(state, m) {
-    console.log(m)
     state.files = m
     // const files = fs.readdirSync(global.hitbdata.path.user).filter(x => x.endsWith('.cda'))
     // state.files = files;
@@ -174,6 +173,7 @@ const mutations = {
   },
   EDIT_SET_FILE_INDEX(state, message) {
     state.fileIndex = message;
+    console.log(state.file)
     state.fileName = state.file[message][0]
   },
   EDIT_SET_FILE_TYPE(state, message) {

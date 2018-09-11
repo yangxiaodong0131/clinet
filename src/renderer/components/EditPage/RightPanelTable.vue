@@ -91,9 +91,9 @@
           let file = []
           const navType = this.$store.state.Edit.navType
           if (navType === '数据分析') {
-            file = this.$store.state.Stat.file
-          } else if (navType === '数据分析') {
-            file = this.$store.state.Library.file
+            file = this.$store.state.Stat.files
+          } else if (navType === '数据字典') {
+            file = this.$store.state.Library.files
           } else {
             file = this.$store.state.Edit.file
           }
@@ -137,15 +137,8 @@
         this.$store.commit('EDIT_SET_BAR_VALUE', data[index]);
       },
       delDoc: function (index) {
-        // const value = this.$store.state.Edit.file[index]
         const fileName = this.$store.state.Edit.file[index][0]
         dataDB(this, 'local', 'cda', { fileName }, 'remove', { fileName })
-        // this.$store.commit('EDIT_DELETE_DOC', index);
-        // this.$store.commit('EDIT_DELETE_DOC_SUMMARY', index);
-        // this.$store.commit('SET_NOTICE', '删除成功');
-        // this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-        // this.$store.commit('EDIT_SET_DELETE_LOCAL', index[0])
-        // this.$store.commit('EDIT_DELETE_FILE', index[0])
       },
       uploadDoc: function (data, index) {
         const currentdate = getDate()
@@ -170,8 +163,31 @@
         this.$store.commit('EDIT_SET_DOC_STATE');
       },
       loadDoc: function (index, name) {
-        this.$store.commit('EDIT_SET_FILE_INDEX', index);
-        dataDB(this, 'local', 'cda', { fileName: name[0] }, 'editFile', null)
+        const navType = this.$store.state.Edit.navType
+        let tableType = 'local'
+        if (this.$store.state.Edit.dataType.includes('远程')) {
+          tableType = 'server'
+        } else if (this.$store.state.Edit.dataType.includes('区块链')) {
+          tableType = 'block'
+        } else {
+          tableType = 'local'
+        }
+        switch (navType) {
+          case '数据分析':
+            dataDB(this, tableType, 'stat', { fileType: name[0] }, 'statFile', { fileType: name[0], username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
+            break;
+          case '数据字典':
+            dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: name[0] }, 'libraryFile', { type1: this.$store.state.Library.tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
+            break;
+          default:
+            this.$store.commit('EDIT_SET_FILE_INDEX', index);
+            if (tableType === 'local') {
+              dataDB(this, 'local', 'cda', { fileName: name[0] }, 'editFile', null)
+            } else {
+              dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
+            }
+            break;
+        }
       },
       close(data) {
         this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);

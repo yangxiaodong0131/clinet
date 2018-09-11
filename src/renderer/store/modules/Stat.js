@@ -42,6 +42,7 @@ const state = {
 const mutations = {
   STAT_LOAD_FILES(state, value) {
     state.files = value
+    console.log(state.files)
   },
   STAT_SET_TABLE(state, opt) {
     if (state.tableType === 'local') {
