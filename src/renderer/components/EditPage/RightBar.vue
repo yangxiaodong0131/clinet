@@ -189,7 +189,7 @@
             break;
           default:
             this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editFiles', null, null)
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
         }
         this.$store.commit('SET_NOTICE', '读取本地文件');
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');

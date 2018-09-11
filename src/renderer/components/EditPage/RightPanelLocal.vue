@@ -12,8 +12,9 @@
           </th>
         </tr>
         <tr class="edit-rightpanellocal-tr" v-for="(data, index) in xs" v-bind:key='index' v-bind:id="'edit-rightpanellocal-tr'+index" v-bind:class="{'table-danger':flag == index}">
-          <td v-on:click="loadFile(data, index)">{{index + 1}}</td>
-          <td v-on:click="loadFile(data, index)">{{data}}</td>
+          <td v-on:click="loadFile(data[0], index)">{{index + 1}}</td>
+          <td v-on:click="loadFile(data[0], index)">{{data[0]}}</td>
+          <td v-on:click="loadFile(data[0], index)">{{data[1]}}</td>
           <!-- <td v-if ="title === '远程文件的用户列表' && data.split('').includes('-')">
             <a href="#" v-on:click="blockShare(data)">发布</a>
           </td>
@@ -189,7 +190,8 @@
               break;
           }
         } else {
-          const name = this.$store.state.Edit.files[index]
+          console.log(data)
+          // const name = this.$store.state.Edit.files[index]
           switch (this.$store.state.Edit.lastNav) {
             case '/edit':
               if (this.$store.state.Edit.navType === '数据分析') {
@@ -197,8 +199,8 @@
               } else if (this.$store.state.Edit.navType === '数据字典') {
                 dataDB(this, tableType, 'library', { fileType: data }, 'libraryFile', { type1: tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
               } else {
-                this.$store.commit('EDIT_SET_RIGHT_TYPE', 'doc');
-                dataDB(this, 'local', 'cda', { fileName: name }, 'editFile', null)
+                this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
+                dataDB(this, 'local', 'cda', { docType: data }, 'editFiles', null)
               }
               break;
             default:

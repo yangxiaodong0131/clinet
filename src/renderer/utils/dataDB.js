@@ -37,9 +37,32 @@ function find(obj, col, data, type, skip, limit, newData) {
     query = query.skip(skip).limit(limit)
   }
   query.exec((err, res) => {
+    const obj1 = {}
     switch (type) {
+      case 'editTypes':
+        if (res) {
+          const type = []
+          res.forEach((x) => {
+            if (x.docType === undefined) {
+              x = '未定义'
+            } else {
+              x = x.docType
+            }
+            if (obj1[x]) {
+              obj1[x] += 1
+            } else {
+              obj1[x] = 1
+            }
+          })
+          const keys = Object.keys(obj1)
+          keys.forEach((x) => {
+            type.push([x, obj1[x]])
+          })
+          obj.$store.commit('EDIT_LOAD_FILES', type)
+        }
+        break;
       case 'editFiles':
-        obj.$store.commit('EDIT_LOAD_FILES', res.map(x => x.fileName));
+        obj.$store.commit('EDIT_LOAD_FILE', res.map(x => [x.fileName, x.docType]));
         break;
       case 'libraryFiles':
         obj.$store.commit('LIBRARY_LOAD_FILES', res.map(x => x.fileName));
@@ -82,7 +105,7 @@ function insert(obj, col, data, type, newData) {
       break;
     case 'createCda':
       fileName = data.fileName
-      query = obj.db.statFile.count({ fileName: data.fileName })
+      // query = obj.db.statFile.count({ fileName: data.fileName })
       break;
     default:
       break;
@@ -110,6 +133,7 @@ function insert(obj, col, data, type, newData) {
       }
     })
   }
+  find(obj, 'cda', { fileType: 'cda' }, 'editFiles', null, null, newData)
 }
 
 function findOne(obj, col, data, type) {
@@ -132,7 +156,10 @@ function update(obj, col, data, newData) {
 }
 
 function remove(obj, col, data, newData) {
-  obj.db[col].remove(data, newData, (err, res) => {
+  console.log(data)
+  console.log(newData)
+  console.log(col)
+  obj.db[col].remove(data, (err, res) => {
     console.log(res)
   })
 }
@@ -149,6 +176,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'update': update(obj, col, data, newData, type); break
         case 'remove': remove(obj, col, data, newData); break
         case 'editFiles': find(obj, col, data, type, skip, limit, newData); break
+        case 'editTypes': find(obj, col, data, type, skip, limit, newData); break
         case 'editFile': findOne(obj, col, data, type); break
         case 'createCda': insert(obj, col, data, type); break
         case 'saveCda': update(obj, col, data, newData, type); break
