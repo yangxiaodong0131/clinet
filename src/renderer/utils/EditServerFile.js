@@ -1,6 +1,6 @@
 const axios = require('axios');
 const qs = require('qs');
-export function getEditFiles(obj, data, type, username, serverType = 'server') {
+export function getEditTypes(obj, data, type, username, serverType = 'server') {
   let url = ''
   if (type === 'user') {
     url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
@@ -14,18 +14,52 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      obj.$store.commit('EDIT_SERVER_FILES', res.data.cda)
-      const num = Math.ceil(res.data.cda.length / 20)
-      obj.$store.commit('EDIT_SET_FILES_NUM', num)
-      obj.$store.commit('EDIT_SET_FILES_OFFSET', 20)
-      obj.$store.commit('EDIT_CLEAR_FILES_PAGE')
-      obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', res.data.cda.slice(0, 20))
-      // if (type === 'user') {
-      //   console.log('===')
-      //   obj.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
-      // } else {
-      //   obj.$store.commit('EDIT_SET_SERVER_TYPE', 'show');
-      // }
+      // obj.$store.commit('EDIT_SERVER_FILES', res.data)
+      const keys = Object.keys(res.data)
+      const data = keys.map((v, i) => [keys[i], res.data[v].length])
+      console.log(data)
+      obj.$store.commit('EDIT_LOAD_FILES', data)
+      // const num = Math.ceil(res.data.cda.length / 20)
+      // obj.$store.commit('EDIT_SET_FILES_NUM', num)
+      // obj.$store.commit('EDIT_SET_FILES_OFFSET', 20)
+      // obj.$store.commit('EDIT_CLEAR_FILES_PAGE')
+      // obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', res.data.cda.slice(0, 20))
+      // obj.$store.commit('SET_NOTICE', res.data.info);
+    } else {
+      obj.$store.commit('EDIT_SERVER_FILES', [])
+    }
+  }).catch((err) => {
+    console.log(err);
+    obj.$store.commit('SET_NOTICE', '连接服务器错误')
+    obj.$store.commit('EDIT_SERVER_FILES', [])
+  })
+}
+export function getEditFiles(obj, data, type, username, serverType = 'server') {
+  console.log('===')
+  let url = ''
+  if (type === 'user') {
+    url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
+  } else {
+    url = `http://${data[0]}:${data[1]}/edit/cda_file?username=${username}&server_type=${serverType}`
+  }
+  axios({
+    method: 'get',
+    url: url,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json'
+  }).then((res) => {
+    if (res.status === 200) {
+      console.log('===')
+      console.log(res.data.cda)
+      obj.$store.commit('EDIT_LOAD_FILE', res.data.cda.map(x => [x]))
+      // const keys = Object.keys(res.data)
+      // const data = keys.map((v, i) => [keys[i], res.data[v].length])
+      // obj.$store.commit('EDIT_LOAD_FILE', data)
+      // const num = Math.ceil(res.data.cda.length / 20)
+      // obj.$store.commit('EDIT_SET_FILES_NUM', num)
+      // obj.$store.commit('EDIT_SET_FILES_OFFSET', 20)
+      // obj.$store.commit('EDIT_CLEAR_FILES_PAGE')
+      // obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', res.data.cda.slice(0, 20))
       obj.$store.commit('SET_NOTICE', res.data.info);
     } else {
       obj.$store.commit('EDIT_SERVER_FILES', [])
@@ -69,7 +103,6 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
         })
         docSummary.push(arr)
       }
-      console.log(res.data.cda)
       obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
       obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
       obj.$store.commit('EDIT_LOAD_DOC', [res.data.cda.content])

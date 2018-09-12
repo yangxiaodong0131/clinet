@@ -53,7 +53,7 @@
 </template>
 
 <script>
-  import { getEditFiles, getEdit, getDocTypes, getHelpTypes } from '../../utils/EditServerFile'
+  import { getEditFiles, getEdit } from '../../utils/EditServerFile'
   import { rightBarHelp } from '../../utils/EditOperation'
   import dataDB from '../../utils/dataDB';
   export default {
@@ -112,6 +112,7 @@
         rightBarHelp(this, n)
       },
       navBar: function (n) {
+        console.log(n)
         this.$store.commit('EDIT_SET_NAV_TYPE', n);
         if (n === '病案文档') {
           switch (this.$store.state.Edit.dataType) {
@@ -122,11 +123,11 @@
               break;
             case '远程-用户':
               this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
-              this.serverData('远程-文档')
+              this.serverData(n, '远程-文档')
               break;
             case '远程-文档':
               this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
-              this.serverData('远程-文档')
+              this.serverData(n, '远程-文档')
               break;
             case '区块链-用户':
               this.blockData('区块链-用户')
@@ -141,7 +142,7 @@
           this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
           switch (this.$store.state.Edit.dataType) {
             case '本地-文档':
-              dataDB(this, 'local', 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: 'local' })
+              dataDB(this, 'local', 'statFile', {}, 'statTypes', { fileType: '', username: this.$store.state.System.user.username, tableType: 'local' })
               break;
             case '远程-文档': case '远程-用户':
               this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
@@ -156,7 +157,8 @@
         } else if (n === '数据字典') {
           switch (this.$store.state.Edit.dataType) {
             case '本地-文档':
-              dataDB(this, 'local', 'libraryFile', null, 'libraryFiles', null)
+              // dataDB(this, 'local', 'libraryFile', null, 'libraryFiles', null)
+              dataDB(this, 'local', 'libraryFile', null, 'libraryTypes', null)
               break;
             case '远程-文档': case '远程-用户':
               this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server');
@@ -189,16 +191,16 @@
             break;
           default:
             this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editFiles', null, null)
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
         }
         this.$store.commit('SET_NOTICE', '读取本地文件');
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
       },
       serverData: function (x) {
         this.$store.commit('EDIT_SET_DATA_TYPE', x);
-        getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
-        getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
-        this.$store.commit('EDIT_SET_CHAT_TYPE', false);
+        // getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
+        // getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
+        // this.$store.commit('EDIT_SET_CHAT_TYPE', false);
         if (x === '远程-文档') {
           this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
         } else {
@@ -212,7 +214,8 @@
         } else {
           this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
           this.$store.commit('SET_NOTICE', '读取远程文件');
-          getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
+          dataDB(this, 'server', 'cda', { fileType: 'cda' }, 'editTypes', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
+          // getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
         }
       },
       blockData: function (x) {

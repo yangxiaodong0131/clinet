@@ -59,7 +59,8 @@ const state = {
   expertHint: [],
   expertSection: null,
   idIndex: null,
-  currentFiles: []
+  currentFiles: [],
+  filesName: null
 };
 
 const mutations = {
@@ -87,8 +88,8 @@ const mutations = {
     state.doc = [];
   },
   EDIT_DELETE_FILE(state, n) {
-    state.files.splice(n, 1);
-    state.file = [];
+    state.file.splice(n, 1);
+    // state.file = [];
   },
   EDIT_ADD_DOC(state, message) {
     state.docIndex = 0
@@ -168,10 +169,12 @@ const mutations = {
   },
   EDIT_SET_FILES_INDEX(state, message) {
     state.filesIndex = message;
-    state.fileName = state.files[message]
+    state.filesName = state.files[message][0]
   },
   EDIT_SET_FILE_INDEX(state, message) {
     state.fileIndex = message;
+    console.log(state.file)
+    state.fileName = state.file[message][0]
   },
   EDIT_SET_FILE_TYPE(state, message) {
     state.fileType = message;

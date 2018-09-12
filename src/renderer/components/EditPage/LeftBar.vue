@@ -150,16 +150,8 @@
           }
         }
       },
-      // saveDoc: function () {
-      //   cacheEditDoc(this)
-      // },
       save: function (data) {
         saveEditDoc(this, data)
-        if (this.$store.state.Edit.fileName === '未保存病案.cda') {
-          // this.$store.commit('EDIT_ADD_DOC', this.$store.state.Edit.doc.toString());
-          // // this.$store.commit('EDIT_ADD_DOC', [this.$store.state.Edit.fileIndex, this.$store.state.Edit.doc.toString()]);
-          // unSaveFile(this, '2018年度病案.cda', '/edit')
-        }
       },
       leftEnter(e) {
         const doc = this.$store.state.Edit.doc

@@ -28,26 +28,25 @@ export function saveEditDoc(obj, data) {
   obj.$store.commit('EDIT_SET_DOC_STATE');
   let fileName = obj.$store.state.Edit.fileName
   let doc = obj.$store.state.Edit.doc
+  const docType = obj.$store.state.Edit.docType
   doc = doc.filter(x => x !== '')
   if (!fileName) {
     fileName = getDate().replace(/[ :-]/g, '')
-    fileName = `${obj.$store.state.Edit.docType}${fileName}`
+    fileName = `${docType}${fileName}`
   }
-  console.log(fileName)
   if (data === '保存模板') {
     if (!obj.$store.state.Edit.modelName) {
       const modelName = getDate().replace(/[ :-]/g, '')
       obj.$store.commit('EDIT_SET_MODEL_NAME', modelName)
     } else if (fileName.includes('@')) {
-      dataDB(obj, 'server', 'cda', { fileType: 'modal', fileName, value: doc }, 'createCda', null)
+      dataDB(obj, 'server', 'cda', { fileType: 'modal', fileName, value: doc, docType }, 'saveCda', null)
     } else {
-      dataDB(obj, 'local', 'cda', { fileType: 'modal', fileName, value: doc }, 'createCda', null)
+      dataDB(obj, 'local', 'cda', { fileType: 'modal', fileName, value: doc, docType }, 'saveCda', null)
     }
   } else if (fileName.includes('@')) {
-    dataDB(obj, 'server', 'cda', { fileType: 'cda', fileName, value: doc }, 'createCda', { fileName, content: doc, username: obj.$store.state.System.user.username, docType: obj.$store.state.Edit.docType, mouldtype: '病案' })
+    dataDB(obj, 'server', 'cda', { fileType: 'cda', fileName, value: doc, docType }, 'saveCda', { fileName, content: doc, username: obj.$store.state.System.user.username, docType: obj.$store.state.Edit.docType, mouldtype: '病案' })
   } else {
-    dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName, value: doc }, 'createCda', null)
-    obj.$store.commit('EDIT_SET_DELETE_LOCAL', obj.$store.state.Edit.fileIndex)
+    dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName }, 'saveCda', { value: doc, docType })
   }
 }
 
@@ -66,9 +65,12 @@ export function newEditDoc(obj, n) {
       getDocContent(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username, n)
     } else if (global.hitbmodel[n] !== undefined) {
       obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
+      // const date = getDate.
       const filename = getDate().replace(/[ :-]/g, '')
+      const docType = obj.$store.state.Edit.docType
+      console.log(obj.$store.state.Edit.docType)
       obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
-      dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${filename}.cda`, value: global.hitbmodel[n] }, 'createCda', null)
+      dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType }, 'createCda', null)
     } else { obj.$store.commit('EDIT_SET_DOC'); }
   } else {
     obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
@@ -225,21 +227,4 @@ export function editPage(obj, n) {
       obj.$store.commit('EDIT_SET_FILES_OFFSET', offset - 20);
     }
   }
-}
-
-export function loadEditDoc(obj, index, type) {
-  console.log(index, type)
-  const file = obj.$store.state.Edit.file
-  const r = []
-  const h = file[index]
-  h.split(',').forEach((key) => {
-    const value = key.split(' ')
-    // r.push(`${key} ${data[i]}`)
-    if (value[1] === undefined) {
-      r.push(`${value[0]}`)
-    } else {
-      r.push(`${value[0]} ${value[1]}`)
-    }
-  });
-  obj.$store.commit('EDIT_LOAD_DOC', r)
 }

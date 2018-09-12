@@ -3,7 +3,7 @@
 // 包括cda、library、stat、system、user等等数据表
 import { getLibraryFiles, getLibrary, downloadLibrary, getLibrarySerach, saveLibraryPage } from './LibraryServerFile'
 import { getStatFiles, getStat, downloadStat } from './StatServerFile'
-import { getEditFiles, getEdit, saveEdit } from './EditServerFile'
+import { getEditFiles, getEdit, saveEdit, getEditTypes } from './EditServerFile'
 import pageSearch from './PageSearch';
 function count(obj, col, data, type, limit) {
   obj.db[col].count(data, (err, res) => {
@@ -37,12 +37,67 @@ function find(obj, col, data, type, skip, limit, newData) {
     query = query.skip(skip).limit(limit)
   }
   query.exec((err, res) => {
+    const obj1 = {}
     switch (type) {
+      case 'editTypes':
+        if (res) {
+          const type = []
+          res.forEach((x) => {
+            if (x.docType === undefined) {
+              x = '未定义'
+            } else {
+              x = x.docType
+            }
+            if (obj1[x]) {
+              obj1[x] += 1
+            } else {
+              obj1[x] = 1
+            }
+          })
+          const keys = Object.keys(obj1)
+          keys.forEach((x) => {
+            type.push([x, obj1[x]])
+          })
+          obj.$store.commit('EDIT_LOAD_FILES', type)
+        }
+        break;
       case 'editFiles':
-        obj.$store.commit('EDIT_LOAD_FILES', res.map(x => x.fileName));
+        obj.$store.commit('EDIT_LOAD_FILE', res.map(x => [x.fileName, x.docType]));
+        break;
+      case 'libraryTypes':
+        if (res) {
+          const type = []
+          res.forEach((x) => {
+            if (x.year === undefined) {
+              x = '未定义'
+            } else {
+              x = x.year
+            }
+            if (obj1[x]) {
+              obj1[x] += 1
+            } else {
+              obj1[x] = 1
+            }
+          })
+          const keys = Object.keys(obj1)
+          keys.forEach((x) => {
+            type.push([x, obj1[x]])
+          })
+          console.log(type)
+          obj.$store.commit('EDIT_LOAD_FILES', type)
+        }
+        // obj.$store.commit('EDIT_LOAD_FILE', res.map(x => [x.fileName, x.docType]));
         break;
       case 'libraryFiles':
-        obj.$store.commit('LIBRARY_LOAD_FILES', res.map(x => x.fileName));
+        obj.$store.commit('LIBRARY_LOAD_FILES', res.map((x) => {
+          let type = null
+          if (x.statType) {
+            type = x.year
+          } else {
+            type = '未定义'
+          }
+          return [x.fileName, type]
+        }));
         break;
       case 'libraryFile':
         obj.$store.commit('LIBRARY_LOAD_FILE', res);
@@ -52,8 +107,40 @@ function find(obj, col, data, type, skip, limit, newData) {
         obj.$store.commit('LIBRARY_SET_TABLE_TYPE', 'search')
         obj.$store.commit('LIBRARY_SET_SEARCH_TABLE', res)
         break;
+      case 'statTypes':
+        if (res) {
+          const type = []
+          res.forEach((x) => {
+            if (x.statType === undefined) {
+              x = '未定义'
+            } else {
+              x = x.statType
+            }
+            if (obj1[x]) {
+              obj1[x] += 1
+            } else {
+              obj1[x] = 1
+            }
+          })
+          const keys = Object.keys(obj1)
+          keys.forEach((x) => {
+            type.push([x, obj1[x]])
+          })
+          obj.$store.commit('EDIT_LOAD_FILES', type)
+        }
+        // obj.$store.commit('EDIT_LOAD_FILE', res.map(x => [x.fileName, x.docType]));
+        break;
       case 'statFiles':
-        obj.$store.commit('STAT_LOAD_FILES', res.map(x => x.fileName));
+        // obj.$store.commit('STAT_LOAD_FILE', res.map(x => x.fileName));
+        obj.$store.commit('STAT_LOAD_FILES', res.map((x) => {
+          let type = null
+          if (x.statType) {
+            type = x.statType
+          } else {
+            type = '未定义'
+          }
+          return [x.fileName, type]
+        }));
         break;
       case 'statFile':
         obj.$store.commit('STAT_SET_TABLE', res);
@@ -82,7 +169,7 @@ function insert(obj, col, data, type, newData) {
       break;
     case 'createCda':
       fileName = data.fileName
-      query = obj.db.statFile.count({ fileName: data.fileName })
+      // query = obj.db.statFile.count({ fileName: data.fileName })
       break;
     default:
       break;
@@ -110,6 +197,7 @@ function insert(obj, col, data, type, newData) {
       }
     })
   }
+  find(obj, 'cda', { fileType: 'cda' }, 'editFiles', null, null, newData)
 }
 
 function findOne(obj, col, data, type) {
@@ -132,8 +220,9 @@ function update(obj, col, data, newData) {
 }
 
 function remove(obj, col, data, newData) {
-  obj.db[col].remove(data, newData, (err, res) => {
+  obj.db[col].remove(data, (err, res) => {
     console.log(res)
+    find(obj, 'cda', { fileType: 'cda' }, 'editFiles', null, null, newData)
   })
 }
 
@@ -149,12 +238,15 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'update': update(obj, col, data, newData, type); break
         case 'remove': remove(obj, col, data, newData); break
         case 'editFiles': find(obj, col, data, type, skip, limit, newData); break
+        case 'editTypes': find(obj, col, data, type, skip, limit, newData); break
         case 'editFile': findOne(obj, col, data, type); break
         case 'createCda': insert(obj, col, data, type); break
         case 'saveCda': update(obj, col, data, newData, type); break
+        case 'libraryTypes': find(obj, col, data, type, skip, limit, newData); break
         case 'libraryFiles': find(obj, col, data, type, skip, limit, newData); break
         case 'libraryFile': find(obj, col, data, type, skip, limit, newData); break
         case 'downloadLibrary': insert(obj, col, data, type, newData); break
+        case 'statTypes': find(obj, col, data, type, skip, limit, newData); break
         case 'statFiles': find(obj, col, data, type, skip, limit, newData); break
         case 'statFile': find(obj, col, data, type, skip, limit, newData); break
         case 'downloadStat': insert(obj, col, data, type, newData); break
@@ -235,7 +327,12 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             downloadStat(obj, serverConfig, { tableName: newData.fileType, page: 1, username: newData.username, dimension: newData.dimension, sort: newData.sort }, 'stat')
             break;
           case 'editFiles':
+            console.log('asdfasd')
             getEditFiles(obj, serverConfig, newData.type, newData.username)
+            break
+          case 'editTypes':
+            console.log('1121')
+            getEditTypes(obj, serverConfig, newData.type, newData.username)
             break
           case 'editFile':
             getEdit(obj, serverConfig, newData.fileName)
