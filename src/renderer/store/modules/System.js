@@ -411,6 +411,9 @@ const mutations = {
   SYSTEM_GET_TARGET_LIST_KEY(state, value) {
     state.targetKey = value
   },
+  SYSTEM_GET_WT4TABLE_PAGE(state, value) {
+    state.wt4TablePage = value
+  },
 };
 
 const actions = {
@@ -424,6 +427,7 @@ const actions = {
     commit('SYSTEM_GET_FIELD');
     commit('SYSTEM_SET_TABLE');
     commit('SYSTEM_SET_SERVER');
+    commit('SYSTEM_GET_WT4TABLE_PAGE');
     commit('SYSTEM_SET_SERVER_STATUS');
     // 用户设置模块
     commit('SYSTEM_SET_SERVERS');

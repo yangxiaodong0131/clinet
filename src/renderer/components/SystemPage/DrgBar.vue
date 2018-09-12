@@ -111,6 +111,7 @@
           // 保存分组数据类型
           this.$store.commit('SYSTEM_SET_COMPUTE_DATA', 'getServerData');
           sGetWt4(this, [this.server, this.port], 1)
+          this.$store.commit('SYSTEM_GET_WT4TABLE_PAGE', this.port);
         } else {
           this.$store.commit('SET_NOTICE', '服务器连接未设置,请在系统服务内连接');
         }
@@ -167,6 +168,7 @@
           } else if (value === 'down' && this.localPage + 1 < this.$store.state.System.wt4TablePage) {
             this.$store.commit('SYSTEM_SET_LOCAL_PAGE', value);
             sGetWt4(this, [this.server, this.port], this.localPage)
+            // console.log(this.$store.state.System.wt4TablePage);
             this.$store.commit('SET_NOTICE', `当前页数${this.localPage}`);
           }
         } else if (this.$store.state.System.computeData === 'getLocalData') {
