@@ -22,11 +22,11 @@
             {{navType}}
           </a>
           <div class="dropdown-menu" id="edit-rightbar-sel" aria-labelledby="edit-rightbar-choice">
-            <a class="dropdown-item" href="#" v-on:click="navBar('病案文档')">病案文档</a>
+            <a class="dropdown-item" href="#" v-on:click="navBar('病案文档')">本地</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" v-on:click="navBar('数据分析')">数据分析</a>
+            <a class="dropdown-item" href="#" v-on:click="navBar('数据分析')">远程</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" v-on:click="navBar('数据字典')">数据字典</a>
+            <a class="dropdown-item" href="#" v-on:click="navBar('数据字典')">区块链</a>
           </div>
         </li>
 
@@ -111,67 +111,6 @@
       help: function (n) {
         rightBarHelp(this, n)
       },
-      navBar: function (n) {
-        console.log(n)
-        this.$store.commit('EDIT_SET_NAV_TYPE', n);
-        if (n === '病案文档') {
-          switch (this.$store.state.Edit.dataType) {
-            case '本地-文档':
-              this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-              this.localData()
-              break;
-            case '远程-用户':
-              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
-              this.serverData(n, '远程-文档')
-              break;
-            case '远程-文档':
-              this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
-              this.serverData(n, '远程-文档')
-              break;
-            case '区块链-用户':
-              this.blockData('区块链-用户')
-              break;
-            case '区块链-文档':
-              this.blockData('区块链-文档')
-              break;
-            default:
-              break;
-          }
-        } else if (n === '数据分析') {
-          this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-          switch (this.$store.state.Edit.dataType) {
-            case '本地-文档':
-              dataDB(this, 'local', 'statFile', {}, 'statTypes', { fileType: '', username: this.$store.state.System.user.username, tableType: 'local' })
-              break;
-            case '远程-文档': case '远程-用户':
-              this.$store.commit('STAT_SET_TABLE_TYPE', 'server');
-              dataDB(this, 'server', 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: 'server' })
-              break;
-            case '区块链-用户': case '区块链-文档':
-              dataDB(this, 'block', 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType: 'block' })
-              break;
-            default:
-              break;
-          }
-        } else if (n === '数据字典') {
-          switch (this.$store.state.Edit.dataType) {
-            case '本地-文档':
-              // dataDB(this, 'local', 'libraryFile', null, 'libraryFiles', null)
-              dataDB(this, 'local', 'libraryFile', null, 'libraryTypes', null)
-              break;
-            case '远程-文档': case '远程-用户':
-              this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server');
-              dataDB(this, 'server', 'libraryFile', null, 'libraryFiles', null)
-              break;
-            case '区块链-用户': case '区块链-文档':
-              dataDB(this, 'block', 'libraryFile', null, 'libraryFiles', null)
-              break;
-            default:
-              break;
-          }
-        }
-      },
       localData: function () {
         this.$store.commit('EDIT_SET_DATA_TYPE', '本地-文档');
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
@@ -179,20 +118,8 @@
         this.$store.commit('EDIT_SET_HELP_TYPES', ['输入框提示', '病案参考', '病案历史', '在线交流', '病案质控', '专家提示', 'DRG分析', 'HIS接口'])
         this.$store.commit('EDIT_SET_CHAT_TYPE', false);
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-        switch (this.$store.state.Edit.lastNav) {
-          case '/stat':
-            this.$store.commit('STAT_LOAD_FILES');
-            break;
-          case '/library':
-            this.$store.commit('LIBRARY_LOAD_FILES');
-            break;
-          case '/system':
-            this.$store.commit('SYSTEM_GET_FILES');
-            break;
-          default:
-            this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
-            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
-        }
+        this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
+        dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
         this.$store.commit('SET_NOTICE', '读取本地文件');
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
       },

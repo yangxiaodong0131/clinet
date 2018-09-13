@@ -9,11 +9,11 @@
       </tr>
       <tr class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index, 'table-danger': isSave.includes(index)}">
         <!-- <td> {{index + 1}} </td> -->
-        <td v-if="lastNav !== '/edit' && index < 10" v-for="(field, index) in data" v-bind:key='index' v-on:click="onClickTd(data, index)" v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}">{{data[index]}}</td>
-        <td v-if="lastNav === '/edit'" v-for="(item, index) in data" v-bind:key='index'>{{item}}</td>
+        <td v-if="index < 10" v-for="(field, index) in data" v-bind:key='index' v-on:click="onClickTd(data, index)" v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}">{{data[index]}}</td>
+        <td v-for="(item, index) in data" v-bind:key='index'>{{item}}</td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-del'+index"><a href="#" v-on:click="delDoc(index)">删除</a></td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-edit'+index"><a href="#" v-on:click="loadDoc(index, data)">编辑</a></td>
-        <td v-if="lastNav !== '/library' && rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-ref'+index"><a href="#" v-on:click="loadDoc(data, index, 'show')">参考</a></td>
+        <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-ref'+index"><a href="#" v-on:click="loadDoc(data, index, 'show')">参考</a></td>
         <td v-if="fileName.includes('@')" v-bind:id="'edit-leftpaneltable-dow'+index"><a href="#" v-on:click="downloadDoc(data, index)">下载</a></td>
         <td v-if="data[2]" class="table-success"><a href="#" style="color: #000">已上传</a></td>
         <td v-if="(!fileName.includes('@') || rightPanel !== 'block') && !data[2]" class="table-warning"><a href="#" style="color: #000" v-on:click="uploadDoc(data, index)">未上传</a></td>
@@ -53,11 +53,6 @@
             type = this.$store.state.Edit.isSaveServer
           }
           return type
-        }
-      },
-      lastNav: {
-        get() {
-          return this.$store.state.Edit.lastNav
         }
       },
       rightPanel: {
@@ -109,11 +104,6 @@
         get() {
           return this.$store.state.Edit.selectedCol
         }
-      },
-      navType: {
-        get() {
-          return this.$store.state.Edit.navType
-        }
       }
     },
     methods: {
@@ -163,7 +153,9 @@
         this.$store.commit('EDIT_SET_DOC_STATE');
       },
       loadDoc: function (index, name) {
-        const navType = this.$store.state.Edit.navType
+        console.log(index, name)
+        // EDIT_SET_DOC_TYPE
+        this.$store.commit('EDIT_SET_DOC_TYPE', name[1]);
         let tableType = 'local'
         if (this.$store.state.Edit.dataType.includes('远程')) {
           tableType = 'server'
@@ -172,21 +164,11 @@
         } else {
           tableType = 'local'
         }
-        switch (navType) {
-          case '数据分析':
-            dataDB(this, tableType, 'stat', { fileType: name[0] }, 'statFile', { fileType: name[0], username: this.$store.state.System.user.username, tableType: this.$store.state.Stat.tableType, dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
-            break;
-          case '数据字典':
-            dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: name[0] }, 'libraryFile', { type1: this.$store.state.Library.tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
-            break;
-          default:
-            this.$store.commit('EDIT_SET_FILE_INDEX', index);
-            if (tableType === 'local') {
-              dataDB(this, 'local', 'cda', { fileName: name[0] }, 'editFile', null)
-            } else {
-              dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
-            }
-            break;
+        this.$store.commit('EDIT_SET_FILE_INDEX', index);
+        if (tableType === 'local') {
+          dataDB(this, 'local', 'cda', { fileName: name[0] }, 'editFile', null)
+        } else {
+          dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
         }
       },
       close(data) {

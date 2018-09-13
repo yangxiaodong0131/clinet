@@ -3,14 +3,7 @@
     <div class="card">
       <table><tr class="table-warning">当前病案状态：{{docState}}</tr></table>
       <div class="card-body" v-for="(section, key) of doc" v-bind:key='key'>
-        <div v-if="lastNav === '/stat' || lastNav === '/system' || lastNav === '/library' || navType === '数据分析' || navType === '数据字典'">
-          <table >
-            <tr v-for="(item, index) of section" v-bind:key='index'>
-              <td v-for="(item1, index1) of item" v-bind:key='index1' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item)">{{item1}}</td>
-            </tr>
-          </table>
-        </div>
-        <div v-if="lastNav === '/edit' && navType === '病案文档'">
+        <div>
           <table v-if="key.split(',')[1] === '个人信息'">
             <tr class="table-warning" v-bind:class="{'table-danger':flag == key.split(',')[0]}" v-on:click="changeIndex(key, '', true)"><td colspan="4">{{key.split(',')[1]}}</td></tr>
             <tr rowspan="2" v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item, key)">
@@ -124,11 +117,6 @@
           }
           doc1 = editDoc(doc, systemSection)
           return doc1
-        }
-      },
-      lastNav: {
-        get() {
-          return this.$store.state.Edit.lastNav
         }
       },
       docState: {

@@ -49,8 +49,6 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      console.log('===')
-      console.log(res.data.cda)
       obj.$store.commit('EDIT_LOAD_FILE', res.data.cda.map(x => [x]))
       // const keys = Object.keys(res.data)
       // const data = keys.map((v, i) => [keys[i], res.data[v].length])

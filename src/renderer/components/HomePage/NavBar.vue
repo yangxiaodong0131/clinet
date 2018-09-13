@@ -76,7 +76,6 @@
 
 <script>
   import loadFile from '../../utils/LoadFile';
-  import saveFile from '../../utils/SaveFile'
   import { offline } from '../../utils/Socket';
   // import { saveEditDoc } from '../../utils/EditOperation'
   // import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
@@ -114,17 +113,10 @@
       }
     },
     methods: {
-      test: function () {
-        let x = ''
-        let p = ''
-        if (this.$store.state.Edit.lastNav === '/stat') {
-          x = this.$store.state.Stat.fileName
-        } else {
-          x = '未保存病案.cda'
-        }
-        p = this.$store.state.Edit.lastNav
-        saveFile(this, x, p)
-      },
+      // test: function () {
+      //   const x = '未保存病案.cda'
+      //   saveFile(this, x)
+      // },
       created: function () {
         this.$nextTick(function () {
           this.timer()

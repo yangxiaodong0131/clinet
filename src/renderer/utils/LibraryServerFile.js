@@ -29,6 +29,7 @@ export function getLibraryFiles(obj, data, serverType = 'server', show = null) {
 
 export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensionServer, type1, serverType = 'server', sort) {
   let url = ''
+  console.log(dimensionServer)
   if (dimensionType !== null) {
     const keys = Object.keys(dimensionServer)
     keys.forEach((n) => {
