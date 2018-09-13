@@ -9,11 +9,11 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item dropdown" v-on:click="onClick('数据采集-数据采集')" id="navbar-edit" >
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            数据采集
+            电子病历
             <span style="color: red"><b>{{docLength}}</b></span>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#" v-on:click="onClick('数据采集-数据采集')">数据采集</a>
+            <a class="dropdown-item" href="#" v-on:click="onClick('数据采集-数据采集')">电子病历</a>
             <div class="dropdown-divider"></div>
           </div>
         </li>

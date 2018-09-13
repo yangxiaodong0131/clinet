@@ -38,7 +38,10 @@
             <!-- <a class="dropdown-item" href="#" v-on:click="localData()">文档</a>
             <div class="dropdown-divider"></div> -->
             <a class="dropdown-item" href="#" v-on:click="navBar('用户')">用户</a>
+            <a class="dropdown-item" href="#" v-on:click="navBar('客户')">客户</a>
+            <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#" v-on:click="navBar('文档')">文档</a>
+            <a class="dropdown-item" href="#" v-on:click="navBar('模板')">模板</a>
             <!-- <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#" v-on:click="blockData('区块链-用户')">区块链-用户</a>
             <a class="dropdown-item" href="#" v-on:click="blockData('区块链-文档')">区块链-文档</a> -->
