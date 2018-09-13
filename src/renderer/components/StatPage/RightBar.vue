@@ -27,9 +27,6 @@
         <li class="nav-item active" id="stat-next-page" v-on:click='page(1)'>
           <a class="nav-link text-light" href="#" title="向后翻页"> 后页 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" id="stat-edit-data" v-on:click='edit()'>
-          <a class="nav-link text-light" href="#" title="跳转到编辑来编辑该文件"> 编辑数据 <span class="sr-only">(current)</span></a>
-        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-light" href="#" id="stat-left-chart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="选择分析图表左图类型">
             左图选择
@@ -296,27 +293,6 @@
             default: break;
           }
         }
-      },
-      edit: function () {
-        switch (this.$store.state.Stat.tableType) {
-          case 'local':
-            if (this.$store.state.Stat.fileIndex !== null) {
-              this.$store.commit('EDIT_LOAD_FILE', this.$store.state.Stat.statTable.data);
-            }
-            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-            this.$store.commit('EDIT_SET_FILES_INDEX', this.$store.state.Stat.fileIndex);
-            break;
-          case 'server':
-            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
-            this.$store.commit('EDIT_SET_FILES_INDEX', 0);
-            this.$store.commit('EDIT_LOAD_FILE', this.$store.state.Stat.statTable.data);
-            break;
-          default:
-        }
-        this.$store.commit('EDIT_SET_LAST_NAV', '/stat');
-        this.$store.commit('SET_NOTICE', '数据采集-数据采集');
-        this.$store.commit('EDIT_SET_BAR_VALUE', '');
-        this.$router.push('/edit');
       },
       selX: function (x, selType = '', type = 'org') {
         switch (this.$store.state.Stat.tableType) {
