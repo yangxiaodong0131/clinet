@@ -51,7 +51,7 @@
             <div class="dropdown-divider"></div>
           </div>
         </li>
-        <li class="nav-item active" v-on:click='add()' id="library-down">
+        <li class="nav-item active" v-if="this.$store.state.Library.libraryTable.data.length > 0" v-on:click='add()' id="library-down">
           <a class="nav-link text-light" href="#" title="新建"> 新建 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-if="this.$store.state.Library.changIndex.length === 2" v-on:click='del()' id="library-down">
@@ -273,7 +273,17 @@
         const table = this.$store.state.Library.libraryTable.data
         const dataIndex = this.$store.state.Library.changIndex[0]
         const data = table[dataIndex]
-        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'delete', tableType: 'saveLibraryPage' }, 0, 30)
+        let idIndex = null
+        if (table[0].includes('_id')) {
+          idIndex = table[0].indexOf('_id');
+        } else {
+          idIndex = table[0].indexOf('ID');
+        }
+        if (data[idIndex] === '-') {
+          this.$store.commit('SET_NOTICE', '新建行不允许删除')
+        } else {
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'delete', tableType: 'saveLibraryPage' }, 0, 30)
+        }
       },
     },
   };

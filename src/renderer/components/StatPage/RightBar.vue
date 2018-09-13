@@ -575,7 +575,17 @@
         const table = this.$store.state.Stat.statTable.data
         const dataIndex = this.$store.state.Stat.changIndex[0]
         const data = table[dataIndex]
-        dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'delete', tableType: 'saveStatPage' }, 0, 30)
+        let idIndex = null
+        if (table[0].includes('_id')) {
+          idIndex = table[0].indexOf('_id');
+        } else {
+          idIndex = table[0].indexOf('ID');
+        }
+        if (data[idIndex] === '-') {
+          this.$store.commit('SET_NOTICE', '新建行不允许删除')
+        } else {
+          dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'delete', tableType: 'saveStatPage' }, 0, 30)
+        }
       },
     },
   };
