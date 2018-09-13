@@ -69,7 +69,7 @@ export default function appInit() {
     if (res === 0) {
       db.server.insert({ name: '远程测试服务器', host: 'www.jiankanglaifu.com', port: '80', setting: '1' })
     } else {
-      db.server.find({}).sort({ setting: -1 }, (err, res) => {
+      db.server.find({}, (err, res) => {
         global.hitbdata.server = res;
       })
     }

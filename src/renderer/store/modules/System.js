@@ -109,8 +109,8 @@ const mutations = {
       state.connectInfo = false
     }
     const servers = []
-    state.servers.forEach((x, i) => {
-      if (i === state.serverIndex) {
+    state.servers.forEach((x) => {
+      if (state.server === x.host) {
         x.connect = m
       } else {
         x.connect = ''

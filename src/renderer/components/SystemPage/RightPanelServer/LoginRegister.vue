@@ -105,8 +105,9 @@
       sysytemlogin: function () {
         const user = this.$store.state.System.userLogin
         if (this.reg.test(user.username)) {
-          const host = this.$store.state.System.servers[this.$store.state.System.serverIndex].host
-          const data = this.$store.state.System.servers[this.$store.state.System.serverIndex].port
+          const server = this.$store.state.System.servers.filter(x => x.setting === '1')[0];
+          const host = server.host
+          const data = server.port
           this.$store.commit('SYSTEM_SET_SERVER', [host, data])
           socketConnect(this, [this.server, this.port], { username: user.username, password: user.password });
           sGetRecord(this, [this.server, this.port], this.$store.state.Home.recordPage)
