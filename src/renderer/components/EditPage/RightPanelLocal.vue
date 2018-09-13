@@ -127,22 +127,15 @@
     },
     methods: {
       loadFile: function (data, index) {
+        const navType = this.$store.state.Edit.navType
         this.$store.commit('EDIT_SET_FILES_INDEX', index)
-        let tableType = 'local'
-        if (this.$store.state.Edit.dataType.includes('远程')) {
-          tableType = 'server'
-        } else if (this.$store.state.Edit.dataType.includes('区块链')) {
-          tableType = 'block'
-        } else {
-          tableType = 'local'
-        }
         this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
         if (this.$store.state.Edit.rightPanel === 'server' || this.$store.state.Edit.rightPanel === 'block') {
           if (this.$store.state.Edit.serverType === 'file') {
-            dataDB(this, tableType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: data })
+            dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: data })
           } else if (this.$store.state.Edit.serverType === 'user') {
             this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
-            dataDB(this, tableType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
+            dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
           }
         } else {
           dataDB(this, 'local', 'cda', { docType: data }, 'editFiles', null)

@@ -165,7 +165,6 @@
             //   getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
             //   getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
             // } else {
-            //   this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
             //   this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
             //   this.$store.commit('EDIT_LOAD_FILES');
             //   this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');

@@ -136,7 +136,6 @@
         const files = this.$store.state.System.files.filter(x => x.endsWith('.csv'))
         this.$store.commit('EDIT_LOAD_FILE', this.$store.state.System.checkDataAll)
         this.$store.commit('EDIT_SERVER_FILES', files)
-        this.$store.commit('EDIT_SET_LAST_NAV', '/system');
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
         this.$store.commit('EDIT_SET_FILES_INDEX', this.$store.state.System.loadTable);
         this.$router.push('/edit');

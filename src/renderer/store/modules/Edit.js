@@ -57,7 +57,6 @@ const state = {
   docControl: [],
   expertHint: [],
   expertSection: null,
-  idIndex: null,
   currentFiles: [],
   filesName: null
 };
@@ -92,7 +91,6 @@ const mutations = {
   },
   EDIT_ADD_DOC(state, message) {
     state.docIndex = 0
-    state.idIndex = state.file[1].split(',').indexOf('ID')
     state.file.push(message);
   },
   EDIT_SERVER_ID(state, id) {
@@ -134,7 +132,6 @@ const mutations = {
   EDIT_LOAD_DOC(state, message) {
     // const x = message.map(m => m.split(' ').filter(i => i !== ''))
     state.doc = message;
-    state.idIndex = state.file[1].split(',').indexOf('ID')
     state.editBarValue = message[0]
     if (global.hitbSections.length > 0 && global.hitbSections.includes(state.editBarValue)) {
       state.section = state.editBarValue[0]
@@ -526,7 +523,6 @@ const actions = {
     commit('EDIT_SET_RIGHT_PANEL');
     commit('EDIT_SET_FILES_INDEX');
     commit('EDIT_SET_FILE_INDEX');
-    commit('EDIT_SET_LAST_NAV');
     commit('EDIT_SET_FILE_PAGE');
     commit('EDIT_SET_FILES_PAGE');
     commit('EDIT_SET_DOC_INDEX');

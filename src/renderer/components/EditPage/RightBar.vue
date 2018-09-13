@@ -22,11 +22,11 @@
             {{navType}}
           </a>
           <div class="dropdown-menu" id="edit-rightbar-sel" aria-labelledby="edit-rightbar-choice">
-            <a class="dropdown-item" href="#" v-on:click="navBar('病案文档')">本地</a>
+            <a class="dropdown-item" href="#" v-on:click="localData(dataType)">本地</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" v-on:click="navBar('数据分析')">远程</a>
+            <a class="dropdown-item" href="#" v-on:click="serverData(dataType)">远程</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" v-on:click="navBar('数据字典')">区块链</a>
+            <a class="dropdown-item" href="#" v-on:click="blockData(dataType)">区块链</a>
           </div>
         </li>
 
@@ -35,13 +35,13 @@
             {{dataType}}
           </a>
           <div class="dropdown-menu" id="edit-rightbar-sel" aria-labelledby="edit-rightbar-choice">
-            <a class="dropdown-item" href="#" v-on:click="localData()">本地-文档</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" v-on:click="serverData('远程-用户')">远程-用户</a>
-            <a class="dropdown-item" href="#" v-on:click="serverData('远程-文档')">远程-文档</a>
-            <div class="dropdown-divider"></div>
+            <!-- <a class="dropdown-item" href="#" v-on:click="localData()">文档</a>
+            <div class="dropdown-divider"></div> -->
+            <a class="dropdown-item" href="#" v-on:click="navBar('用户')">用户</a>
+            <a class="dropdown-item" href="#" v-on:click="navBar('文档')">文档</a>
+            <!-- <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#" v-on:click="blockData('区块链-用户')">区块链-用户</a>
-            <a class="dropdown-item" href="#" v-on:click="blockData('区块链-文档')">区块链-文档</a>
+            <a class="dropdown-item" href="#" v-on:click="blockData('区块链-文档')">区块链-文档</a> -->
           </div>
         </li>
       </ul>
@@ -61,7 +61,6 @@
       return {
         name: this.$route.name,
         rightItem: '',
-        // helpType: '编辑器使用帮助'
       };
     },
     computed: {
@@ -111,24 +110,48 @@
       help: function (n) {
         rightBarHelp(this, n)
       },
-      localData: function () {
-        this.$store.commit('EDIT_SET_DATA_TYPE', '本地-文档');
+      navBar: function (n) {
+        this.$store.commit('EDIT_SET_DATA_TYPE', n);
+        switch (n) {
+          case '本地':
+            this.localData(n)
+            break;
+          case '远程':
+            this.serverData(n)
+            break;
+          case '区块链':
+            this.blockData(n)
+            break;
+          default:
+            break;
+        }
+      },
+      localData: function (x) {
+        console.log(x)
+        const navType = this.$store.state.Edit.navType
+        if (navType !== '本地') {
+          this.$store.commit('EDIT_SET_RIGHT_TYPE', null);
+        }
+        this.$store.commit('EDIT_SET_NAV_TYPE', '本地');
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
         this.$store.commit('EDIT_SET_DOC_TYPES', ['自定义文档', '病案首页（卫统四CSV）', '入院申请', '首次病程', '病程记录', '病案首页', '门诊病案', '健康体检']);
         this.$store.commit('EDIT_SET_HELP_TYPES', ['输入框提示', '病案参考', '病案历史', '在线交流', '病案质控', '专家提示', 'DRG分析', 'HIS接口'])
         this.$store.commit('EDIT_SET_CHAT_TYPE', false);
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-        this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
         dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
         this.$store.commit('SET_NOTICE', '读取本地文件');
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
       },
       serverData: function (x) {
-        this.$store.commit('EDIT_SET_DATA_TYPE', x);
+        const navType = this.$store.state.Edit.navType
+        if (navType !== '远程') {
+          this.$store.commit('EDIT_SET_RIGHT_TYPE', null);
+        }
+        this.$store.commit('EDIT_SET_NAV_TYPE', '远程');
         // getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
         // getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
         // this.$store.commit('EDIT_SET_CHAT_TYPE', false);
-        if (x === '远程-文档') {
+        if (x === '文档') {
           this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
         } else {
           this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');
@@ -146,10 +169,14 @@
         }
       },
       blockData: function (x) {
-        this.$store.commit('EDIT_SET_DATA_TYPE', x);
+        const navType = this.$store.state.Edit.navType
+        if (navType !== '区块链') {
+          this.$store.commit('EDIT_SET_RIGHT_TYPE', null);
+        }
+        this.$store.commit('EDIT_SET_NAV_TYPE', '区块链');
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '区块链文件');
         this.$store.commit('SET_NOTICE', '读取区块链文件');
-        if (x === '区块链-文档') {
+        if (x === '文档') {
           this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
         } else {
           this.$store.commit('EDIT_SET_SERVER_TYPE', 'user');

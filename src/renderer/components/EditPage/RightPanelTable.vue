@@ -9,7 +9,6 @@
       </tr>
       <tr class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index, 'table-danger': isSave.includes(index)}">
         <!-- <td> {{index + 1}} </td> -->
-        <td v-if="index < 10" v-for="(field, index) in data" v-bind:key='index' v-on:click="onClickTd(data, index)" v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}">{{data[index]}}</td>
         <td v-for="(item, index) in data" v-bind:key='index'>{{item}}</td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-del'+index"><a href="#" v-on:click="delDoc(index)">删除</a></td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-edit'+index"><a href="#" v-on:click="loadDoc(index, data)">编辑</a></td>
@@ -83,15 +82,7 @@
       },
       file: {
         get() {
-          let file = []
-          const navType = this.$store.state.Edit.navType
-          if (navType === '数据分析') {
-            file = this.$store.state.Stat.files
-          } else if (navType === '数据字典') {
-            file = this.$store.state.Library.files
-          } else {
-            file = this.$store.state.Edit.file
-          }
+          const file = this.$store.state.Edit.file
           return file
         }
       },
@@ -107,25 +98,6 @@
       }
     },
     methods: {
-      onClickTd: function (data, index) {
-        this.$store.commit('EDIT_SET_SELECTED_TYPE', 'row');
-        switch (this.$store.state.Stat.tableType) {
-          case 'local':
-            if (data[0] === 'org' && data[1] === 'time') {
-              this.$store.commit('EDIT_SET_COL', index);
-              this.$store.commit('EDIT_SET_SELECTED_TYPE', 'col');
-            }
-            break;
-          case 'server':
-            if (data[0] === '机构' && data[1] === '时间') {
-              this.$store.commit('EDIT_SET_COL', index);
-              this.$store.commit('EDIT_SET_SELECTED_TYPE', 'col');
-            }
-            break;
-          default:
-        }
-        this.$store.commit('EDIT_SET_BAR_VALUE', data[index]);
-      },
       delDoc: function (index) {
         const fileName = this.$store.state.Edit.file[index][0]
         dataDB(this, 'local', 'cda', { fileName }, 'remove', { fileName })
@@ -153,19 +125,10 @@
         this.$store.commit('EDIT_SET_DOC_STATE');
       },
       loadDoc: function (index, name) {
-        console.log(index, name)
-        // EDIT_SET_DOC_TYPE
+        const navType = this.$store.state.Edit.navType
         this.$store.commit('EDIT_SET_DOC_TYPE', name[1]);
-        let tableType = 'local'
-        if (this.$store.state.Edit.dataType.includes('远程')) {
-          tableType = 'server'
-        } else if (this.$store.state.Edit.dataType.includes('区块链')) {
-          tableType = 'block'
-        } else {
-          tableType = 'local'
-        }
         this.$store.commit('EDIT_SET_FILE_INDEX', index);
-        if (tableType === 'local') {
+        if (navType === '本地') {
           dataDB(this, 'local', 'cda', { fileName: name[0] }, 'editFile', null)
         } else {
           dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
