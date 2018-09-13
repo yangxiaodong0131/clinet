@@ -188,7 +188,7 @@
             break;
           case '系统服务-远程服务器设置':
             this.$router.push('/system');
-            dataDB(this, 'local', 'server', {}, 'serverConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
+            dataDB(this, 'local', 'server', {}, 'serverConfig', {}, null, null)
             this.$store.commit('SYSTEM_SET_TOOLBAR', 'getServers');
             break;
           case '系统服务-DRG分组服务':

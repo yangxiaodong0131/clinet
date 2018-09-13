@@ -2,12 +2,16 @@
   <div>
     <div v-if="this.toolbar === 'getServers'" id="system-server-port">
       <table>
-        <tr><td>服务器名称</td><td>地址</td><td>端口</td><td>连接状态</td><td>操作</td></tr>
+        <tr><td>服务器名称</td><td>地址</td><td>端口</td><td>连接状态</td><td>是否默认</td><td>操作</td></tr>
         <tr v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-danger':flag == index}" class="server-rightpanel-tr" v-bind:id="'system-td-tr'+index">
           <td>{{data.name}}</td>
           <td>{{data.host}}</td>
           <td>{{data.port}}</td>
           <td>{{data.connect}}</td>
+          <td v-if="data.setting === '1'">
+            <span class="oi oi-check"></span>
+          </td>
+          <td v-else></td>
           <td>
             <a href="#" v-on:click="connect(data, index)">连接</a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="#" v-on:click="setFirst(data, index)" v-if="data.setting !== '1'">设为默认</a>
@@ -175,14 +179,15 @@
           const id = '_id'
           dataDB(this, 'local', 'server', { _id: x[id] }, 'update', { setting: setting })
         })
-        dataDB(this, 'local', 'server', {}, 'serverConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
+        // sort: { field: 'setting', type: 'desc' }
+        dataDB(this, 'local', 'server', {}, 'serverConfig', {}, null, null)
       },
       addServer: function () {
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'sddServers')
       },
       addServerSubmit: function () {
         if (this.serverInput.name !== '' && this.serverInput.host !== '' && this.serverInput.port !== '') {
-          dataDB(this, 'local', 'server', this.serverInput, 'addServerConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
+          dataDB(this, 'local', 'server', this.serverInput, 'addServerConfig', {}, null, null)
         } else {
           this.$store.commit('SET_NOTICE', '请填写完整后再点击确认按钮')
         }
