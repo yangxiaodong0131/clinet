@@ -26,9 +26,6 @@
         <li v-if="this.$store.state.Library.tableType === 'server' && server.length > 1" class="nav-item active" v-on:click='docDown()' id="library-doc-down">
           <a class="nav-link text-light" href="#" title="下载该文件到本地"> 下载 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click='edit()' id="library-edit">
-          <a class="nav-link text-light" href="#" title="跳转到编辑来编辑该文件"> 编辑数据 <span class="sr-only">(current)</span></a>
-        </li>
         <li v-if="this.$store.state.Library.tableType === 'server' && libraryList.time.length !== 0" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-light" href="#" id="library-right-dimension-time" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             时间
@@ -144,36 +141,6 @@
           dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: this.$store.state.Library.tableType, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, skip, 30)
           this.$store.commit('SET_NOTICE', `当前${this.$store.state.Library.libraryTableInfo.page}页,共${this.$store.state.Library.libraryTableInfo.countPage}页`)
         }
-      },
-      edit: function () {
-        let f = []
-        if (this.$store.state.Library.tableType === 'local') {
-          this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
-          this.$store.commit('EDIT_SET_RIGHT_FOLDS', '本地文件');
-          if (this.$store.state.Library.libraryTable.data.includes(undefined)) {
-            f = this.$store.state.Library.libraryTable.data.filter(x => x !== undefined)
-          } else {
-            f = this.$store.state.Library.libraryTable.data
-          }
-        }
-        if (this.$store.state.Library.tableType === 'server') {
-          this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
-          this.$store.commit('EDIT_SET_RIGHT_FOLDS', '远程文件');
-          this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
-          this.$store.commit('EDIT_SERVER_FILES', f);
-          this.$store.commit('EDIT_SET_FILES_INDEX', 0);
-          const skip = (this.$store.state.Library.libraryTableInfo.page - 1) * 30
-          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: 'edit', dimensionType: this.$store.state.Library.dimensionType, dimensionServer: this.$store.state.Library.dimensionServer, sort: this.$store.state.Library.serverSort }, skip, 30)
-        } else {
-          if (this.$store.state.Library.fileIndex !== null) {
-            this.$store.commit('EDIT_LOAD_FILE', f);
-          }
-          this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-          this.$store.commit('EDIT_SET_FILES_INDEX', this.$store.state.Library.fileIndex);
-        }
-        this.$store.commit('EDIT_SET_LAST_NAV', '/library');
-        this.$router.push('/edit');
-        this.$store.commit('EDIT_SET_BAR_VALUE', '');
       },
       selX: function (value, x) {
         switch (this.$store.state.Library.tableType) {
