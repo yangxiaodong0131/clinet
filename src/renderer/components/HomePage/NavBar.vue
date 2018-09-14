@@ -9,11 +9,11 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item dropdown" v-on:click="onClick('数据采集-数据采集')" id="navbar-edit" >
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            数据采集
+            电子病历
             <span style="color: red"><b>{{docLength}}</b></span>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#" v-on:click="onClick('数据采集-数据采集')">数据采集</a>
+            <a class="dropdown-item" href="#" v-on:click="onClick('数据采集-数据采集')">电子病历</a>
             <div class="dropdown-divider"></div>
           </div>
         </li>
@@ -76,7 +76,6 @@
 
 <script>
   import loadFile from '../../utils/LoadFile';
-  import saveFile from '../../utils/SaveFile'
   import { offline } from '../../utils/Socket';
   // import { saveEditDoc } from '../../utils/EditOperation'
   // import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
@@ -114,17 +113,10 @@
       }
     },
     methods: {
-      test: function () {
-        let x = ''
-        let p = ''
-        if (this.$store.state.Edit.lastNav === '/stat') {
-          x = this.$store.state.Stat.fileName
-        } else {
-          x = '未保存病案.cda'
-        }
-        p = this.$store.state.Edit.lastNav
-        saveFile(this, x, p)
-      },
+      // test: function () {
+      //   const x = '未保存病案.cda'
+      //   saveFile(this, x)
+      // },
       created: function () {
         this.$nextTick(function () {
           this.timer()
@@ -173,7 +165,6 @@
             //   getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
             //   getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
             // } else {
-            //   this.$store.commit('EDIT_SET_LAST_NAV', '/edit');
             //   this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
             //   this.$store.commit('EDIT_LOAD_FILES');
             //   this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
@@ -196,7 +187,7 @@
             break;
           case '系统服务-远程服务器设置':
             this.$router.push('/system');
-            dataDB(this, 'local', 'server', {}, 'serverConfig', { sort: { field: 'setting', type: 'desc' } }, null, null)
+            dataDB(this, 'local', 'server', {}, 'serverConfig', {}, null, null)
             this.$store.commit('SYSTEM_SET_TOOLBAR', 'getServers');
             break;
           case '系统服务-DRG分组服务':

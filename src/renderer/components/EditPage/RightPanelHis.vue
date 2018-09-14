@@ -20,16 +20,7 @@
       </div> -->
       <div class="card-body" v-for="(section, key) of doc" v-bind:key='key'>
         <!-- 个人信息 -->
-        <div v-if="lastNav === '/stat' || lastNav === '/library' || lastNav === '/system'">
-          <table>
-            <tr class="table-warning"><td>{{key}}</td><td></td></tr>
-            <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item)">
-              <td><b>{{ item[1] }}</b></td>
-              <td>{{ item[2] }}{{ item[3] }}{{ item[4] }}{{ item[5] }}{{ item[6] }}{{ item[7] }}{{ item[8] }}</td>
-            </tr>
-          </table>
-        </div>
-        <div v-if="lastNav === '/edit'">
+        <div>
           <!-- <table v-if="key === '标题'">
             <tr class="table-warning" v-bind:class="{'table-danger':flag == key.split(',')[0]}" v-on:click="changeIndex(key, true)"><td>{{key.split(',')[1]}}</td></tr>
             <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item)">
@@ -135,11 +126,6 @@
             return doc1
           }
           return doc
-        }
-      },
-      lastNav: {
-        get() {
-          return this.$store.state.Edit.lastNav
         }
       },
       docState: {

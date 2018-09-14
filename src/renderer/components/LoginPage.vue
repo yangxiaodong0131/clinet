@@ -6,7 +6,7 @@
         <main>
           <div class="left-side">
             <div class="jumbotron">
-              <h2>登录系统(V1.0.0-907)</h2>
+              <h2>登录系统(V1.0.0-913)</h2>
                 <form>
                   <div class="form-group">
                     <label for="exampleInputEmail1" class="text-danger">用户名（电子邮箱）</label>

@@ -28,44 +28,6 @@
           </ul>
         </nav>
       </div>
-      <div style="marginTop: 20px">
-        <h3>使用流程</h3>
-        <hr />
-        <ul class="breadcrumb" style="marginLeft: 0">
-          <li>
-            <a href="#">数据采集</a> <span class="divider">></span>
-          </li>
-          <li>
-            <a href="#">新建自定义文档</a> <span class="divider">></span>
-          </li>
-          <li class="active">查询历史病历</li>
-        </ul>
-        <ul class="breadcrumb" style="marginLeft: 0">
-          <li>
-            <a href="#">数据分析</a> <span class="divider">></span>
-          </li>
-          <li>
-            <a href="#">表格展示</a> <span class="divider">></span>
-          </li>
-          <li class="active">图表分析</li>
-        </ul>
-        <ul class="breadcrumb" style="marginLeft: 0">
-          <li>
-            <a href="#">术语字典</a> <span class="divider">></span>
-          </li>
-          <li>
-            <a href="#">表格展示</a> <span class="divider">></span>
-          </li>
-        </ul>
-        <ul class="breadcrumb" style="marginLeft: 0">
-          <li>
-            <a href="#"></a>系统服务<span class="divider">></span>
-          </li>
-          <li>
-            <a href="#"></a>分组服务<span class="divider">></span>
-          </li>
-        </ul>
-      </div>
     </div>
     <div class="col-md-6" style="marginTop: 10px">
       <div>
@@ -107,64 +69,6 @@
             </tr>
           </tbody>
         </table>
-      </div>
-      <div style="marginTop: 20px">
-        <h3 class="alert-heading">住院病历</h3>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" style="marginLeft: 0">
-            <span><b>入院记录</b></span>
-          </ol>
-        </nav>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" style="marginLeft: 0">
-            <span><b>病程记录</b></span>
-            <li v-for="(data, index) in bcRecord" class="breadcrumb-item active" aria-current="page" v-bind:key="index"><a href="#">{{data}}</a></li>
-          </ol>
-        </nav>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" style="marginLeft: 0">
-            <span><b>围术期相关记录</b></span>
-            <li v-for="(data, index) in wsqRecord" class="breadcrumb-item active" aria-current="page" v-bind:key="index"><a href="#">{{data}}</a></li>
-          </ol>
-        </nav>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" style="marginLeft: 0">
-            <span><b>出院（死亡）记录</b></span>
-            <li v-for="(data, index) in cyRecord" class="breadcrumb-item active" aria-current="page" v-bind:key="index"><a href="#">{{data}}</a></li>
-          </ol>
-        </nav>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" style="marginLeft: 0">
-            <span><b>护理相关记录</b></span>
-            <li v-for="(data, index) in hlRecord" class="breadcrumb-item active" aria-current="page" v-bind:key="index"><a href="#">{{data}}</a></li>
-          </ol>
-        </nav>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" style="marginLeft: 0">
-            <span><b>知情同意书</b></span>
-            <li v-for="(data, index) in zqRecord" class="breadcrumb-item active" aria-current="page" v-bind:key="index"><a href="#">{{data}}</a></li>
-          </ol>
-        </nav>
-        <h3 class="alert-heading">门诊病历</h3>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" style="marginLeft: 0">
-            <span></span>
-            <li v-for="(data, index) in mzRecord" class="breadcrumb-item active" aria-current="page" v-bind:key="index"><a href="#">{{data}}</a></li>
-          </ol>
-        </nav>
-        <h3 class="alert-heading">健康体检</h3>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" style="marginLeft: 0">
-            <li class="breadcrumb-item active" aria-current="page"><a href="#">体检报告</a></li>
-          </ol>
-        </nav>
-        <h3 class="alert-heading">特殊病历</h3>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb" style="marginLeft: 0">
-            <span></span>
-            <li v-for="(data, index) in tsRecord" class="breadcrumb-item active" aria-current="page" v-bind:key="index"><a href="#">{{data}}</a></li>
-          </ol>
-        </nav>
       </div>
     </div>
   </div>

@@ -19,7 +19,7 @@
             <a href="#" v-on:click="blockShare(data)">发布</a>
           </td>
           <td v-if="rightPanel === 'local' || (rightPanel === 'server' && serverType !== 'user')"><a href="#" v-on:click="delDoc(index)">删除</a></td>
-          <td v-if="serverType !== 'user' && lastNav !== '/library' && rightPanel !== 'block'">
+          <td v-if="serverType !== 'user' && rightPanel !== 'block'">
             <a href="#" v-on:click="loadDoc(data, index, 'show')">参考</a>
           </td>
           <td v-if="fileName.includes('@')"><a href="#" v-on:click="downloadDoc(data, index)">下载</a></td>
@@ -95,33 +95,12 @@
           } else if (this.$store.state.Edit.rightPanel === 'block') {
             x = '区块链文件的用户列表'
           }
-          switch (this.$store.state.Edit.lastNav) {
-            case '/stat':
-              x = '数据分析文件列表'
-              break;
-            case '/library':
-              x = '术语字典文件列表'
-              break;
-            case '/system':
-              x = '本地导入文件列表'
-              break;
-            default:
-              break
-          }
           return x
         }
       },
       xs: {
         get() {
-          let x = this.$store.state.Edit.files
-          if (this.$store.state.Edit.lastNav === '/stat') {
-            x = this.$store.state.Stat.files
-          } else if (this.$store.state.Edit.lastNav === '/library') {
-            x = this.$store.state.Library.files
-          } else if (this.$store.state.Edit.lastNav === '/system') {
-            x = this.$store.state.System.files
-          }
-          console.log(x)
+          const x = this.$store.state.Edit.files
           return x
         },
       },
@@ -140,11 +119,6 @@
           return this.$store.state.Edit.serverType
         }
       },
-      lastNav: {
-        get() {
-          return this.$store.state.Edit.lastNav
-        }
-      },
       fileName: {
         get() {
           return this.$store.state.Edit.fileName
@@ -153,58 +127,18 @@
     },
     methods: {
       loadFile: function (data, index) {
+        const navType = this.$store.state.Edit.navType
         this.$store.commit('EDIT_SET_FILES_INDEX', index)
-        let tableType = 'local'
-        if (this.$store.state.Edit.dataType.includes('远程')) {
-          tableType = 'server'
-        } else if (this.$store.state.Edit.dataType.includes('区块链')) {
-          tableType = 'block'
-        } else {
-          tableType = 'local'
-        }
         this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
         if (this.$store.state.Edit.rightPanel === 'server' || this.$store.state.Edit.rightPanel === 'block') {
-          switch (this.$store.state.Edit.lastNav) {
-            case '/edit':
-              if (this.$store.state.Edit.serverType === 'file' && this.$store.state.Edit.navType === '病案文档') {
-                console.log('3333')
-                dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: data })
-              } else if (this.$store.state.Edit.serverType === 'user' && this.$store.state.Edit.navType === '病案文档') {
-                this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
-                console.log('2222')
-                dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
-              } else if (this.$store.state.Edit.navType === '数据分析') {
-                if (this.$store.state.Stat.serverMenu.type === '三级菜单') {
-                  this.$store.commit('STAT_CLEAR_SERVER_DIMENSION');
-                  this.$store.commit('STAT_CLEAR_SERVER_SORT');
-                  dataDB(this, tableType, 'statFile', { fileType: data }, 'statFile', { fileType: data, username: this.$store.state.System.user.username, tableType: 'edit', dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
-                  this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
-                } else {
-                  dataDB(this, tableType, 'statFile', { fileType: data }, 'statFiles', { fileType: data, username: this.$store.state.System.user.username, tableType: 'edit', dimension: this.$store.state.Stat.dimension, sort: this.$store.state.Stat.serverSort }, 0, 20)
-                }
-              } else if (this.$store.state.Edit.navType === '数据字典') {
-                this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
-                dataDB(this, tableType, 'library', { fileType: data }, 'libraryFile', { type1: tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
-              }
-              break;
-            default:
-              break;
+          if (this.$store.state.Edit.serverType === 'file') {
+            dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: data })
+          } else if (this.$store.state.Edit.serverType === 'user') {
+            this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
+            dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
           }
         } else {
-          switch (this.$store.state.Edit.lastNav) {
-            case '/edit':
-              if (this.$store.state.Edit.navType === '数据分析') {
-                dataDB(this, tableType, 'statFile', {}, 'statFiles', { fileType: '', username: this.$store.state.System.user.username, tableType })
-              } else if (this.$store.state.Edit.navType === '数据字典') {
-                // dataDB(this, tableType, 'library', { fileType: data }, 'libraryFile', { type1: tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
-                dataDB(this, tableType, 'libraryFile', null, 'libraryFiles', null)
-              } else {
-                dataDB(this, 'local', 'cda', { docType: data }, 'editFiles', null)
-              }
-              break;
-            default:
-              break;
-          }
+          dataDB(this, 'local', 'cda', { docType: data }, 'editFiles', null)
         }
       },
       close(data) {
@@ -221,7 +155,6 @@
         this.$store.commit('EDIT_SET_DOC_STATE');
       },
       page: function (n) {
-        console.log(n)
         editPage(this, n)
       },
       delDoc: function (index) {

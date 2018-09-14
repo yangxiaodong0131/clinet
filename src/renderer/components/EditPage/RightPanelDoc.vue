@@ -15,16 +15,7 @@
       </div>
       <div class="card-body" v-for="(section, key) of doc" v-bind:key='key'>
         <!-- 个人信息 -->
-        <div v-if="lastNav === '/stat' && key.length > 0">
-          <table>
-            <tr class="table-warning" v-on:dblclick="addSection(key.split(',')[1])"><td>{{key.split(',')[1]}}</td><td></td></tr>
-            <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="onClick(item)" v-on:dblclick="onDblClick(item)">
-              <td><b>{{ item[1] }}</b></td>
-              <td>{{ item[2] }}{{ item[3] }}{{ item[4] }}{{ item[5] }}{{ item[6] }}{{ item[7] }}{{ item[8] }}</td>
-            </tr>
-          </table>
-        </div>
-        <div v-if="lastNav === '/edit' && key.length > 0">
+        <div>
           <table v-if="key.split(',')[1] === '个人信息'">
             <tr class="table-warning" v-on:dblclick="addSection(key.split(',')[1])"><td>{{key.split(',')[1]}}</td><td></td></tr>
             <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="onClick(item)" v-on:dblclick="onDblClick(item)">
@@ -115,11 +106,6 @@
           const doc1 = editDoc(doc, systemSection)
           console.log(doc1)
           return doc1
-        }
-      },
-      lastNav: {
-        get() {
-          return this.$store.state.Edit.lastNav
         }
       }
     },

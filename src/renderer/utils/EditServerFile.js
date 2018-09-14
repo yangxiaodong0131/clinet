@@ -35,7 +35,6 @@ export function getEditTypes(obj, data, type, username, serverType = 'server') {
   })
 }
 export function getEditFiles(obj, data, type, username, serverType = 'server') {
-  console.log('===')
   let url = ''
   if (type === 'user') {
     url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
@@ -49,8 +48,6 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      console.log('===')
-      console.log(res.data.cda)
       obj.$store.commit('EDIT_LOAD_FILE', res.data.cda.map(x => [x]))
       // const keys = Object.keys(res.data)
       // const data = keys.map((v, i) => [keys[i], res.data[v].length])
@@ -75,7 +72,7 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
   // 去除文件名中的.csv
   const file = filename.split('-')
   let url = ''
-  const docSummary = []
+  // const docSummary = []
   if (type === 'upload') {
     url = '&type=create'
   }
@@ -92,20 +89,20 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
       //   }
       // })
       // const arr = []
-      if (docSummary.length === 0) {
-        const value = res.data.cda.content.split(',')
-        const arr = []
-        value.map((x, index) => {
-          if (index < 10) {
-            arr.push(x)
-          }
-          return arr
-        })
-        docSummary.push(arr)
-      }
-      obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
+      // if (docSummary.length === 0) {
+      //   const value = res.data.cda.content.split(',')
+      //   const arr = []
+      //   value.map((x, index) => {
+      //     if (index < 10) {
+      //       arr.push(x)
+      //     }
+      //     return arr
+      //   })
+      //   docSummary.push(arr)
+      // }
+      // obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
       obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
-      obj.$store.commit('EDIT_LOAD_DOC', [res.data.cda.content])
+      obj.$store.commit('EDIT_LOAD_DOC', res.data.cda.content)
       obj.$store.commit('SET_NOTICE', res.data.info);
     } else {
       obj.$store.commit('EDIT_LOAD_FILE', [])

@@ -52,30 +52,27 @@ export function saveEditDoc(obj, data) {
 
 // 新建文件
 export function newEditDoc(obj, n) {
-  if (obj.$store.state.Edit.lastNav === '/edit') {
-    obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true])
-    if (n) {
-      obj.$store.commit('EDIT_SET_DOC_TYPE', n)
-    } else {
-      n = obj.$store.state.Edit.docType
-    }
-    obj.$store.commit('SET_NOTICE', n);
-    obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-    if (obj.$store.state.Edit.rightPanel === 'server') {
-      getDocContent(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username, n)
-    } else if (global.hitbmodel[n] !== undefined) {
-      obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
-      // const date = getDate.
-      const filename = getDate().replace(/[ :-]/g, '')
-      const docType = obj.$store.state.Edit.docType
-      console.log(obj.$store.state.Edit.docType)
-      obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
-      dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType }, 'createCda', null)
-    } else { obj.$store.commit('EDIT_SET_DOC'); }
+  obj.$store.commit('EDIT_SET_DOC_INDEX', [0, true])
+  if (n) {
+    obj.$store.commit('EDIT_SET_DOC_TYPE', n)
   } else {
-    obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
-    obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+    n = obj.$store.state.Edit.docType
   }
+  obj.$store.commit('SET_NOTICE', n);
+  obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+  if (obj.$store.state.Edit.rightPanel === 'server') {
+    getDocContent(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username, n)
+  } else if (global.hitbmodel[n] !== undefined) {
+    obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
+    // const date = getDate.
+    const filename = getDate().replace(/[ :-]/g, '')
+    const docType = obj.$store.state.Edit.docType
+    console.log(obj.$store.state.Edit.docType)
+    obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
+    dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType }, 'createCda', null)
+  } else { obj.$store.commit('EDIT_SET_DOC'); }
+  // obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
+  // obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
 }
 
 export function editBarEnter(obj, targetValue) {
@@ -91,53 +88,42 @@ export function editBarEnter(obj, targetValue) {
       obj.$store.commit('EDIT_SET_MODEL_NAME', targetValue.replace('~', ''));
       obj.$store.commit('EDIT_SET_BAR_VALUE', '');
     } else {
-      let value = targetValue
+      const value = targetValue
       let n = obj.$store.state.Edit.docIndex
-      if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Edit.idIndex === n) {
-        if (obj.$store.state.Edit.file[obj.$store.state.Edit.file.length - 1] === '') {
-          value = '-'
-        } else {
-          obj.$store.commit('SET_NOTICE', '禁止编辑当前项！');
-        }
-      }
       // const value = targetValue
-      if (obj.$store.state.Edit.lastNav === '/library' && obj.$store.state.Edit.idIndex === n && obj.$store.state.Edit.file[obj.$store.state.Edit.file.length - 1] !== '') {
-        obj.$store.commit('SET_NOTICE', '禁止编辑当前项！');
-      } else {
-        if (obj.$store.state.Edit.selectedType !== 'col') {
-          const vs = value.split(',').filter(i => i !== '');
-          if (vs.length > 0) {
-            vs.forEach((element, index) => {
-              const v = element.split(' ').filter(i => i !== '');
-              if (index > 0) {
-                obj.$store.commit('EDIT_UPDATE_DOC', [n, v, true]);
-              } else {
-                obj.$store.commit('EDIT_UPDATE_DOC', [n, v]);
-              }
-              obj.$store.commit('EDIT_SET_DOC_INDEX', [1]);
-              n += 1
-              // if (!global.hitbdata.cdhHeader.includes(v[0]) && obj.$store.state.Edit.rightPanels.includes('病案质控')) {
-              //   obj.$store.commit('EDIT_ADD_DOC_CONTROL', v);
-              // }
-              if (obj.$store.state.Edit.lastNav === '/edit' && obj.$store.state.Edit.rightPanel === 'server') {
-                getExpertHint(obj, [obj.$store.state.System.server, obj.$store.state.System.port], v, obj.$store.state.Edit.section)
-              }
-            });
-          } else {
-            obj.$store.commit('EDIT_DELETE_ITEM', n);
-          }
-          if (obj.$store.state.Edit.helpType === '在线交流') {
-            message(obj, targetValue, obj.$store.state.System.user.username, 'doc')
-          }
+      if (obj.$store.state.Edit.selectedType !== 'col') {
+        const vs = value.split(',').filter(i => i !== '');
+        if (vs.length > 0) {
+          vs.forEach((element, index) => {
+            const v = element.split(' ').filter(i => i !== '');
+            if (index > 0) {
+              obj.$store.commit('EDIT_UPDATE_DOC', [n, v, true]);
+            } else {
+              obj.$store.commit('EDIT_UPDATE_DOC', [n, v]);
+            }
+            obj.$store.commit('EDIT_SET_DOC_INDEX', [1]);
+            n += 1
+            // if (!global.hitbdata.cdhHeader.includes(v[0]) && obj.$store.state.Edit.rightPanels.includes('病案质控')) {
+            //   obj.$store.commit('EDIT_ADD_DOC_CONTROL', v);
+            // }
+            if (obj.$store.state.Edit.rightPanel === 'server') {
+              getExpertHint(obj, [obj.$store.state.System.server, obj.$store.state.System.port], v, obj.$store.state.Edit.section)
+            }
+          });
         } else {
-          // value = value.replace(/,/g, '，')
-          const cv = value.split(' ').filter(i => i !== '');
-          const col = obj.$store.state.Edit.selectedCol[0]
-          obj.$store.commit('EDIT_UPDATE_FILE', [col, cv[1]]);
+          obj.$store.commit('EDIT_DELETE_ITEM', n);
         }
-        obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-        obj.$store.commit('SET_NOTICE', '编辑 -> 缓存 -> 选择文件 -> 保存');
+        if (obj.$store.state.Edit.helpType === '在线交流') {
+          message(obj, targetValue, obj.$store.state.System.user.username, 'doc')
+        }
+      } else {
+        // value = value.replace(/,/g, '，')
+        const cv = value.split(' ').filter(i => i !== '');
+        const col = obj.$store.state.Edit.selectedCol[0]
+        obj.$store.commit('EDIT_UPDATE_FILE', [col, cv[1]]);
       }
+      obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+      obj.$store.commit('SET_NOTICE', '编辑 -> 缓存 -> 选择文件 -> 保存');
     }
   } else {
     message(obj, targetValue, obj.$store.state.System.user.username, 'message')

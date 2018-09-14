@@ -10,7 +10,6 @@ const state = {
   filesIndex: 0,
   fileIndex: null,
   rightPanel: 'local',
-  lastNav: '/edit',
   fileName: '',
   filePage: 0,
   // 翻页
@@ -24,8 +23,8 @@ const state = {
   hint: [],
   helpType: '编辑器使用帮助',
   helpTypes: ['输入框提示', '病案参考', '病案历史', '相似病案', '在线交流', 'DRG分析', 'HIS接口', '病案质控', '专家提示'],
-  dataType: '本地-文档',
-  navType: '病案文档',
+  dataType: '文档',
+  navType: '本地',
   serverType: 'user',
   docType: '自定义文档',
   docTypes: ['自定义文档', '病案首页（卫统四CSV）', '入院申请', '首次病程', '病程记录', '病案首页', '门诊病案', '健康体检'],
@@ -58,7 +57,6 @@ const state = {
   docControl: [],
   expertHint: [],
   expertSection: null,
-  idIndex: null,
   currentFiles: [],
   filesName: null
 };
@@ -93,9 +91,6 @@ const mutations = {
   },
   EDIT_ADD_DOC(state, message) {
     state.docIndex = 0
-    if (state.lastNav !== '/edit') {
-      state.idIndex = state.file[1].split(',').indexOf('ID')
-    }
     state.file.push(message);
   },
   EDIT_SERVER_ID(state, id) {
@@ -105,11 +100,7 @@ const mutations = {
     state.files.push(message);
   },
   EDIT_SAVE_DOC(state, m) {
-    // if (state.lastNav !== '/edit') {
-    //   // const a = m[1].split(',')
-    // } else {
     state.file.splice(m[0], 1, m[1]);
-    // }
   },
   EDIT_SAVE_FILE(state, m) {
     state.file.splice(m[0], 1, m[1]);
@@ -141,9 +132,6 @@ const mutations = {
   EDIT_LOAD_DOC(state, message) {
     // const x = message.map(m => m.split(' ').filter(i => i !== ''))
     state.doc = message;
-    if (state.lastNav !== '/edit') {
-      state.idIndex = state.file[1].split(',').indexOf('ID')
-    }
     state.editBarValue = message[0]
     if (global.hitbSections.length > 0 && global.hitbSections.includes(state.editBarValue)) {
       state.section = state.editBarValue[0]
@@ -178,11 +166,6 @@ const mutations = {
   },
   EDIT_SET_FILE_TYPE(state, message) {
     state.fileType = message;
-  },
-  EDIT_SET_LAST_NAV(state, message) {
-    state.lastNav = message;
-    // state.doc = []
-    // state.file = []
   },
   EDIT_SET_DOC_INDEX(state, m) {
     if (m[1] === true) {
@@ -540,7 +523,6 @@ const actions = {
     commit('EDIT_SET_RIGHT_PANEL');
     commit('EDIT_SET_FILES_INDEX');
     commit('EDIT_SET_FILE_INDEX');
-    commit('EDIT_SET_LAST_NAV');
     commit('EDIT_SET_FILE_PAGE');
     commit('EDIT_SET_FILES_PAGE');
     commit('EDIT_SET_DOC_INDEX');

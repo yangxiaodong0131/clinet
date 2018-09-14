@@ -69,13 +69,6 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
       obj.$store.commit('LIBRARY_SET_LIBRARY_LIST', res.data.list);
       obj.$store.commit('LIBRARY_SET_COUNT_PAGE', res.data.count);
       obj.$store.commit('SET_NOTICE', `当前${obj.$store.state.Library.libraryTableInfo.page}页,共${obj.$store.state.Library.libraryTableInfo.countPage}页`);
-      if (type1) {
-        // console.log(res.data.library.filter(x => x !== undefined).map(x => x.join(',')));
-        obj.$store.commit('EDIT_LOAD_FILE', res.data.library.filter(x => x !== undefined).map(x => x.join(',')))
-        // obj.$store.commit('EDIT_LOAD_FILE', res.data.library.filter(x => x !== undefined).map(x => x.join(','))).map(x => x.join(','))
-      }
-      // obj.$store.commit('EDIT_LOAD_FILE', res.data.library.filter(x => x !== undefined).map(x => x.join(',')))
-      // .map(x => x.join(','))
     } else {
       obj.$store.commit('LIBRARY_SET_SERVER_TABLE', {})
     }
