@@ -45,7 +45,7 @@
         } else if (this.$store.state.Library.tableType === 'local') {
           dataDB(this, 'local', 'library', { fileType: data }, 'libraryCount', null, null, 30)
         }
-        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: data }, 'libraryFile', { type1: this.$store.state.Library.tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
+        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: data }, 'libraryFile', { sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
       },
     },
   };

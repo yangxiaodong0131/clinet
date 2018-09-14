@@ -103,11 +103,11 @@
         const page = parseInt(data, 10)
         this.$store.commit('LIBRARY_SET_TABLE_PAGE', page);
         const skip = (page - 1) * 30
-        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: this.$store.state.Library.tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, skip, 30)
+        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, skip, 30)
       },
       onClickSort: function (field, type) {
         this.$store.commit('LIBRARY_SET_SERVER_SORT', [field, type])
-        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: this.$store.state.Library.tableType, sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
+        dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { sort: this.$store.state.Library.serverSort, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension }, 0, 30)
       },
       change: function (dataIndex, trIndex, value) {
         this.$store.commit('LIBRARY_SET_CHANGE_INDEX', [dataIndex, trIndex]);

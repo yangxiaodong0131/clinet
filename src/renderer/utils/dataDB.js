@@ -235,7 +235,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             getLibraryFiles(obj, serverConfig, serverType);
             break;
           case 'libraryFile':
-            getLibrary(obj, serverConfig, data.fileType, page + 1, newData.serverDimension, newData.dimensionServer, newData.type1, serverType, newData.sort)
+            getLibrary(obj, serverConfig, data.fileType, page + 1, newData.serverDimension, newData.dimensionServer, serverType, newData.sort)
             break;
           case 'serach':
             if (newData.tableType === 'librarySerach') {
