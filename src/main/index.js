@@ -1,14 +1,13 @@
-import { app, BrowserWindow, globalShortcut } from 'electron' // eslint-disable-line
-// const { ipcMain } = require('electron')
-// todo:'electron' should be listed in the project's dependencies, not devDependencies
-// ipcMain.on('asynchronous-message', (event, arg) => {
-//   console.log(arg) // prints "ping"
-//   event.sender.send('asynchronous-reply', 'pong')
-// })
-// ipcMain.on('synchronous-message', (event, arg) => {
-//   console.log(arg) // prints "ping"
-//   event.returnValue = 'pong'
-// })
+import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron' // eslint-disable-line
+
+ipcMain.on('asynchronous-message', (event, arg) => {
+  console.log(arg) // prints "ping"
+  event.sender.send('asynchronous-reply', 'pong')
+})
+ipcMain.on('synchronous-message', (event, arg) => {
+  console.log(arg) // prints "ping"
+  event.returnValue = 'pong'
+})
 
 /**
  * Set `__static` path to static files in production
