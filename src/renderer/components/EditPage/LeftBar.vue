@@ -25,7 +25,7 @@
           <a class="nav-link text-light" href="#">保存</a>
         </li>
         <li class="nav-item" id="edit-leftbar-newdoc3" v-on:click="save('保存模板')">
-          <a class="nav-link text-light" href="#" v-if="this.$store.state.System.user.login">另存为模板</a>
+          <a class="nav-link text-light" href="#">另存为模板</a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0" v-on:submit.prevent>

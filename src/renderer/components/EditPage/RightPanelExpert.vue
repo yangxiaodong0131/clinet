@@ -40,13 +40,11 @@
     computed: {
       rightFolds: {
         get() {
-          console.log(this.$store.state.Edit.rightFolds)
           return this.$store.state.Edit.rightFolds
         }
       },
       expertKey: {
         get() {
-          console.log(this.$store.state.Edit.expertHint)
           return this.$store.state.Edit.expertHint.symptom
         }
       },
@@ -59,7 +57,6 @@
               arr.push(this.$store.state.Edit.expertHint[x])
             }
           })
-          console.log(arr)
           return arr
         }
       },

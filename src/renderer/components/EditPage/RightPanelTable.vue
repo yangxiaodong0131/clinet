@@ -129,7 +129,11 @@
         this.$store.commit('EDIT_SET_DOC_TYPE', name[1]);
         this.$store.commit('EDIT_SET_FILE_INDEX', index);
         if (navType === '本地') {
-          dataDB(this, 'local', 'cda', { fileName: name[0] }, 'editFile', null)
+          if (name[1].includes('模板')) {
+            dataDB(this, 'local', 'cda', { modelName: name[0] }, 'editFile', null)
+          } else {
+            dataDB(this, 'local', 'cda', { fileName: name[0] }, 'editFile', null)
+          }
         } else {
           dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
         }

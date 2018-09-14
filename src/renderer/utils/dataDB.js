@@ -41,6 +41,7 @@ function find(obj, col, data, type, skip, limit, newData) {
     switch (type) {
       case 'editTypes':
         if (res) {
+          console.log(res)
           const type = []
           res.forEach((x) => {
             if (x.docType === undefined) {
@@ -61,8 +62,82 @@ function find(obj, col, data, type, skip, limit, newData) {
           obj.$store.commit('EDIT_LOAD_FILES', type)
         }
         break;
+      case 'editModels':
+        if (res) {
+          console.log(res)
+          const type = []
+          res.forEach((x) => {
+            if (x.modelType === undefined) {
+              x = '未定义模板'
+            } else {
+              x = x.modelType
+            }
+            if (obj1[x]) {
+              obj1[x] += 1
+            } else {
+              obj1[x] = 1
+            }
+          })
+          const keys = Object.keys(obj1)
+          keys.forEach((x) => {
+            type.push([x, obj1[x]])
+          })
+          obj.$store.commit('EDIT_LOAD_FILES', type)
+        }
+        break;
+      case 'editUsers':
+        if (res) {
+          const type = []
+          res.forEach((x) => {
+            if (x.userName === undefined) {
+              x = '未定义用户'
+            } else {
+              x = x.userName
+            }
+            if (obj1[x]) {
+              obj1[x] += 1
+            } else {
+              obj1[x] = 1
+            }
+          })
+          const keys = Object.keys(obj1)
+          keys.forEach((x) => {
+            type.push([x, obj1[x]])
+          })
+          obj.$store.commit('EDIT_LOAD_FILES', type)
+        }
+        break;
+      case 'editPatients':
+        if (res) {
+          const type = []
+          res.forEach((x) => {
+            if (x.id === undefined || x.id === '未定义') {
+              x = '未定义客户'
+            } else {
+              x = x.id
+            }
+            if (obj1[x]) {
+              obj1[x] += 1
+            } else {
+              obj1[x] = 1
+            }
+          })
+          const keys = Object.keys(obj1)
+          keys.forEach((x) => {
+            type.push([x, obj1[x]])
+          })
+          obj.$store.commit('EDIT_LOAD_FILES', type)
+        }
+        break;
       case 'editFiles':
-        obj.$store.commit('EDIT_LOAD_FILE', res.map(x => [x.fileName, x.docType]));
+        obj.$store.commit('EDIT_LOAD_FILE', res.map((x) => {
+          if (x.fileType === 'cda') {
+            x = [x.fileName, x.docType]
+          } else {
+            x = [x.modelName, x.modelType]
+          }
+          return x
+        }));
         break;
       case 'libraryFiles':
         obj.$store.commit('LIBRARY_LOAD_FILES', res.map(x => x.fileName));
@@ -174,6 +249,9 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'update': update(obj, col, data, newData, type); break
         case 'remove': remove(obj, col, data, newData); break
         case 'editFiles': find(obj, col, data, type, skip, limit, newData); break
+        case 'editUsers': find(obj, col, data, type, skip, limit, newData); break
+        case 'editPatients': find(obj, col, data, type, skip, limit, newData); break
+        case 'editModels': find(obj, col, data, type, skip, limit, newData); break
         case 'editTypes': find(obj, col, data, type, skip, limit, newData); break
         case 'editFile': findOne(obj, col, data, type); break
         case 'createCda': insert(obj, col, data, type); break

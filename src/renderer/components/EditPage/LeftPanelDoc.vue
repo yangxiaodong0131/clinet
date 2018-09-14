@@ -124,18 +124,6 @@
           return this.$store.state.Edit.docState
         }
       },
-      // libraryHead: {
-      //   get() {
-      //     const file = this.$store.state.Edit.file
-      //     console.log(file)
-      //     return file
-      //   }
-      // },
-      idIndex: {
-        get() {
-          return this.$store.state.Edit.idIndex - 2
-        }
-      },
       navType: {
         get() {
           return this.$store.state.Edit.navType

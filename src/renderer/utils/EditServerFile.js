@@ -17,7 +17,6 @@ export function getEditTypes(obj, data, type, username, serverType = 'server') {
       // obj.$store.commit('EDIT_SERVER_FILES', res.data)
       const keys = Object.keys(res.data)
       const data = keys.map((v, i) => [keys[i], res.data[v].length])
-      console.log(data)
       obj.$store.commit('EDIT_LOAD_FILES', data)
       // const num = Math.ceil(res.data.cda.length / 20)
       // obj.$store.commit('EDIT_SET_FILES_NUM', num)

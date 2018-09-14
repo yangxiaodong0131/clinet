@@ -43,8 +43,6 @@ export default function saveFile(obj, x, p) {
       })
       arr.splice(0, 1)
       const data1 = arr.join('\n')
-      // if (data1.length > 0) {
-      // console.log(fileName.Substring(0, -3))
       fs.writeFile(fileName, data1, (err) => {
         if (!err) {
           obj.$store.commit('SET_NOTICE', `文件成功保存到「${fileName}」！`)
@@ -76,9 +74,6 @@ export default function saveFile(obj, x, p) {
     } else {
       data = p.join('\n')
     }
-    // // const data = p.join(',\n')
-    // console.log(obj.$store.state.Edit.file);
-    // console.log(p);
     if (fileName.includes('未保存病案.cda')) {
       if (obj.$store.state.Edit.rightPanel === 'local') {
         const arr = []
@@ -121,7 +116,6 @@ export default function saveFile(obj, x, p) {
     })
   } else {
     obj.$store.commit('SET_NOTICE', '请先打开一个本地或者远程的CDA文件！');
-    // console.log(x)
     // const fileName = path.format({
     //   dir: dir,
     //   base: `${x}.cda`
