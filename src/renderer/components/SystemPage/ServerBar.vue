@@ -183,6 +183,7 @@
         } else {
           switch (value) {
             case '机构信息':
+              sGetOrg(this, [this.server, this.port], this.$store.state.System.user, this.$store.state.System.pageInfo.org);
               this.$store.commit('SYSTEM_GET_ORGPAGE', 'getOrg');
               this.$store.commit('SET_NOTICE', '机构信息');
               break;
