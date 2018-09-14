@@ -14,7 +14,11 @@
         <td>区块链版本号</td>
       </tr>
       <tr v-for="(line, index) in peers" v-bind:key='index' v-on:click="onClick(line, index)">
-        <td v-for="(data, index) in line" v-bind:key='index'>{{line[index]}}</td>
+        <td>{{line.host}}</td>
+        <td>{{line.port}}</td>
+        <td>{{line.id}}</td>
+        <td>{{line.updated_at}}</td>
+        <td>{{line.inserted_at}}</td>
       </tr>
     </table>
     <table v-if="toolbar == 'blockChainFunction'">

@@ -27,7 +27,7 @@ export function getLibraryFiles(obj, data, serverType = 'server', show = null) {
   })
 }
 
-export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensionServer, type1, serverType = 'server', sort) {
+export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensionServer, serverType = 'server', sort) {
   let url = ''
   if (dimensionType !== null) {
     const keys = Object.keys(dimensionServer)
@@ -45,13 +45,9 @@ export function getLibrary(obj, data, tableName, pageNum, dimensionType, dimensi
   } else {
     sorts = ''
   }
-  let username = ''
-  if (type1 === 'edit') {
-    username = obj.$store.state.System.user.username
-  }
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&username=${username}&tab_type=${tableName}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
+    url: `http://${data[0]}:${data[1]}/library/rule_client?rows=30&username=&tab_type=${tableName}&page=${pageNum}&server_type=${serverType}${url}${sorts}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -137,30 +133,6 @@ export function getLibrarySerach(obj, url, fileName, value, servertype) {
   }).catch((err) => {
     console.log(err);
     obj.$store.commit('SET_NOTICE', '下载失败')
-  })
-}
-
-export function saveLibrary(obj, data, content) {
-  const user = obj.$store.state.System.user;
-  const tableName = obj.$store.state.Library.libraryTableInfo.tableName;
-  const pageNum = obj.$store.state.Library.libraryTableInfo.page;
-  const serverType = 'server'
-  const sort = obj.$store.state.Library.serverSort;
-  axios({
-    method: 'post',
-    url: `http://${data[0]}:${data[1]}/library/client_save`,
-    data: qs.stringify({ data: JSON.stringify(content), username: user.username, tab_type: tableName, rows: 30, page: pageNum, order: sort.field, order_type: sort.type, server_type: serverType }),
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    responseType: 'json'
-  }).then((res) => {
-    if (res.status === 200) {
-      obj.$store.commit('SET_NOTICE', `保存字典     ${tableName}     成功!`);
-    } else {
-      obj.$store.commit('SET_NOTICE', `保存字典     ${tableName}     失败,文件已经存在!`);
-    }
-  }).catch((err) => {
-    console.log(err)
-    obj.$store.commit('SET_NOTICE', '保存字典失败!');
   })
 }
 
