@@ -57,7 +57,7 @@
 <script>
   import { sRegister, sUpdateUser } from '../../../utils/ServerUser'
   import { socketConnect } from '../../../utils/Socket';
-  import { sGetRecord } from '../../../utils/Server'
+  // import { sGetRecord } from '../../../utils/Server'
   export default {
     data() {
       return {
@@ -117,7 +117,7 @@
         if (this.reg.test(user.username)) {
           this.$store.commit('SYSTEM_SET_SERVER', [host, port])
           socketConnect(this, [host, port], { username: user.username, password: user.password });
-          sGetRecord(this, [host, port], this.$store.state.Home.recordPage)
+          // sGetRecord(this, [host, port], this.$store.state.Home.recordPage)
         }
       },
       sysytemRegisters: function () {
