@@ -134,11 +134,10 @@
         if (n.includes('你好')) {
           n = '已登录'
         }
-        if (n !== '数据采集-数据采集' && n !== '未登录...' && this.$store.state.Edit.doc.length > 0) {
-          // cacheEditDoc(this)
-          console.log(this.$store.state.Edit.doc)
-          // saveEditDoc(this, this.$store.state.Edit.doc)
-        }
+        // if (n !== '数据采集-数据采集' && n !== '未登录...' && this.$store.state.Edit.doc.length > 0) {
+        //   // cacheEditDoc(this)
+        //   // saveEditDoc(this, this.$store.state.Edit.doc)
+        // }
         switch (n) {
           case '首页':
             this.$router.push('/home');

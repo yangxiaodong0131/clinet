@@ -15,18 +15,6 @@
           <td v-on:click="loadFile(data[0], index)">{{index + 1}}</td>
           <td v-on:click="loadFile(data[0], index)">{{data[0]}}</td>
           <td v-on:click="loadFile(data[0], index)">{{data[1]}}</td>
-          <!-- <td v-if ="title === '远程文件的用户列表' && data.split('').includes('-')">
-            <a href="#" v-on:click="blockShare(data)">发布</a>
-          </td>
-          <td v-if="rightPanel === 'local' || (rightPanel === 'server' && serverType !== 'user')"><a href="#" v-on:click="delDoc(index)">删除</a></td>
-          <td v-if="serverType !== 'user' && rightPanel !== 'block'">
-            <a href="#" v-on:click="loadDoc(data, index, 'show')">参考</a>
-          </td>
-          <td v-if="fileName.includes('@')"><a href="#" v-on:click="downloadDoc(data, index)">下载</a></td>
-          <td v-if="data[2]" class="table-success"><a href="#" style="color: #000">已上传</a></td>
-          <td v-if="(!fileName.includes('@') || rightPanel !== 'block') && !data[2]" class="table-warning">
-            <a href="#" style="color: #000" v-on:click="uploadDoc(data, index)">未上传</a> -->
-          <!-- </td> -->
         </tr>
       </table>
       <table v-if="this.$store.state.Edit.rightFolds.includes(title)">
@@ -138,7 +126,24 @@
             dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
           }
         } else {
-          dataDB(this, 'local', 'cda', { docType: data }, 'editFiles', null)
+          const dataType = this.$store.state.Edit.dataType
+          switch (dataType) {
+            case '用户':
+              // userName
+              dataDB(this, 'local', 'cda', { userName: data }, 'editFiles', null)
+              break;
+            case '客户':
+              dataDB(this, 'local', 'cda', { id: data }, 'editFiles', null)
+              break;
+            case '文档':
+              dataDB(this, 'local', 'cda', { docType: data }, 'editFiles', null)
+              break;
+            case '模板':
+              dataDB(this, 'local', 'cda', { modelType: data }, 'editFiles', null)
+              break;
+            default:
+              break;
+          }
         }
       },
       close(data) {
@@ -156,15 +161,6 @@
       },
       page: function (n) {
         editPage(this, n)
-      },
-      delDoc: function (index) {
-        console.log(index)
-        // this.$store.commit('EDIT_DELETE_FILE', index);
-        // this.$store.commit('EDIT_DELETE_DOC_SUMMARY', index);
-        // this.$store.commit('SET_NOTICE', '删除成功');
-        // this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-        // this.$store.commit('EDIT_SET_DELETE_LOCAL', index[0])
-        // dataDB(this, 'local', 'cda', { fileType: 'cda', fileIndex: index }, 'remove', null)
       },
       fold(data) {
         this.$store.commit('EDIT_SET_RIGHT_FOLDS', data);

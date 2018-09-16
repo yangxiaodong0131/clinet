@@ -98,7 +98,7 @@
 </template>
 
 <script>
-  import loadFile from '../../utils/LoadFile';
+  // import loadFile from '../../utils/LoadFile';
   import GetUsers from './RightPanelServer/GetUsers';
   import GetOrgs from './RightPanelServer/GetOrgs';
   import CreateOrgs from './RightPanelServer/CreateOrgs';
@@ -119,7 +119,7 @@
       }
     },
     created: function () {
-      loadFile(this, 'hitb_server.csv', 'system')
+      // loadFile(this, 'hitb_server.csv', 'system')
     },
     computed: {
       file: {

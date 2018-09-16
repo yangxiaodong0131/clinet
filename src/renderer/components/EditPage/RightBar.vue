@@ -35,16 +35,11 @@
             {{dataType}}
           </a>
           <div class="dropdown-menu" id="edit-rightbar-sel" aria-labelledby="edit-rightbar-choice">
-            <!-- <a class="dropdown-item" href="#" v-on:click="localData()">文档</a>
-            <div class="dropdown-divider"></div> -->
             <a class="dropdown-item" href="#" v-on:click="navBar('用户')">用户</a>
             <a class="dropdown-item" href="#" v-on:click="navBar('客户')">客户</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#" v-on:click="navBar('文档')">文档</a>
             <a class="dropdown-item" href="#" v-on:click="navBar('模板')">模板</a>
-            <!-- <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" v-on:click="blockData('区块链-用户')">区块链-用户</a>
-            <a class="dropdown-item" href="#" v-on:click="blockData('区块链-文档')">区块链-文档</a> -->
           </div>
         </li>
       </ul>
@@ -67,24 +62,6 @@
       };
     },
     computed: {
-      isSaveLocal: {
-        get() {
-          let length = null
-          if (this.$store.state.Edit.isSaveLocal.length > 0) {
-            length = this.$store.state.Edit.isSaveLocal.length
-          }
-          return length
-        }
-      },
-      isSaveServer: {
-        get() {
-          let length = null
-          if (this.$store.state.Edit.isSaveServer.length > 0) {
-            length = this.$store.state.Edit.isSaveServer.length
-          }
-          return length
-        }
-      },
       helpType: {
         get() {
           return this.$store.state.Edit.helpType
@@ -114,8 +91,9 @@
         rightBarHelp(this, n)
       },
       navBar: function (n) {
+        const navType = this.$store.state.Edit.navType
         this.$store.commit('EDIT_SET_DATA_TYPE', n);
-        switch (n) {
+        switch (navType) {
           case '本地':
             this.localData(n)
             break;
@@ -130,7 +108,6 @@
         }
       },
       localData: function (x) {
-        console.log(x)
         const navType = this.$store.state.Edit.navType
         if (navType !== '本地') {
           this.$store.commit('EDIT_SET_RIGHT_TYPE', null);
@@ -141,9 +118,24 @@
         this.$store.commit('EDIT_SET_HELP_TYPES', ['输入框提示', '病案参考', '病案历史', '在线交流', '病案质控', '专家提示', 'DRG分析', 'HIS接口'])
         this.$store.commit('EDIT_SET_CHAT_TYPE', false);
         this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-        dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
         this.$store.commit('SET_NOTICE', '读取本地文件');
         this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+        switch (x) {
+          case '用户':
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editUsers', null, null)
+            break;
+          case '客户':
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editPatients', null, null)
+            break;
+          case '文档':
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
+            break;
+          case '模板':
+            dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
+            break;
+          default:
+            break;
+        }
       },
       serverData: function (x) {
         const navType = this.$store.state.Edit.navType

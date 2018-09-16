@@ -110,7 +110,6 @@ export default function loadFile(obj, x, p, e = null) {
       if (stat.isDirectory()) {
         obj.$store.commit('SET_NOTICE', '目录不能导入，请选择文件！');
       } else if (stat.size < 1000 * 5000) {
-        // console.log(stat);
         obj.$store.commit('SET_NOTICE', '正在读取文件，请等待！');
         const fRead = fs.createReadStream(file);
         const fReadline = readline.createInterface({ input: fRead });

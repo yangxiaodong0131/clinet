@@ -60,3 +60,16 @@ export function peersGetIp(obj, data) {
       console.log(err);
     });
 }
+
+// 获取指定ip节点信息
+export function serverServiceGet(obj, data) {
+  axios.get(`http://${data[0]}:${data[1]}/block/api/server_service/`)
+    .then((res) => {
+      if (res.status === 200) {
+        obj.$store.commit('BLOCK_SET_FUNS', res.data.server_service)
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}

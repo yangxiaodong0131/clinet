@@ -138,7 +138,7 @@
         } else if (['local', 'server', 'block'].includes(this.$store.state.Library.tableType)) {
           this.$store.commit('LIBRARY_TABLE_PAGE', [n]);
           const skip = (this.$store.state.Library.libraryTableInfo.page - 1) * 30
-          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: this.$store.state.Library.tableType, dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, skip, 30)
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { dimensionType: null, dimensionServer: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, skip, 30)
           this.$store.commit('SET_NOTICE', `当前${this.$store.state.Library.libraryTableInfo.page}页,共${this.$store.state.Library.libraryTableInfo.countPage}页`)
         }
       },
@@ -169,7 +169,7 @@
           case 'server': {
             if (this.$store.state.Library.libraryTableInfo.tableName) {
               this.$store.commit('LIBRARY_SET_SERVER_DIMENSION', [value, x]);
-              dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, 0, 30)
+              dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'libraryFile', { dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort }, 0, 30)
             } else {
               this.$store.commit('SET_NOTICE', '请选择文件');
             }
@@ -185,7 +185,7 @@
         if (type === 'page') {
           dataDB(this, 'server', 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'search', { value: this.$store.state.Library.changeVal, data: data, tableType: 'librarySerach' }, 0, 30)
         } else if (type === 'server') {
-          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'serach', { val: this.$store.state.Library.changeVal, type1: 'server', dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort, header: data[0], tableType: 'librarySerach' }, 0, 30)
+          dataDB(this, this.$store.state.Library.tableType, 'library', { fileType: this.$store.state.Library.libraryTableInfo.tableName }, 'serach', { val: this.$store.state.Library.changeVal, dimensionType: 'filter', serverDimension: this.$store.state.Library.serverDimension, sort: this.$store.state.Library.serverSort, header: data[0], tableType: 'librarySerach' }, 0, 30)
         } else if (type === 'return') {
           if (this.$store.state.Library.isServer) {
             this.$store.commit('LIBRARY_SET_TABLE_TYPE', 'server')

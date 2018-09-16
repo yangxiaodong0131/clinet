@@ -36,15 +36,19 @@ export function saveEditDoc(obj, data) {
   }
   if (data === '保存模板') {
     if (!obj.$store.state.Edit.modelName) {
-      const modelName = getDate().replace(/[ :-]/g, '')
-      obj.$store.commit('EDIT_SET_MODEL_NAME', modelName)
-    } else if (fileName.includes('@')) {
-      dataDB(obj, 'server', 'cda', { fileType: 'modal', fileName, value: doc, docType }, 'saveCda', null)
+      const name = getDate().replace(/[ :-]/g, '')
+      obj.$store.commit('EDIT_SET_MODEL_NAME', `模板-${name}`)
+    }
+    const modelName = obj.$store.state.Edit.modelName
+    if (fileName.includes('@')) {
+      dataDB(obj, 'server', 'cda', { fileType: 'model', value: doc, modelName, modelType: '未定义模板' }, 'createCda', { fileName, content: doc, username: obj.$store.state.System.user.username, mouldtype: '模板' })
     } else {
-      dataDB(obj, 'local', 'cda', { fileType: 'modal', fileName, value: doc, docType }, 'saveCda', null)
+      dataDB(obj, 'local', 'cda', { fileType: 'model', value: doc, modelName, modelType: '未定义模板' }, 'createCda', { value: doc, modelName, modelType: '未定义模板' })
     }
   } else if (fileName.includes('@')) {
     dataDB(obj, 'server', 'cda', { fileType: 'cda', fileName, value: doc, docType }, 'saveCda', { fileName, content: doc, username: obj.$store.state.System.user.username, docType: obj.$store.state.Edit.docType, mouldtype: '病案' })
+  } else if (fileName.includes('模板')) {
+    dataDB(obj, 'local', 'cda', { fileType: 'model', modelName: fileName }, 'saveCda', { value: doc, docType })
   } else {
     dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName }, 'saveCda', { value: doc, docType })
   }
@@ -64,15 +68,66 @@ export function newEditDoc(obj, n) {
     getDocContent(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username, n)
   } else if (global.hitbmodel[n] !== undefined) {
     obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
-    // const date = getDate.
     const filename = getDate().replace(/[ :-]/g, '')
     const docType = obj.$store.state.Edit.docType
-    console.log(obj.$store.state.Edit.docType)
+    let userName = obj.$store.state.System.user.username
+    if (!userName) {
+      userName = '未定义用户'
+    }
     obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
-    dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType }, 'createCda', null)
+    dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType, userName }, 'createCda', null)
   } else { obj.$store.commit('EDIT_SET_DOC'); }
   // obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
   // obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+  const navType = obj.$store.state.Edit.navType
+  const dataType = obj.$store.state.Edit.dataType
+  const files = obj.$store.state.Edit.files
+  const filesIndex = obj.$store.state.Edit.filesIndex
+  const data = files[filesIndex][0]
+  switch (dataType) {
+    case '用户':
+      if (navType === '本地') {
+        dataDB(obj, 'local', 'cda', { fileType: 'cda' }, 'editUsers', null, null)
+        dataDB(obj, 'local', 'cda', { userName: data }, 'editFiles', null)
+      } else if (navType === '远程') {
+        console.log('远程')
+      } else {
+        console.log('区块链')
+      }
+      break;
+    case '客户':
+      if (navType === '本地') {
+        dataDB(obj, 'local', 'cda', { fileType: 'cda' }, 'editPatients', null, null)
+        dataDB(obj, 'local', 'cda', { id: data }, 'editFiles', null)
+      } else if (navType === '远程') {
+        console.log('远程')
+      } else {
+        console.log('区块链')
+      }
+      break;
+    case '文档':
+      if (navType === '本地') {
+        dataDB(obj, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
+        dataDB(obj, 'local', 'cda', { docType: data }, 'editFiles', null)
+      } else if (navType === '远程') {
+        console.log('远程')
+      } else {
+        console.log('区块链')
+      }
+      break;
+    case '模板':
+      if (navType === '本地') {
+        dataDB(obj, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
+        dataDB(obj, 'local', 'cda', { modelType: data }, 'editFiles', null)
+      } else if (navType === '远程') {
+        console.log('远程')
+      } else {
+        console.log('区块链')
+      }
+      break;
+    default:
+      break;
+  }
 }
 
 export function editBarEnter(obj, targetValue) {
