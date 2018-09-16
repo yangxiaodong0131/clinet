@@ -31,23 +31,23 @@
           <td>ID</td>
           <td>{{this.$store.state.System.user.id}}</td>
         </tr>
-        <tr>
+        <tr v-if="this.$store.state.System.user.blockchain">
           <td>区块链口令</td>
           <td>{{this.$store.state.System.user.blockchain.username}}</td>
         </tr>
-        <tr>
+        <tr v-if="this.$store.state.System.user.blockchain">
           <td>公钥</td>
           <td>{{this.$store.state.System.user.blockchain.publicKey}}</td>
         </tr>
-        <tr>
+        <tr v-if="this.$store.state.System.user.blockchain">
           <td>地址</td>
           <td>{{this.$store.state.System.user.blockchain.address}}</td>
         </tr>
-        <tr>
+        <tr v-if="this.$store.state.System.user.blockchain">
           <td>区块链余额</td>
           <td>{{this.$store.state.System.user.blockchain.balance}}</td>
         </tr>
-        <tr>
+        <tr v-if="this.$store.state.System.user.blockchain">
           <td>最后区块高度</td>
           <td>{{this.$store.state.System.user.blockchain.lockHeight}}</td>
         </tr>

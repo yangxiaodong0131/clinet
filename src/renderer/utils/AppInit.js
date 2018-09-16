@@ -335,66 +335,66 @@ export default function appInit() {
   })
 
   // 用户导入文件
-  const orgFile1 = path.format({
-    dir: hitbdata,
-    base: 'test_org.csv'
-  });
-  if (!fs.existsSync(orgFile1)) {
-    axios.get('/static/test_org.csv')
-      .then((res) => {
-        fs.writeFile(orgFile1, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const deptFile1 = path.format({
-    dir: hitbdata,
-    base: 'test_department.csv'
-  });
-  if (!fs.existsSync(deptFile1)) {
-    axios.get('/static/test_department.csv')
-      .then((res) => {
-        fs.writeFile(deptFile1, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const wt4File1 = path.format({
-    dir: hitbdata,
-    base: 'test_wt4_2015年1月.csv'
-  });
-  if (!fs.existsSync(wt4File1)) {
-    axios.get('/static/test_wt4_2015年1月.csv')
-      .then((res) => {
-        fs.writeFile(wt4File1, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const wt4File2 = path.format({
-    dir: hitbdata,
-    base: 'test_wt4_2015年2月.csv'
-  });
-  if (!fs.existsSync(wt4File2)) {
-    axios.get('/static/test_wt4_2015年2月.csv')
-      .then((res) => {
-        fs.writeFile(wt4File2, res.data, (err) => {
-          console.log(err)
-        })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  // const orgFile1 = path.format({
+  //   dir: hitbdata,
+  //   base: 'test_org.csv'
+  // });
+  // if (!fs.existsSync(orgFile1)) {
+  //   axios.get('/static/test_org.csv')
+  //     .then((res) => {
+  //       fs.writeFile(orgFile1, res.data, (err) => {
+  //         console.log(err)
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
+  // const deptFile1 = path.format({
+  //   dir: hitbdata,
+  //   base: 'test_department.csv'
+  // });
+  // if (!fs.existsSync(deptFile1)) {
+  //   axios.get('/static/test_department.csv')
+  //     .then((res) => {
+  //       fs.writeFile(deptFile1, res.data, (err) => {
+  //         console.log(err)
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
+  // const wt4File1 = path.format({
+  //   dir: hitbdata,
+  //   base: 'test_wt4_2015年1月.csv'
+  // });
+  // if (!fs.existsSync(wt4File1)) {
+  //   axios.get('/static/test_wt4_2015年1月.csv')
+  //     .then((res) => {
+  //       fs.writeFile(wt4File1, res.data, (err) => {
+  //         console.log(err)
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
+  // const wt4File2 = path.format({
+  //   dir: hitbdata,
+  //   base: 'test_wt4_2015年2月.csv'
+  // });
+  // if (!fs.existsSync(wt4File2)) {
+  //   axios.get('/static/test_wt4_2015年2月.csv')
+  //     .then((res) => {
+  //       fs.writeFile(wt4File2, res.data, (err) => {
+  //         console.log(err)
+  //       })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
 
   // 用户本地文件
   db.cda.count({ fileType: 'cda' }, (err, res) => {
