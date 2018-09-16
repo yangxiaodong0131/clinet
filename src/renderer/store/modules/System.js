@@ -160,13 +160,11 @@ const mutations = {
   },
   // 用户登录后信息
   SYSTEM_SET_USER(state, field) {
-    console.log(field);
     state.user = field[1];
     state.userPower = field[1].type
   },
   // 用户信息
   SYSTEM_INFO_USER(state, field) {
-    console.log(field);
     state.user = field[1]
   },
   // 人员修改

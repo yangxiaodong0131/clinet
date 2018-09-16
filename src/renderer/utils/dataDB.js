@@ -41,7 +41,6 @@ function find(obj, col, data, type, skip, limit, newData) {
     switch (type) {
       case 'editTypes':
         if (res) {
-          console.log(res)
           const type = []
           res.forEach((x) => {
             if (x.docType === undefined) {
@@ -64,7 +63,6 @@ function find(obj, col, data, type, skip, limit, newData) {
         break;
       case 'editModels':
         if (res) {
-          console.log(res)
           const type = []
           res.forEach((x) => {
             if (x.modelType === undefined) {

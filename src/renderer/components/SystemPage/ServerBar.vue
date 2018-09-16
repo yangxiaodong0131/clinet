@@ -51,7 +51,7 @@
   import { sGetProvince, sUpHelp } from '../../utils/Server';
   import { sGetUsers, sUpdateUser, sGetOrg, sCreateOrg, sUpdateOrg, sGetDepart, sCreateDepart, sUpdateDepart } from '../../utils/ServerUser';
   // import { open } from '../../utils/BlockAccount'
-  import loadFile from '../../utils/LoadFile';
+  // import loadFile from '../../utils/LoadFile';
   import statCda from '../../utils/StatCda';
   // import dataDB from '../../utils/dataDB';
   export default {
@@ -147,9 +147,9 @@
         this.$store.commit('SET_NOTICE', '远程服务器列表');
       },
       getUsers: function () {
-        if (!this.$store.state.System.connectInfo) {
-          loadFile(this, 'hitb_server.csv', 'system')
-        }
+        // if (!this.$store.state.System.connectInfo) {
+        //   loadFile(this, 'hitb_server.csv', 'system')
+        // }
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'getUsers');
         this.$store.commit('SET_NOTICE', '用户设置');
       },
