@@ -6,21 +6,21 @@ const qs = require('qs');
 // key为version，value为''
 export function blockPost(obj, data) {
   // console.log(data)
+  console.log(data[2]);
   const pay = {
-    publicKey: data[2].recipientId, amount: data[2].amount, recipientId: data[2].targetAddress, message: data[2].message
+    publicKey: data[2].publicKey, amount: data[2].amount, recipientId: data[2].targetAddress, message: data[2].message
   }
-  console.log(pay);
   axios({
     method: 'post',
     url: `http://${data[0]}:${data[1]}/api/addTransactions`,
     data: qs.stringify(pay),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    responseType: 'json',
     async: false,
-    responseType: 'json'
   }).then((res) => {
-    console.log(res)
     if (res.status === 200) {
-      // obj.$store.commit('BLOCK_SET_TRANS', res.data)
+      obj.$store.commit('SET_NOTICE', '转账成功')
+      obj.$store.commit('BLOCK_SET_TOOLBAR', 'account');
     }
   })
     .catch((err) => {
