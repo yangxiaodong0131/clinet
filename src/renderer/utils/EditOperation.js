@@ -29,6 +29,7 @@ export function saveEditDoc(obj, data) {
   let fileName = obj.$store.state.Edit.fileName
   let doc = obj.$store.state.Edit.doc
   const docType = obj.$store.state.Edit.docType
+  const dataType = obj.$store.state.Edit.dataType
   doc = doc.filter(x => x !== '')
   if (!fileName) {
     fileName = getDate().replace(/[ :-]/g, '')
@@ -40,15 +41,18 @@ export function saveEditDoc(obj, data) {
       obj.$store.commit('EDIT_SET_MODEL_NAME', `模板-${name}`)
     }
     const modelName = obj.$store.state.Edit.modelName
+    const models = obj.$store.state.Edit.editModels
+
+    models[0].value[modelName] = doc
     if (fileName.includes('@')) {
-      dataDB(obj, 'server', 'cda', { fileType: 'model', value: doc, modelName, modelType: '未定义模板' }, 'createCda', { fileName, content: doc, username: obj.$store.state.System.user.username, mouldtype: '模板' })
+      dataDB(obj, 'server', 'cda', { fileType: 'model', value: models }, 'saveCda', { fileName, content: doc, username: obj.$store.state.System.user.username, mouldtype: '模板' })
     } else {
-      dataDB(obj, 'local', 'cda', { fileType: 'model', value: doc, modelName, modelType: '未定义模板' }, 'createCda', { value: doc, modelName, modelType: '未定义模板' })
+      dataDB(obj, 'local', 'cda', { fileType: 'model', }, 'saveCda', { value: models[0].value })
     }
   } else if (fileName.includes('@')) {
     dataDB(obj, 'server', 'cda', { fileType: 'cda', fileName, value: doc, docType }, 'saveCda', { fileName, content: doc, username: obj.$store.state.System.user.username, docType: obj.$store.state.Edit.docType, mouldtype: '病案' })
-  } else if (fileName.includes('模板')) {
-    dataDB(obj, 'local', 'cda', { fileType: 'model', modelName: fileName }, 'saveCda', { value: doc, docType })
+  } else if (dataType === '模板') {
+    console.log('111')
   } else {
     dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName }, 'saveCda', { value: doc, docType })
   }
@@ -75,7 +79,7 @@ export function newEditDoc(obj, n) {
       userName = '未定义用户'
     }
     obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
-    dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType, userName }, 'createCda', null)
+    dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType, userName, id: '未定义客户' }, 'createCda', null)
   } else { obj.$store.commit('EDIT_SET_DOC'); }
   // obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
   // obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
@@ -267,5 +271,36 @@ export function editPage(obj, n) {
       obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', files.slice(offset - 20, offset));
       obj.$store.commit('EDIT_SET_FILES_OFFSET', offset - 20);
     }
+  }
+}
+
+export function getLocalFiles(obj, x) {
+  const navType = obj.$store.state.Edit.navType
+  if (navType !== '本地') {
+    obj.$store.commit('EDIT_SET_RIGHT_TYPE', null);
+  }
+  obj.$store.commit('EDIT_SET_NAV_TYPE', '本地');
+  obj.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+  obj.$store.commit('EDIT_SET_DOC_TYPES', ['自定义文档', '病案首页（卫统四CSV）', '入院申请', '首次病程', '病程记录', '病案首页', '门诊病案', '健康体检']);
+  obj.$store.commit('EDIT_SET_HELP_TYPES', ['输入框提示', '病案参考', '病案历史', '在线交流', '病案质控', '专家提示', 'DRG分析', 'HIS接口'])
+  obj.$store.commit('EDIT_SET_CHAT_TYPE', false);
+  obj.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
+  obj.$store.commit('SET_NOTICE', '读取本地文件');
+  obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+  switch (x) {
+    case '用户':
+      dataDB(obj, 'local', 'cda', { fileType: 'cda' }, 'editUsers', null, null)
+      break;
+    case '客户':
+      dataDB(obj, 'local', 'cda', { fileType: 'cda' }, 'editPatients', null, null)
+      break;
+    case '文档':
+      dataDB(obj, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
+      break;
+    case '模板':
+      dataDB(obj, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
+      break;
+    default:
+      break;
   }
 }

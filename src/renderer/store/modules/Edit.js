@@ -58,7 +58,8 @@ const state = {
   expertHint: [],
   expertSection: null,
   currentFiles: [],
-  filesName: null
+  filesName: null,
+  editModels: null
 };
 
 const mutations = {
@@ -476,6 +477,9 @@ const mutations = {
   },
   EDIT_SET_RIGHT_TYPE(state, value) {
     state.rightType = value
+  },
+  EDIT_SET_EDIT_MODELS(state, value) {
+    state.editModels = value
   },
 };
 

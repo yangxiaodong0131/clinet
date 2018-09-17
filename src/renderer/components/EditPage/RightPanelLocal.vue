@@ -139,7 +139,7 @@
               dataDB(this, 'local', 'cda', { docType: data }, 'editFiles', null)
               break;
             case '模板':
-              dataDB(this, 'local', 'cda', { modelType: data }, 'editFiles', null)
+              dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editFiles', null)
               break;
             default:
               break;

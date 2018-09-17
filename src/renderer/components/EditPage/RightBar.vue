@@ -52,7 +52,7 @@
 
 <script>
   import { getEditFiles, getEdit } from '../../utils/EditServerFile'
-  import { rightBarHelp } from '../../utils/EditOperation'
+  import { rightBarHelp, getLocalFiles } from '../../utils/EditOperation'
   import dataDB from '../../utils/dataDB';
   export default {
     data() {
@@ -108,34 +108,7 @@
         }
       },
       localData: function (x) {
-        const navType = this.$store.state.Edit.navType
-        if (navType !== '本地') {
-          this.$store.commit('EDIT_SET_RIGHT_TYPE', null);
-        }
-        this.$store.commit('EDIT_SET_NAV_TYPE', '本地');
-        this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
-        this.$store.commit('EDIT_SET_DOC_TYPES', ['自定义文档', '病案首页（卫统四CSV）', '入院申请', '首次病程', '病程记录', '病案首页', '门诊病案', '健康体检']);
-        this.$store.commit('EDIT_SET_HELP_TYPES', ['输入框提示', '病案参考', '病案历史', '在线交流', '病案质控', '专家提示', 'DRG分析', 'HIS接口'])
-        this.$store.commit('EDIT_SET_CHAT_TYPE', false);
-        this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-        this.$store.commit('SET_NOTICE', '读取本地文件');
-        this.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
-        switch (x) {
-          case '用户':
-            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editUsers', null, null)
-            break;
-          case '客户':
-            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editPatients', null, null)
-            break;
-          case '文档':
-            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
-            break;
-          case '模板':
-            dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
-            break;
-          default:
-            break;
-        }
+        getLocalFiles(this, x)
       },
       serverData: function (x) {
         const navType = this.$store.state.Edit.navType

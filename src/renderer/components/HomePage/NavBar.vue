@@ -77,7 +77,7 @@
 <script>
   import loadFile from '../../utils/LoadFile';
   import { offline } from '../../utils/Socket';
-  // import { saveEditDoc } from '../../utils/EditOperation'
+  import { getLocalFiles } from '../../utils/EditOperation'
   // import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
   import { open } from '../../utils/BlockAccount'
   import { bcBlockchain } from '../../utils/BlockBlock'
@@ -144,32 +144,7 @@
             break;
           case '数据采集-数据采集':
             this.$router.push('/edit');
-            // if (global.hitbDoc.length > 0) {
-            //   global.hitbDoc.forEach((x) => {
-            //     this.$store.commit('EDIT_SET_IS_SAVE_LOCAL', x);
-            //   })
-            //   this.$store.commit('EDIT_LOAD_FILES');
-            //   this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
-            //   const index = this.$store.state.Edit.files.indexOf('未保存病案.cda')
-            //   this.$store.commit('EDIT_SET_LEFT_PANEL', 'table');
-            //   this.$store.commit('EDIT_LOAD_FILE', global.hitbDoc)
-            //   this.$store.commit('EDIT_SET_FILES_INDEX', index)
-            //   loadFile(this, '未保存病案.cda', 'user', 'edit')
-            // } else if (!this.$store.state.Edit.fileName) {
-            // }
-            // ----------------------------------------------------
-            // if (this.$store.state.Edit.rightPanel === 'server') {
-            //   this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
-            //   getDocTypes(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.System.user.username)
-            //   getHelpTypes(this, [this.$store.state.System.server, this.$store.state.System.port])
-            //   getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
-            // } else {
-            //   this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
-            //   this.$store.commit('EDIT_LOAD_FILES');
-            //   this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-            //   loadFile(this, '2018年度病案.cda', 'user', 'edit')
-            //   this.$store.commit('EDIT_SET_FILES_INDEX', 0)
-            // }
+            getLocalFiles(this, this.$store.state.Edit.dataType)
             break;
           case '数据分析-数据分析':
             this.$router.push('/stat');
