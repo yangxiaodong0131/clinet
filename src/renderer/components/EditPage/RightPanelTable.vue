@@ -126,11 +126,14 @@
       },
       loadDoc: function (index, name) {
         const navType = this.$store.state.Edit.navType
+        const dataType = this.$store.state.Edit.dataType
         this.$store.commit('EDIT_SET_DOC_TYPE', name[1]);
         this.$store.commit('EDIT_SET_FILE_INDEX', index);
         if (navType === '本地') {
-          if (name[1].includes('模板')) {
-            dataDB(this, 'local', 'cda', { modelName: name[0] }, 'editFile', null)
+          if (dataType.includes('模板')) {
+            const value = this.$store.state.Edit.editModels[0].value[name[0]]
+            this.$store.commit('EDIT_LOAD_DOC', value);
+            // dataDB(this, 'local', 'cda', { fileType: 'model', value: '首次病程' }, 'editFile', null)
           } else {
             dataDB(this, 'local', 'cda', { fileName: name[0] }, 'editFile', null)
           }
