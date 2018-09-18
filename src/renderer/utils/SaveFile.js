@@ -77,9 +77,6 @@ export default function saveFile(obj, x, p) {
     if (fileName.includes('未保存病案.cda')) {
       if (obj.$store.state.Edit.rightPanel === 'local') {
         const arr = []
-        obj.$store.state.Edit.isSaveLocal.forEach((x) => {
-          arr.push(obj.$store.state.Edit.file[x])
-        })
         const data1 = arr.join('\n')
         // if (data1.length > 0) {
         fs.writeFile(fileName, data1, (err) => {

@@ -1,5 +1,6 @@
 <template>
-  <div v-bind:style="{ height: height + 'px', overflow: 'auto' }">
+  <!-- <div v-bind:style="{ height: height + 'px', overflow: 'auto' }"> -->
+  <div style="marginBottom: 10px">
     <table v-if="!this.$store.state.Edit.rightFolds.includes('编辑病案')" id="edit-leftpaneltable-table">
       <tr>
         <th colspan="15" class="table-info"> {{filesName}}（共有{{fileLength}}条记录）
@@ -7,12 +8,12 @@
           <a href="#" v-on:click="fold('编辑病案')" style="float: right; marginRight: 3px">↗</a>
         </th>
       </tr>
-      <tr class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index, 'table-danger': isSave.includes(index)}">
+      <tr class="edit-leftpaneltable-tr" v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index,}">
         <!-- <td> {{index + 1}} </td> -->
         <td v-for="(item, index) in data" v-bind:key='index'>{{item}}</td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-del'+index"><a href="#" v-on:click="delDoc(index)">删除</a></td>
         <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-edit'+index"><a href="#" v-on:click="loadDoc(index, data)">编辑</a></td>
-        <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-ref'+index"><a href="#" v-on:click="loadDoc(data, index, 'show')">参考</a></td>
+        <td v-if="rightPanel !== 'block'" v-bind:id="'edit-leftpaneltable-ref'+index"><a href="#" v-on:click="loadDoc(index, data, 'show')">参考</a></td>
         <td v-if="fileName.includes('@')" v-bind:id="'edit-leftpaneltable-dow'+index"><a href="#" v-on:click="downloadDoc(data, index)">下载</a></td>
         <td v-if="data[2]" class="table-success"><a href="#" style="color: #000">已上传</a></td>
         <td v-if="(!fileName.includes('@') || rightPanel !== 'block') && !data[2]" class="table-warning"><a href="#" style="color: #000" v-on:click="uploadDoc(data, index)">未上传</a></td>
@@ -43,17 +44,6 @@
       };
     },
     computed: {
-      isSave: {
-        get() {
-          let type = this.$store.state.Edit.isSaveLocal
-          if (this.$store.state.Edit.rightPanel === 'local') {
-            type = this.$store.state.Edit.isSaveLocal
-          } else if (this.$store.state.Edit.rightPanel === 'server') {
-            type = this.$store.state.Edit.isSaveServer
-          }
-          return type
-        }
-      },
       rightPanel: {
         get() {
           return this.$store.state.Edit.rightPanel
@@ -124,7 +114,12 @@
         this.$store.commit('EDIT_UPDATE_DOC_HEADER', ['下载时间', currentdate]);
         this.$store.commit('EDIT_SET_DOC_STATE');
       },
-      loadDoc: function (index, name) {
+      loadDoc: function (index, name, type) {
+        let selType = 'editFile'
+        if (type) {
+          selType = 'consultFile'
+          this.$store.commit('EDIT_SET_RIGHT_PANELS', '病案参考');
+        }
         const navType = this.$store.state.Edit.navType
         const dataType = this.$store.state.Edit.dataType
         this.$store.commit('EDIT_SET_DOC_TYPE', name[1]);
@@ -133,12 +128,13 @@
           if (dataType.includes('模板')) {
             const value = this.$store.state.Edit.editModels[0].value[name[0]]
             this.$store.commit('EDIT_LOAD_DOC', value);
+            this.$store.commit('EDIT_SET_MODEL_NAME', name[0]);
             // dataDB(this, 'local', 'cda', { fileType: 'model', value: '首次病程' }, 'editFile', null)
           } else {
-            dataDB(this, 'local', 'cda', { fileName: name[0] }, 'editFile', null)
+            dataDB(this, 'local', 'cda', { fileName: name[0] }, selType, null)
           }
         } else {
-          dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
+          dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, selType, { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
         }
       },
       close(data) {

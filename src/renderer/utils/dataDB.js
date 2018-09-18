@@ -222,6 +222,9 @@ function findOne(obj, col, data, type) {
       case 'editFile':
         obj.$store.commit('EDIT_LOAD_DOC', res.value);
         break;
+      case 'consultFile':
+        obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.value);
+        break;
       default:
         console.log(res);
         break;
@@ -259,6 +262,7 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'editModels': find(obj, col, data, type, skip, limit, newData); break
         case 'editTypes': find(obj, col, data, type, skip, limit, newData); break
         case 'editFile': findOne(obj, col, data, type); break
+        case 'consultFile': findOne(obj, col, data, type); break
         case 'createCda': insert(obj, col, data, type); break
         case 'saveCda': update(obj, col, data, newData, type); break
         case 'libraryFiles': find(obj, col, data, type, skip, limit, newData); break

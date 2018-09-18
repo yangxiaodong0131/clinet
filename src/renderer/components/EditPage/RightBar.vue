@@ -91,6 +91,9 @@
         rightBarHelp(this, n)
       },
       navBar: function (n) {
+        if (n !== this.$store.state.Edit.dataType) {
+          this.$store.commit('EDIT_SET_RIGHT_TYPE', null);
+        }
         const navType = this.$store.state.Edit.navType
         this.$store.commit('EDIT_SET_DATA_TYPE', n);
         switch (navType) {
