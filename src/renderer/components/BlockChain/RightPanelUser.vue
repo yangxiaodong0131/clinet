@@ -57,12 +57,10 @@
         </thead>
         <tbody>
           <tr v-for="(tran, index) in trans" v-bind:key='index'>
-            <td>{{tran.id}}</td>
+            <td>{{tran.transaction_id}}</td>
             <td>{{tran.type}}</td>
-            <td>{{tran.recipientId}}</td>
-            <td>
-              {{tran.senderId}}
-            </td>
+            <td>{{tran.senderPublicKey}}</td>
+            <td>{{tran.requesterPublicKey}}</td>
             <td>{{tran.amount}}</td>
           </tr>
         </tbody>
