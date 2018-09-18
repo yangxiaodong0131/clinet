@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active" v-on:click='setUser()' id="block-user-setup">
-          <a class="nav-link text-light" href="#"> 账户设置 <span class="sr-only">(current)</span></a>
+          <a class="nav-link text-light" href="#"> 账户信息 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click='account()' id="block-user-account">
           <a class="nav-link text-light" href="#"> 账户余额 <span class="sr-only">(current)</span></a>

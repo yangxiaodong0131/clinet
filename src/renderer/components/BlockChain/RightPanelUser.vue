@@ -1,18 +1,11 @@
 <template>
   <div>
     <div v-if="toolbar == 'setUser'">
-      <!-- <form v-if="account.address === ''">
-        <div class="form-group">
-          <label class="text-danger">用户名</label>
-          <input type="password" placeholder="用户名" v-model="name">
-        </div>
-      </form>
-      <button v-if="account.address === ''" id="block-rightpanel-login" class="btn btn-outline-primary" v-on:click="login">登陆</button> -->
       <div>
         <table>
-          <tr v-for="(line, index) in Object.entries(account)" v-bind:key='index'>
+          <tr v-for="(x, index) in Object.entries(account)" v-bind:key='index' v-if="!['login', 'username'].includes(x[0])">
             <td>{{parameter[index]}}</td>
-            <td>{{line[1]}}</td>
+            <td>{{x[1]}}</td>
           </tr>
         </table>
       </div>
@@ -101,7 +94,7 @@
           fee: 1,
           message: ''
         },
-        parameter: ['投票', '版本', '用户名', '秘钥', '第二公钥', '公钥', '登录', '高度', '指数', '代表', '块标识', '余额', '地址']
+        parameter: ['投票', '版本', '', '秘钥', '二级公钥', '公钥', '', '高度', '索引', '代表', '区块ID', '余额', '地址']
       }
     },
     computed: {
