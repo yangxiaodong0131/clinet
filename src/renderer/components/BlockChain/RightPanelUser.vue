@@ -14,7 +14,7 @@
             <td>{{parameter[index]}}</td>
             <td>{{line[1]}}</td>
           </tr>
-        </table> 
+        </table>
       </div>
     </div>
     <div v-if="toolbar == 'account'">
@@ -24,11 +24,11 @@
       <form>
         <div class="form-group">
           <label>发送者</label>
-          <input type="text" class="form-control" placeholder="发送者" v-model="this.$store.state.Block.account.publicKey" disabled="true">
+          <input type="text" class="form-control" placeholder="发送者" v-model="pay.publicKey" disabled="true">
         </div>
         <div class="form-group">
           <label>接受者</label>
-          <select class="form-control" v-model="pay.targetAddress">
+          <select class="form-control" v-model="pay.recipientId">
             <option v-for="(value, index) in publicKeys"  v-bind:key='index'>{{value}}</option>
           </select>
         </div>
@@ -94,11 +94,11 @@
         flag: null,
         name: 'someone manual strong movie roof episode eight spatial brown soldier soup motor',
         pay: {
-          recipientId: this.$store.state.Block.account.publicKey,
-          targetAddress: 'ABbhjhV4g32tWr7JPg1fZfX1TGH9TZQEFg',
+          publicKey: this.$store.state.System.user.blockchain.publicKey,
+          recipientId: this.$store.state.Block.publicKeys[0],
           amount: 100,
           secondPass: 'dzc944262316',
-          fee: '0.1',
+          fee: 1,
           message: ''
         },
         parameter: ['投票', '版本', '用户名', '秘钥', '第二公钥', '公钥', '登录', '高度', '指数', '代表', '块标识', '余额', '地址']
@@ -131,9 +131,6 @@
         }
       }
     },
-    // created: function () {
-    //   this.getPublicKey()
-    // },
     methods: {
       login: function () {
         const ip = this.$store.state.System.server
@@ -151,11 +148,9 @@
       },
       payTrans: function () {
         const data = this.pay
-        console.log(data);
         const ip = this.$store.state.System.server
         const port = 4000
         blockPost(this, [ip, port, data])
-        // transactions1(this, [ip, port, data])
       },
       blockChainPage: function (value) {
         const ip = this.$store.state.System.server

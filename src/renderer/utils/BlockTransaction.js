@@ -5,10 +5,8 @@ const qs = require('qs');
 // key为magic，testnet value:594fe0f3, mainnet value:5f5b3cf5
 // key为version，value为''
 export function blockPost(obj, data) {
-  // console.log(data)
-  console.log(data[2]);
   const pay = {
-    publicKey: data[2].publicKey, amount: data[2].amount, recipientId: data[2].targetAddress, message: data[2].message
+    publicKey: data[2].publicKey, amount: data[2].amount, recipientId: data[2].recipientId, message: data[2].message
   }
   axios({
     method: 'post',
@@ -19,8 +17,11 @@ export function blockPost(obj, data) {
     async: false,
   }).then((res) => {
     if (res.status === 200) {
-      obj.$store.commit('SET_NOTICE', '转账成功')
-      obj.$store.commit('BLOCK_SET_TOOLBAR', 'account');
+      if (res.data.success) {
+        obj.$store.commit('BLOCK_SET_ACCOUNT', res.data.account);
+        obj.$store.commit('BLOCK_SET_TOOLBAR', 'account');
+      }
+      obj.$store.commit('SET_NOTICE', res.data.info)
     }
   })
     .catch((err) => {
