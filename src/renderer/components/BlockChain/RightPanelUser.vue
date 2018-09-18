@@ -11,9 +11,10 @@
       <div>
         <table>
           <tr v-for="(line, index) in Object.entries(account)" v-bind:key='index'>
-            <td v-for="(filed, index) in line" v-bind:key='index'>{{line[index]}}</td>
+            <td>{{parameter[index]}}</td>
+            <td>{{line[1]}}</td>
           </tr>
-        </table>
+        </table> 
       </div>
     </div>
     <div v-if="toolbar == 'account'">
@@ -23,7 +24,7 @@
       <form>
         <div class="form-group">
           <label>发送者</label>
-          <input type="text" class="form-control" placeholder="发送者" v-model="pay.publicKey" disabled="true">
+          <input type="text" class="form-control" placeholder="发送者" v-model="this.$store.state.Block.account.publicKey" disabled="true">
         </div>
         <div class="form-group">
           <label>接受者</label>
@@ -93,13 +94,14 @@
         flag: null,
         name: 'someone manual strong movie roof episode eight spatial brown soldier soup motor',
         pay: {
-          targetAddress: this.$store.state.Block.publicKeys[0],
+          recipientId: this.$store.state.Block.account.publicKey,
+          targetAddress: 'ABbhjhV4g32tWr7JPg1fZfX1TGH9TZQEFg',
           amount: 100,
           secondPass: 'dzc944262316',
-          fee: 0.1,
-          message: '',
-          publicKey: this.$store.state.System.user.blockchain.publicKey
-        }
+          fee: '0.1',
+          message: ''
+        },
+        parameter: ['投票', '版本', '用户名', '秘钥', '第二公钥', '公钥', '登录', '高度', '指数', '代表', '块标识', '余额', '地址']
       }
     },
     computed: {
