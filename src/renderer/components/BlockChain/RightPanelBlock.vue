@@ -10,13 +10,9 @@
         <thead>
           <tr>
             <th>高度</th>
-            <th>日期</th>
-            <th>ID</th>
+            <th>时间</th>
+            <th>hash</th>
             <th>生产者</th>
-            <th>交易</th>
-            <!-- <th>总金额</th>
-            <th>总费用</th>
-            <th>奖励</th> -->
           </tr>
         </thead>
         <tbody>
@@ -25,10 +21,6 @@
             <td>{{value.data}}</td>
             <td>{{value.hash}}</td>
             <td>{{value.generateAdress}}</td>
-            <td>{{value.transactions}}</td>
-            <!-- <td>{{value.totalAmount/100000000}}</td>
-            <td>{{value.totalFee/100000000}}</td>
-            <td>{{value.reward/100000000}}</td> -->
           </tr>
         </tbody>
       </table>
@@ -42,10 +34,13 @@
     </div>
     <div v-if="toolbar == 'blockInfo'">
       <table>
-        <tr v-for="(value, key) in blockInfo" v-bind:key="key">
-          <td>{{key}}</td>
-          <td>{{value}}</td>
-        </tr>
+        <tr><td>高度</td><td>{{blockInfo.index}}</td></tr>
+        <tr><td>hash</td><td>{{blockInfo.hash}}</td></tr>
+        <tr><td>上一条hash</td><td>{{blockInfo.previous_hash}}</td></tr>
+        <tr><td>生产者</td><td>{{blockInfo.generateAdress}}</td></tr>
+        <tr><td>时间</td><td>{{blockInfo.data}}</td></tr>
+        <tr><td>交易</td><td>{{blockInfo.transactions}}</td></tr>
+        <tr><td>时间戳</td><td>{{blockInfo.timestamp}}</td></tr>
       </table>
     </div>
   </div>
@@ -99,6 +94,7 @@
       },
       block: function (value) {
         this.hightLight = value;
+        this.$store.commit('BLOCK_SET_TOOLBAR', 'blockInfo');
         this.$store.commit('BLOCK_GET_BLOCK_INFO', this.blockBlock[value])
       },
       blockChainPage: function (value) {

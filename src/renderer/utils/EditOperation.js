@@ -30,6 +30,9 @@ export function saveEditDoc(obj, data) {
   let doc = obj.$store.state.Edit.doc
   const docType = obj.$store.state.Edit.docType
   const dataType = obj.$store.state.Edit.dataType
+  const modelName = obj.$store.state.Edit.modelName
+  const models = obj.$store.state.Edit.editModels
+  const modelArr = models[0].value
   doc = doc.filter(x => x !== '')
   if (!fileName) {
     fileName = getDate().replace(/[ :-]/g, '')
@@ -40,10 +43,7 @@ export function saveEditDoc(obj, data) {
       const name = getDate().replace(/[ :-]/g, '')
       obj.$store.commit('EDIT_SET_MODEL_NAME', `模板-${name}`)
     }
-    const modelName = obj.$store.state.Edit.modelName
-    const models = obj.$store.state.Edit.editModels
-
-    models[0].value[modelName] = doc
+    modelArr[modelName] = doc
     if (fileName.includes('@')) {
       dataDB(obj, 'server', 'cda', { fileType: 'model', value: models }, 'saveCda', { fileName, content: doc, username: obj.$store.state.System.user.username, mouldtype: '模板' })
     } else {
@@ -52,7 +52,8 @@ export function saveEditDoc(obj, data) {
   } else if (fileName.includes('@')) {
     dataDB(obj, 'server', 'cda', { fileType: 'cda', fileName, value: doc, docType }, 'saveCda', { fileName, content: doc, username: obj.$store.state.System.user.username, docType: obj.$store.state.Edit.docType, mouldtype: '病案' })
   } else if (dataType === '模板') {
-    console.log('111')
+    modelArr[modelName] = doc
+    dataDB(obj, 'local', 'cda', { fileType: 'model' }, 'saveCda', { value: models[0].value })
   } else {
     dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName }, 'saveCda', { value: doc, docType })
   }
@@ -87,6 +88,8 @@ export function newEditDoc(obj, n) {
   const dataType = obj.$store.state.Edit.dataType
   const files = obj.$store.state.Edit.files
   const filesIndex = obj.$store.state.Edit.filesIndex
+  console.log(files)
+  console.log(filesIndex)
   const data = files[filesIndex][0]
   switch (dataType) {
     case '用户':

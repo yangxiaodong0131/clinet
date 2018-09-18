@@ -48,7 +48,6 @@
       blockList: function () {
         const ip = this.$store.state.System.server
         const port = 4000
-        // blocks(this, [ip, port]);
         bcBlockchain(this, [ip, port, 1]);
         this.$store.commit('SET_NOTICE', '区块列表');
         this.$store.commit('BLOCK_SET_TOOLBAR', 'blockList');

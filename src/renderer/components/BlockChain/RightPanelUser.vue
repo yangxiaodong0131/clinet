@@ -1,17 +1,11 @@
 <template>
   <div>
     <div v-if="toolbar == 'setUser'">
-      <!-- <form v-if="account.address === ''">
-        <div class="form-group">
-          <label class="text-danger">用户名</label>
-          <input type="password" placeholder="用户名" v-model="name">
-        </div>
-      </form>
-      <button v-if="account.address === ''" id="block-rightpanel-login" class="btn btn-outline-primary" v-on:click="login">登陆</button> -->
       <div>
         <table>
-          <tr v-for="(line, index) in Object.entries(account)" v-bind:key='index'>
-            <td v-for="(filed, index) in line" v-bind:key='index'>{{line[index]}}</td>
+          <tr v-for="(x, index) in Object.entries(account)" v-bind:key='index' v-if="!['login', 'username'].includes(x[0])">
+            <td>{{parameter[index]}}</td>
+            <td>{{x[1]}}</td>
           </tr>
         </table>
       </div>
@@ -27,7 +21,7 @@
         </div>
         <div class="form-group">
           <label>接受者</label>
-          <select class="form-control" v-model="pay.targetAddress">
+          <select class="form-control" v-model="pay.recipientId">
             <option v-for="(value, index) in publicKeys"  v-bind:key='index'>{{value}}</option>
           </select>
         </div>
@@ -63,12 +57,10 @@
         </thead>
         <tbody>
           <tr v-for="(tran, index) in trans" v-bind:key='index'>
-            <td>{{tran.id}}</td>
+            <td>{{tran.transaction_id}}</td>
             <td>{{tran.type}}</td>
-            <td>{{tran.recipientId}}</td>
-            <td>
-              {{tran.senderId}}
-            </td>
+            <td>{{tran.senderPublicKey}}</td>
+            <td>{{tran.requesterPublicKey}}</td>
             <td>{{tran.amount}}</td>
           </tr>
         </tbody>
@@ -93,13 +85,14 @@
         flag: null,
         name: 'someone manual strong movie roof episode eight spatial brown soldier soup motor',
         pay: {
-          targetAddress: this.$store.state.Block.publicKeys[0],
+          publicKey: this.$store.state.System.user.blockchain.publicKey,
+          recipientId: this.$store.state.Block.publicKeys[0],
           amount: 100,
           secondPass: 'dzc944262316',
-          fee: 0.1,
-          message: '',
-          publicKey: this.$store.state.System.user.blockchain.publicKey
-        }
+          fee: 1,
+          message: ''
+        },
+        parameter: ['投票', '版本', '', '秘钥', '二级公钥', '公钥', '', '高度', '索引', '代表', '区块ID', '余额', '地址']
       }
     },
     computed: {
@@ -129,9 +122,6 @@
         }
       }
     },
-    // created: function () {
-    //   this.getPublicKey()
-    // },
     methods: {
       login: function () {
         const ip = this.$store.state.System.server
@@ -149,11 +139,9 @@
       },
       payTrans: function () {
         const data = this.pay
-        console.log(data);
         const ip = this.$store.state.System.server
         const port = 4000
         blockPost(this, [ip, port, data])
-        // transactions1(this, [ip, port, data])
       },
       blockChainPage: function (value) {
         const ip = this.$store.state.System.server

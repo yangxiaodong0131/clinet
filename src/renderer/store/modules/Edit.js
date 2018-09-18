@@ -45,8 +45,6 @@ const state = {
   serverId: null,
   docState: null,
   serverCdh: [],
-  isSaveLocal: [],
-  isSaveServer: [],
   docHis: [],
   docSummary: [],
   editCdh: null,
@@ -59,7 +57,8 @@ const state = {
   expertSection: null,
   currentFiles: [],
   filesName: null,
-  editModels: null
+  editModels: null,
+  editingFile: []
 };
 
 const mutations = {
@@ -139,8 +138,8 @@ const mutations = {
     }
   },
   EDIT_LOAD_DOC_SHOW(state, message) {
-    const x = message.map(m => m.split(' ').filter(i => i !== ''))
-    state.docShow = x;
+    // const x = message.map(m => m.split(' ').filter(i => i !== ''))
+    state.docShow = message;
   },
   EDIT_SET_DOC(state) {
     state.doc = [];
@@ -162,7 +161,6 @@ const mutations = {
   },
   EDIT_SET_FILE_INDEX(state, message) {
     state.fileIndex = message;
-    console.log(state.file)
     state.fileName = state.file[message][0]
   },
   EDIT_SET_FILE_TYPE(state, message) {
@@ -345,33 +343,6 @@ const mutations = {
       state.docState = '正在编辑...'
     }
   },
-  EDIT_SET_IS_SAVE_LOCAL(state, value) {
-    if (state.docState !== '') {
-      if (!state.isSaveLocal.includes(value)) {
-        state.isSaveLocal.push(value)
-      }
-    }
-  },
-  EDIT_SET_DELETE_LOCAL(state, value) {
-    const index = state.isSaveLocal.indexOf(value)
-    if (state.isSaveLocal.includes(value)) {
-      state.isSaveLocal.splice(index, 1)
-    }
-  },
-  EDIT_SET_IS_SAVE_SERVER(state, value) {
-    if (state.docState !== '') {
-      if (!state.isSaveServer.includes(value)) {
-        state.isSaveServer.push(value)
-      }
-    }
-  },
-  EDIT_SET_DELETE_SERVER(state, value) {
-    if (state.docState !== '') {
-      if (state.isSaveServer.includes(value)) {
-        state.isSaveServer.splice(value, 1)
-      }
-    }
-  },
   EDIT_SET_DOC_HIS(state, value) {
     state.docHis = value
   },
@@ -481,6 +452,9 @@ const mutations = {
   EDIT_SET_EDIT_MODELS(state, value) {
     state.editModels = value
   },
+  EDIT_SET_EDITING_FILE(state, value) {
+    state.editingFile.push(value)
+  },
 };
 
 const actions = {
@@ -503,10 +477,6 @@ const actions = {
     commit('EDIT_ADD_DOC_SUMMARY');
     commit('EDIT_SET_DOC_SUMMARY');
     commit('EDIT_SET_DOC_HIS');
-    commit('EDIT_SET_IS_SAVE_LOCAL');
-    commit('EDIT_SET_DELETE_LOCAL');
-    commit('EDIT_SET_IS_SAVE_SERVER');
-    commit('EDIT_SET_DELETE_SERVER');
     commit('EDIT_UPDATE_DOC_HEADER');
     commit('EDIT_SET_DOC_STATE');
     commit('EDIT_SET_DOC_HEADER');

@@ -63,7 +63,7 @@
             </td></tr>
           </table>
           <!-- 其他 sections -->
-          <table v-else>
+          <!-- <table v-else>
             <tr class="table-warning" v-bind:class="{'table-danger':flag == key.split(',')[0]}" v-on:click="changeIndex(key, '', true)"><td>{{key.split(',')[1]}}</td></tr>
             <tr><td>
               <ol class="breadcrumb" >
@@ -74,7 +74,7 @@
                 <hr>
               </ol>
             </td></tr>
-          </table>
+          </table> -->
         </div>
       </div>
     </div>
@@ -89,9 +89,6 @@
         height: window.innerHeight - 120,
       };
     },
-    // created: function () {
-    //   this.getDocState()
-    // },
     computed: {
       flag: {
         get() {
@@ -105,17 +102,9 @@
       },
       doc: {
         get() {
-          let doc = []
-          let doc1 = null
           const systemSection = this.$store.state.System.systemSection
-          if (this.$store.state.Edit.navType === '数据分析') {
-            doc = this.$store.state.Stat.statTable.data
-          } else if (this.$store.state.Edit.navType === '数据字典') {
-            doc = this.$store.state.Library.libraryTable.data
-          } else {
-            doc = this.$store.state.Edit.doc
-          }
-          doc1 = editDoc(doc, systemSection)
+          const doc = this.$store.state.Edit.doc
+          const doc1 = editDoc(doc, systemSection)
           return doc1
         }
       },

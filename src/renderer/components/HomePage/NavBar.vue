@@ -10,7 +10,6 @@
         <li class="nav-item dropdown" v-on:click="onClick('数据采集-数据采集')" id="navbar-edit" >
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             电子病历
-            <span style="color: red"><b>{{docLength}}</b></span>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#" v-on:click="onClick('数据采集-数据采集')">电子病历</a>
@@ -90,15 +89,6 @@
       };
     },
     computed: {
-      docLength: {
-        get() {
-          let length = null
-          if (this.$store.state.Edit.isSaveLocal.length > 0 || this.$store.state.Edit.isSaveServer.length > 0) {
-            length = this.$store.state.Edit.isSaveLocal.length + this.$store.state.Edit.isSaveServer.length
-          }
-          return length
-        }
-      },
       userName: {
         get() {
           let user = ''
@@ -144,7 +134,9 @@
             break;
           case '数据采集-数据采集':
             this.$router.push('/edit');
+            dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
             getLocalFiles(this, this.$store.state.Edit.dataType)
+            // dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
             break;
           case '数据分析-数据分析':
             this.$router.push('/stat');
