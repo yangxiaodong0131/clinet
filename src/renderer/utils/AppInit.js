@@ -193,7 +193,8 @@ export default function appInit() {
         global.hitbdata.cdh = t;
       })
       db.cdh.findOne({ fileType: 'header' }, (err, res) => {
-        global.hitbdata.cdhHeader = res.header;
+        console.log(res)
+        global.hitbdata.cdhHeader = res.value;
       })
     }
   })

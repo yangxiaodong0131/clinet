@@ -64,7 +64,6 @@ function find(obj, col, data, type, skip, limit, newData) {
       case 'editModels':
         if (res) {
           const type = []
-          console.log(res)
           obj.$store.commit('EDIT_SET_EDIT_MODELS', res)
           res.forEach((x) => {
             if (x.modelType === undefined) {
@@ -129,6 +128,19 @@ function find(obj, col, data, type, skip, limit, newData) {
           obj.$store.commit('EDIT_LOAD_FILES', type)
         }
         break;
+      case 'editCaseHistory':
+        if (res) {
+          const arr = []
+          res.forEach((x) => {
+            x.value.forEach((y) => {
+              if (y[0] === '姓名' && y[1] === newData.barValue[1]) {
+                arr.push([x.fileName, x.docType])
+              }
+            })
+          })
+          obj.$store.commit('EDIT_SET_DOC_HIS', arr)
+        }
+        break;
       case 'editFiles':
         if (res.length > 0 && res[0].fileType === 'cda') {
           const a = res.map((x) => {
@@ -137,7 +149,6 @@ function find(obj, col, data, type, skip, limit, newData) {
           });
           obj.$store.commit('EDIT_LOAD_FILE', a)
         } else if (res.length > 0 && res[0].fileType === 'model') {
-          console.log(res)
           const keys = Object.keys(res[0].value)
           const a = keys.map(x => [x]);
           obj.$store.commit('EDIT_LOAD_FILE', a)
@@ -262,7 +273,10 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
         case 'editModels': find(obj, col, data, type, skip, limit, newData); break
         case 'editTypes': find(obj, col, data, type, skip, limit, newData); break
         case 'editFile': findOne(obj, col, data, type); break
+        // 病案参考文件
         case 'consultFile': findOne(obj, col, data, type); break
+        // 病案历史
+        case 'editCaseHistory': find(obj, col, data, type, skip, limit, newData); break
         case 'createCda': insert(obj, col, data, type); break
         case 'saveCda': update(obj, col, data, newData, type); break
         case 'libraryFiles': find(obj, col, data, type, skip, limit, newData); break
