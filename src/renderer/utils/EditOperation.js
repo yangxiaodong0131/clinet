@@ -86,7 +86,6 @@ export function newEditDoc(obj, n) {
     obj1[a] = global.hitbmodel[n]
     obj1.type = '新建'
     obj1.createTime = getDate()
-    console.log(getDate())
     obj.$store.commit('EDIT_SET_EDITING_FILE', obj1)
     dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType, userName, id: '未定义客户' }, 'createCda', null)
   } else { obj.$store.commit('EDIT_SET_DOC'); }

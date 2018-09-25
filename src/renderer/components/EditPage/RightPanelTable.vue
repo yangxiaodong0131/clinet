@@ -99,8 +99,8 @@
     },
     methods: {
       delDoc: function (index) {
-        const fileName = this.$store.state.Edit.file[index][0]
-        dataDB(this, 'local', 'cda', { fileName }, 'remove', { fileName })
+        const docType = this.$store.state.Edit.files[index][0]
+        dataDB(this, 'local', 'cda', { docType }, 'remove', { docType })
       },
       uploadDoc: function (data, index) {
         const currentdate = getDate()
