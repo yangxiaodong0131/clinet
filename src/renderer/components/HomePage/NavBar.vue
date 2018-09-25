@@ -76,7 +76,7 @@
 <script>
   import loadFile from '../../utils/LoadFile';
   import { offline } from '../../utils/Socket';
-  import { getLocalFiles } from '../../utils/EditOperation'
+  // import { getLocalFiles } from '../../utils/EditOperation'
   // import { getDocTypes, getHelpTypes, getEditFiles } from '../../utils/EditServerFile'
   import { open } from '../../utils/BlockAccount'
   import { bcBlockchain } from '../../utils/BlockBlock'
@@ -134,9 +134,10 @@
             break;
           case '数据采集-数据采集':
             this.$router.push('/edit');
+            this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+            this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
             dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
-            getLocalFiles(this, this.$store.state.Edit.dataType)
-            // dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
             break;
           case '数据分析-数据分析':
             this.$router.push('/stat');

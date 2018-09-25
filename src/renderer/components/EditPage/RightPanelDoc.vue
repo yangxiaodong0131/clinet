@@ -29,9 +29,9 @@
             <tr class="table-warning" v-bind:class="{'table-danger':flag == key.split(',')[0]}" v-on:click="changeIndex(key, '', true)"><td colspan="4">{{key.split(',')[1]}}</td></tr>
             <tr rowspan="2" v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item, key)">
               <td style="width: 25%" rowspan="2" v-if="index % 2 === 0"><b>{{ item[1] }}</b></td>
-              <td style="width: 25%" rowspan="2" v-if="index % 2 === 0">{{ item[2] }}{{ item[3] }}{{ item[4] }}{{ item[5] }}{{ item[6] }}{{ item[7] }}{{ item[8] }}</td>
+              <td style="width: 25%" rowspan="2" v-if="index % 2 === 0" v-on:dblclick="addItem(item, index)">{{ item[2] }}{{ item[3] }}{{ item[4] }}{{ item[5] }}{{ item[6] }}{{ item[7] }}{{ item[8] }}</td>
               <td style="width: 25%" v-if="index % 2 !== 0"><b>{{ item[1] }}</b></td>
-              <td style="width: 25%" v-if="index % 2 !== 0">{{ item[2] }}{{ item[3] }}{{ item[4] }}{{ item[5] }}{{ item[6] }}{{ item[7] }}{{ item[8] }}</td>
+              <td style="width: 25%" v-if="index % 2 !== 0" v-on:dblclick="addItem(item, index)">{{ item[2] }}{{ item[3] }}{{ item[4] }}{{ item[5] }}{{ item[6] }}{{ item[7] }}{{ item[8] }}</td>
             </tr>
           </table>
           <!-- 未定义-主诉-病史-体格检查-辅助检查-处理意见 -->
@@ -40,7 +40,7 @@
             <tr><td>
               <ol class="breadcrumb" >
                 <li class="breadcrumb-item" v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item, key)">
-                  <b>{{ item[1] }}</b>
+                  <b v-on:dblclick="addItem(item, index)">{{ item[1] }}</b>
                   ：{{ item[2] }} {{ item[3] }} {{ item[4] }} {{ item[5] }} {{ item[6] }} {{ item[7] }} {{ item[8] }}
                 </li>
                 <hr>
@@ -51,7 +51,7 @@
           <table v-else-if="key.split(',')[1] === '医嘱'">
             <tr class="table-warning" v-bind:class="{'table-danger':flag == key.split(',')[0]}" v-on:click="changeIndex(key, '', true)"><td>{{key.split(',')[1]}}</td></tr>
             <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}">
-              <td v-on:click="changeIndex(item, key)"><b>{{ item[1] }}</b>
+              <td v-on:click="changeIndex(item, key)" v-on:dblclick="addItem(item, index)"><b>{{ item[1] }}</b>
                 {{ item[2] }}  {{ item[3] }}  {{ item[4] }}
                 {{ item[5] }}  {{ item[6] }}  {{ item[7] }}  {{ item[8] }}
               </td>
@@ -64,7 +64,7 @@
           <table v-else-if="key.split(',')[1] === '签名'">
             <tr v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}">
               <td class="text-right" v-bind:class="{'table-info':index == 0}" v-on:click="changeIndex(item, key)">
-                <b>{{ item[1] }}</b>
+                <b v-on:dblclick="addItem(item, index)">{{ item[1] }}</b>
                 {{ item[2] }}  {{ item[3] }}  {{ item[4] }}
                 {{ item[5] }}  {{ item[6] }}  {{ item[7] }}  {{ item[8] }}
               </td>
@@ -76,7 +76,7 @@
             <tr><td>
               <ol class="breadcrumb" >
                 <li class="breadcrumb-item" v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item, key)">
-                  <b style="float: right">{{ item[1] }}</b>
+                  <b style="float: right" v-on:dblclick="addItem(item, index)">{{ item[1] }}</b>
                   <span style="float: right">：{{ item[2] }} {{ item[3] }} {{ item[4] }} {{ item[5] }} {{ item[6] }} {{ item[7] }} {{ item[8] }}</span>
                 </li>
                 <hr>
@@ -162,6 +162,14 @@
         if (section !== undefined) {
           this.$store.commit('EDIT_SET_SECTION', section.split(',')[1])
         }
+      },
+      addItem: function (item, index) {
+        const value = `${index} ${item}`
+        this.$store.commit('EDIT_SET_BAR_VALUE', value)
+
+        const n = this.$store.state.Edit.docIndex
+        this.$store.commit('EDIT_UPDATE_DOC', [n, [item[1], item[2]]]);
+        this.$store.commit('EDIT_SET_DOC_INDEX', [1]);
       },
     },
   };

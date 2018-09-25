@@ -19,24 +19,6 @@
         <td v-if="(!fileName.includes('@') || rightPanel !== 'block') && !data[2]" class="table-warning"><a href="#" style="color: #000" v-on:click="uploadDoc(data, index)">未上传</a></td>
       </tr>
     </table>
-    <table v-if="!this.$store.state.Edit.rightFolds.includes('编辑病案')" id="edit-leftpaneltable-table">
-      <tr>
-        <th colspan="15" class="table-info"> 当前编辑病案（共有{{editingFileLength}}条记录）
-          <!-- <a href="#" v-on:click="close('编辑病案')" style="float: right">✖</a>
-          <a href="#" v-on:click="fold('编辑病案')" style="float: right; marginRight: 3px">↗</a> -->
-        </th>
-      </tr>
-      <tr class="edit-leftpaneltable-tr" v-for="(data, index) in editingFile" v-bind:key='index' v-bind:class="{'table-warning':fileName === data[0],}">
-        <!-- <td> {{index + 1}} </td> -->
-        <td>{{data[0]}}</td>
-        <!-- <td v-if="rightPanel !== 'block'"><a href="#" v-on:click="delDoc(index)">删除</a></td>
-        <td v-if="rightPanel !== 'block'"><a href="#" v-on:click="loadDoc(index, data)">编辑</a></td>
-        <td v-if="rightPanel !== 'block'"><a href="#" v-on:click="loadDoc(index, data, 'show')">参考</a></td>
-        <td v-if="fileName.includes('@')"><a href="#" v-on:click="downloadDoc(data, index)">下载</a></td>
-        <td v-if="data[2]" class="table-success"><a href="#" style="color: #000">已上传</a></td>
-        <td v-if="(!fileName.includes('@') || rightPanel !== 'block') && !data[2]" class="table-warning"><a href="#" style="color: #000" v-on:click="uploadDoc(data, index)">未上传</a></td> -->
-      </tr>
-    </table>
     <table v-if="this.$store.state.Edit.rightFolds.includes('编辑病案')">
       <tr>
         <th colspan="10" class="table-info"> {{filesName}}（共有{{fileLength}}条记录）
@@ -104,21 +86,21 @@
           return this.$store.state.Edit.selectedCol
         }
       },
-      editingFile: {
-        get() {
-          return this.$store.state.Edit.editingFile
-        }
-      },
-      editingFileLength: {
-        get() {
-          return this.$store.state.Edit.editingFile.length
-        }
-      }
+      // editingFile: {
+      //   get() {
+      //     return this.$store.state.Edit.editingFile
+      //   }
+      // },
+      // editingFileLength: {
+      //   get() {
+      //     return this.$store.state.Edit.editingFile.length
+      //   }
+      // }
     },
     methods: {
       delDoc: function (index) {
-        const fileName = this.$store.state.Edit.file[index][0]
-        dataDB(this, 'local', 'cda', { fileName }, 'remove', { fileName })
+        const docType = this.$store.state.Edit.files[index][0]
+        dataDB(this, 'local', 'cda', { docType }, 'remove', { docType })
       },
       uploadDoc: function (data, index) {
         const currentdate = getDate()

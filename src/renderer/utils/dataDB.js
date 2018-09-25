@@ -153,6 +153,8 @@ function find(obj, col, data, type, skip, limit, newData) {
           const a = keys.map(x => [x]);
           obj.$store.commit('EDIT_LOAD_FILE', a)
           obj.$store.commit('EDIT_SET_EDIT_MODELS', res)
+        } else {
+          obj.$store.commit('EDIT_LOAD_FILE', [])
         }
         break;
       case 'libraryFiles':
@@ -252,7 +254,8 @@ function update(obj, col, data, newData) {
 function remove(obj, col, data, newData) {
   obj.db[col].remove(data, (err, res) => {
     console.log(res)
-    find(obj, 'cda', { fileType: 'cda' }, 'editFiles', null, null, newData)
+    find(obj, 'cda', { fileType: 'cda' }, 'editTypes', null, null, newData)
+    find(obj, 'cda', { docType: data.docType }, 'editFiles', null, null, newData)
   })
 }
 

@@ -141,6 +141,16 @@
             case '模板':
               dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editFiles', null)
               break;
+            case '新建':
+              if (this.$store.state.Edit.editingFile.length > 0) {
+                const value = this.$store.state.Edit.editingFile.map((x) => {
+                  const arr = []
+                  arr.push(Object.keys(x)[0], x.type, x.createTime)
+                  return arr
+                })
+                this.$store.commit('EDIT_LOAD_FILE', value)
+              }
+              break;
             default:
               break;
           }

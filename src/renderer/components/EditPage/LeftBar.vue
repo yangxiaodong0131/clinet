@@ -18,9 +18,6 @@
         <li class="nav-item" id="edit-leftbar-newdoc1" v-on:click="show()">
           <a class="nav-link text-light" href="#" v-if="this.$store.state.Edit.leftPanel == 'table'">编辑</a>
         </li>
-        <!-- <li class="nav-item" id="edit-leftbar-cache" v-on:click="saveDoc()">
-          <a class="nav-link text-light" href="#">缓存</a>
-        </li> -->
         <li class="nav-item" id="edit-leftbar-newdoc2" v-on:click="save('保存病案')">
           <a class="nav-link text-light" href="#">保存</a>
         </li>
@@ -37,12 +34,12 @@
 
 <script>
   import { saveEditDoc, newEditDoc } from '../../utils/EditOperation'
+  import dataDB from '../../utils/dataDB';
   // import { unSaveFile } from '../../utils/SaveFile'
   // import { getDocContent } from '../../utils/EditServerFile'
   export default {
     data() {
       return {
-        // name: this.$route.name,
         leftItem: '',
         docType: '自定义文档',
       };
@@ -64,7 +61,13 @@
         document.getElementById('edit-editbar-input').focus()
       },
       newDoc: function (n) {
-        newEditDoc(this, n)
+        const dataType = this.$store.state.Edit.dataType
+        dataDB(this, 'local', 'cda', { docType: this.$store.state.Edit.files[0][0] }, 'editFiles', null)
+        if (dataType === '文档' || dataType === '模板' || dataType === '新建') {
+          newEditDoc(this, n)
+        } else {
+          this.$store.commit('SET_NOTICE', '请选择‘文档’、‘模板’或‘新建’类别后新建！')
+        }
       },
       save: function (data) {
         saveEditDoc(this, data)
