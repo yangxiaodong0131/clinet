@@ -60,10 +60,12 @@
         document.getElementById('edit-editbar-input').focus()
       },
       newDoc: function (n) {
-        // const dataType = this.$store.state.Edit.dataType
-        // if (dataType === '用户' || dataType === '客户') {
-        // }
-        newEditDoc(this, n)
+        const dataType = this.$store.state.Edit.dataType
+        if (dataType === '文档' || dataType === '模板' || dataType === '新建') {
+          newEditDoc(this, n)
+        } else {
+          this.$store.commit('SET_NOTICE', '请选择‘文档’、‘模板’或‘新建’类别后新建！')
+        }
       },
       save: function (data) {
         saveEditDoc(this, data)
