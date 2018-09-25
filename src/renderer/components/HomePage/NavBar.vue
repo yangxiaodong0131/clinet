@@ -137,8 +137,7 @@
             this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
             this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
             dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
-            // this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
-            // dataDB(this, 'local', 'cda', { docType: this.$store.state.Edit.files[0][0] }, 'editFiles', null)
+            dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
             break;
           case '数据分析-数据分析':
             this.$router.push('/stat');
