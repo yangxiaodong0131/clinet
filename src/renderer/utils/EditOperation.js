@@ -80,6 +80,7 @@ export function newEditDoc(obj, n) {
       userName = '未定义用户'
     }
     obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
+    obj.$store.commit('EDIT_SET_EDITING_FILE', [`${docType}-${filename}`, global.hitbmodel[n]])
     dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType, userName, id: '未定义客户' }, 'createCda', null)
   } else { obj.$store.commit('EDIT_SET_DOC'); }
   // obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
@@ -88,8 +89,6 @@ export function newEditDoc(obj, n) {
   const dataType = obj.$store.state.Edit.dataType
   const files = obj.$store.state.Edit.files
   const filesIndex = obj.$store.state.Edit.filesIndex
-  console.log(files)
-  console.log(filesIndex)
   const data = files[filesIndex][0]
   switch (dataType) {
     case '用户':
@@ -141,10 +140,13 @@ export function editBarEnter(obj, targetValue) {
   if (obj.$store.state.Edit.editType === '病案编辑') {
     if (obj.$store.state.Edit.section === '个人信息' && targetValue.includes('姓名')) {
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', '病案历史');
-    }
-    if (obj.$store.state.Edit.rightPanel === 'server') {
-      getCaseHistory(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Edit.doc, obj.$store.state.System.user.username)
-      editDocShow(obj, [obj.$store.state.System.server, obj.$store.state.System.port], targetValue)
+      if (obj.$store.state.Edit.rightPanel === 'server') {
+        // 病案历史
+        getCaseHistory(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Edit.doc, obj.$store.state.System.user.username)
+        editDocShow(obj, [obj.$store.state.System.server, obj.$store.state.System.port], targetValue)
+      } else {
+        dataDB(obj, 'local', 'cda', { fileType: 'cda' }, 'editCaseHistory', { barValue: targetValue.split(' ') })
+      }
     }
     if (targetValue.includes('~')) {
       obj.$store.commit('EDIT_SET_MODEL_NAME', targetValue.replace('~', ''));
@@ -204,6 +206,8 @@ export function rightBarHelp(obj, n) {
     // obj.$store.commit('EDIT_SET_HELP_TYPE', n);
     if (obj.$store.state.Edit.rightPanel === 'server') {
       clinetHelp(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.System.user.username)
+    } else {
+      console.log('本地的cdh帮助查询')
     }
     if (n === 'DRG分析') {
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);

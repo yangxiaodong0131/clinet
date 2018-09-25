@@ -63,7 +63,7 @@
             </td></tr>
           </table>
           <!-- 其他 sections -->
-          <!-- <table v-else>
+          <table v-else>
             <tr class="table-warning" v-bind:class="{'table-danger':flag == key.split(',')[0]}" v-on:click="changeIndex(key, '', true)"><td>{{key.split(',')[1]}}</td></tr>
             <tr><td>
               <ol class="breadcrumb" >
@@ -74,7 +74,7 @@
                 <hr>
               </ol>
             </td></tr>
-          </table> -->
+          </table>
         </div>
       </div>
     </div>

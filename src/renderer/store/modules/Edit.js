@@ -58,7 +58,7 @@ const state = {
   currentFiles: [],
   filesName: null,
   editModels: null,
-  editingFile: []
+  editingFile: [],
 };
 
 const mutations = {
@@ -459,6 +459,7 @@ const mutations = {
 
 const actions = {
   someAsyncTask({ commit }) {
+    commit('EDIT_SET_EDITING_FILE');
     commit('EDIT_SET_RIGHT_TYPE');
     commit('EDIT_DELETE_RIGHT_FOLDS');
     commit('EDIT_SET_FILES_OFFSET');

@@ -183,12 +183,11 @@
           const value = this.$store.state.Edit.editBarValue.slice(0, start)
           const value1 = value.replace(/\s/ig, '')
           const searchKeys = []
-
-          // global.hitbdata.cdhHeader.forEach((n) => {
-          //   if (n.includes(value1)) {
-          //     searchKeys.push(n)
-          //   }
-          // })
+          global.hitbdata.cdhHeader.forEach((n) => {
+            if (n.includes(value1)) {
+              searchKeys.push(n)
+            }
+          })
           const obj = {}
           searchKeys.forEach((n) => {
             obj[n] = global.hitbdata.cdh[n]
