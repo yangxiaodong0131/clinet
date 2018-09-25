@@ -18,9 +18,6 @@
         <li class="nav-item" id="edit-leftbar-newdoc1" v-on:click="show()">
           <a class="nav-link text-light" href="#" v-if="this.$store.state.Edit.leftPanel == 'table'">编辑</a>
         </li>
-        <!-- <li class="nav-item" id="edit-leftbar-cache" v-on:click="saveDoc()">
-          <a class="nav-link text-light" href="#">缓存</a>
-        </li> -->
         <li class="nav-item" id="edit-leftbar-newdoc2" v-on:click="save('保存病案')">
           <a class="nav-link text-light" href="#">保存</a>
         </li>
@@ -42,7 +39,6 @@
   export default {
     data() {
       return {
-        // name: this.$route.name,
         leftItem: '',
         docType: '自定义文档',
       };
@@ -64,6 +60,9 @@
         document.getElementById('edit-editbar-input').focus()
       },
       newDoc: function (n) {
+        // const dataType = this.$store.state.Edit.dataType
+        // if (dataType === '用户' || dataType === '客户') {
+        // }
         newEditDoc(this, n)
       },
       save: function (data) {

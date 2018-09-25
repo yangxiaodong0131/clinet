@@ -80,7 +80,14 @@ export function newEditDoc(obj, n) {
       userName = '未定义用户'
     }
     obj.$store.commit('EDIT_LOAD_DOC', global.hitbmodel[n])
-    obj.$store.commit('EDIT_SET_EDITING_FILE', [`${docType}-${filename}`, global.hitbmodel[n]])
+    const a = `${docType}-${filename}`
+    // const editingFile = obj.$store.state.Edit.editingFile
+    const obj1 = {}
+    obj1[a] = global.hitbmodel[n]
+    obj1.type = '新建'
+    obj1.createTime = getDate()
+    console.log(getDate())
+    obj.$store.commit('EDIT_SET_EDITING_FILE', obj1)
     dataDB(obj, 'local', 'cda', { fileType: 'cda', fileName: `${docType}-${filename}`, value: global.hitbmodel[n], docType, userName, id: '未定义客户' }, 'createCda', null)
   } else { obj.$store.commit('EDIT_SET_DOC'); }
   // obj.$store.commit('SET_NOTICE', '请先打开一个文件，然后选择编辑一个文档，或者新建一个文档！')
@@ -294,6 +301,20 @@ export function getLocalFiles(obj, x) {
   obj.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
   obj.$store.commit('SET_NOTICE', '读取本地文件');
   obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+  const editingFile = obj.$store.state.Edit.editingFile
+  const obj1 = {}
+  const type = []
+  editingFile.forEach((x) => {
+    if (obj1[x.type]) {
+      obj1[x.type] += 1
+    } else {
+      obj1[x.type] = 1
+    }
+  })
+  const keys = Object.keys(obj1)
+  keys.forEach((x) => {
+    type.push([x, obj1[x]])
+  })
   switch (x) {
     case '用户':
       dataDB(obj, 'local', 'cda', { fileType: 'cda' }, 'editUsers', null, null)
@@ -306,6 +327,9 @@ export function getLocalFiles(obj, x) {
       break;
     case '模板':
       dataDB(obj, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
+      break;
+    case '新建':
+      obj.$store.commit('EDIT_LOAD_FILES', type)
       break;
     default:
       break;
