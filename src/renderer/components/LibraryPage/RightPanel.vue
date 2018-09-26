@@ -15,7 +15,7 @@
           </th>
         </tr>
         <tr v-for="(data, index) in xs" v-bind:key='index' class="library-right-table-tr" v-if="index > 0">
-          <td v-for="(field, index2) in data"  v-bind:key='index2' v-bind:class="{'table-danger': changIndexDataIndex === index && changIndexTrIndex === index2}"  v-on:dblclick="change(index, index2, data[index2])" title="双击以修改">{{data[index2]}}</td>
+          <td v-for="(field, index2) in data"  v-bind:key='index2' v-bind:class="{'table-success': changIndexDataIndex === index && changIndexTrIndex === index2}"  v-on:dblclick="change(index, index2, data[index2])" title="双击以修改">{{data[index2]}}</td>
         </tr>
       </table>
       <h3 v-if="xs.length === 1" class="text-center">该术语字典暂无数据</h3>

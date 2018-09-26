@@ -109,7 +109,7 @@
           </th>
         </tr>
         <tr v-for="(data, indexs) in xs" v-bind:key='indexs' class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===indexs)}" v-if="indexs > 0">
-          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}"  class="stat-right-table-td" v-on:click="onClick(data, indexs)" v-if="index < 1">{{data[index]}}</td>
+          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index), 'table-success':flagTd.find((n)=>n===index)}"  class="stat-right-table-td" v-on:click="onClick(data, indexs)" v-if="index < 1">{{data[index]}}</td>
           <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" class="stat-right-table-td" v-on:dblclick="change(indexs, index, data[index])"  v-if="index >= 1 && index < 11">{{data[index]}}</td>
           <!-- v-on:click="onClickTd(data, index)" -->
         </tr>
