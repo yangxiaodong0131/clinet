@@ -57,7 +57,7 @@
 <script>
   import { sRegister, sUpdateUser } from '../../../utils/ServerUser'
   import { socketConnect } from '../../../utils/Socket';
-  // import { sGetRecord } from '../../../utils/Server'
+  import dataDB from '../../../utils/dataDB';
   export default {
     data() {
       return {
@@ -108,8 +108,23 @@
         let port = ''
         if (this.$store.state.System.server === '') {
           const server = this.$store.state.System.servers.filter(x => x.setting === '1')[0];
-          host = server.host
-          port = server.port
+          if (server) {
+            host = server.host
+            port = server.port
+          } else {
+            this.$store.state.System.servers.forEach((x, i) => {
+              let setting = ''
+              if (i === 0) {
+                setting = '1'
+              } else {
+                setting = ''
+              }
+              const id = '_id'
+              dataDB(this, 'local', 'server', { _id: x[id] }, 'update', { setting: setting })
+            })
+            host = this.$store.state.System.servers[0].host
+            port = this.$store.state.System.servers[0].port
+          }
         } else {
           host = this.$store.state.System.server
           port = this.$store.state.System.port
@@ -117,7 +132,6 @@
         if (this.reg.test(user.username)) {
           this.$store.commit('SYSTEM_SET_SERVER', [host, port])
           socketConnect(this, [host, port], { username: user.username, password: user.password });
-          // sGetRecord(this, [host, port], this.$store.state.Home.recordPage)
         }
       },
       sysytemRegisters: function () {

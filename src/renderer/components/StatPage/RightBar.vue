@@ -152,7 +152,7 @@
       <button>页面上查询</button>&nbsp;&nbsp;<button>服务器查询</button>-->
       <div class="form-inline my-4 my-lg-0">
         <div class="input-group">
-          <input id="stat-right-search" v-on:submit.prevent class="mr-sm-2 form-control" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="statSearch()" v-model="stat">
+          <input id="stat-right-search" v-on:submit.prevent class="mr-sm-2 form-control" type="search" placeholder="编辑数据" aria-label="Search" v-on:keyup.13="statSearch()"  :value="changeVal" @input="updateMessage" @keyup.13="submit()">
           <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" style="color:#fff">页面上查询</button>
             <button class="btn btn-outline-secondary" type="button" style="color:#fff">服务器查询</button>
@@ -192,6 +192,11 @@
       dimensionSel: {
         get() {
           return this.$store.state.Stat.dimensionSel
+        }
+      },
+      changeVal: {
+        get() {
+          return this.$store.state.Stat.changeVal
         }
       },
       file: {
@@ -586,6 +591,9 @@
         } else {
           dataDB(this, this.$store.state.Stat.tableType, 'stat', { fileType: this.$store.state.Stat.statTableInfo.tableName }, 'savePage', { data: data, header: table[0], table: table, dataIndex: dataIndex, type: 'delete', tableType: 'saveStatPage' }, 0, 30)
         }
+      },
+      updateMessage: function (e) {
+        this.$store.commit('STAT_SET_CHANGE_VAL', e.target.value)
       },
     },
   };

@@ -108,8 +108,10 @@
             <a class="oi oi-sort-descending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'desc')" v-bind:id="'stat-table-desc'+xindex"></a>
           </th>
         </tr>
-        <tr v-for="(data, index) in xs" v-bind:key='index' v-on:click="onClick(data, index)" class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===index)}" v-if="index > 0">
-          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" v-on:click="onClickTd(data, index)" class="stat-right-table-td"  v-if="index < 11">{{data[index]}}</td>
+        <tr v-for="(data, indexs) in xs" v-bind:key='indexs' class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===indexs)}" v-if="indexs > 0">
+          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index), 'table-success':flagTd.find((n)=>n===index)}"  class="stat-right-table-td" v-on:click="onClick(data, indexs)" v-if="index < 1">{{data[index]}}</td>
+          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" class="stat-right-table-td" v-on:dblclick="change(indexs, index, data[index])"  v-if="index >= 1 && index < 11">{{data[index]}}</td>
+          <!-- v-on:click="onClickTd(data, index)" -->
         </tr>
       </table>
     </div>
@@ -456,6 +458,15 @@
             chartPie(id, chartdata)
             break;
           default: break;
+        }
+      },
+      change: function (dataIndex, trIndex, value) {
+        if (this.$store.state.Stat.tableType === 'local') {
+          this.$store.commit('STAT_SET_CHANGE_INDEX', [dataIndex, trIndex]);
+          this.$store.commit('STAT_SET_CHANGE_VAL', value)
+          this.$store.commit('STAT_SET_CHANGE', { val: value, dataIndex: dataIndex, trIndex: trIndex })
+        } else {
+          this.$store.commit('SET_NOTICE', '远程或区块链文件不允许修改')
         }
       },
     },
