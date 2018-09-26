@@ -169,7 +169,7 @@ function find(obj, col, data, type, skip, limit, newData) {
         obj.$store.commit('LIBRARY_SET_SEARCH_TABLE', res)
         break;
       case 'statFiles':
-        obj.$store.commit('STAT_LOAD_FILE', res.map(x => x.fileName));
+        obj.$store.commit('STAT_LOAD_FILES', res.map(x => x.fileName));
         break;
       case 'statFile':
         obj.$store.commit('STAT_SET_TABLE', res);
