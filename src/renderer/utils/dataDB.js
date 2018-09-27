@@ -371,7 +371,10 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             getEditTypes(obj, serverConfig, newData.type, newData.username)
             break
           case 'editFile':
-            getEdit(obj, serverConfig, newData.fileName)
+            getEdit(obj, serverConfig, newData.fileName, type)
+            break
+          case 'consultFile':
+            getEdit(obj, serverConfig, newData.fileName, 'server', '', type)
             break
           case 'createCda':
             saveEdit(obj, serverConfig, newData.fileName, newData.content, newData.username, newData.doctype, newData.mouldtype)

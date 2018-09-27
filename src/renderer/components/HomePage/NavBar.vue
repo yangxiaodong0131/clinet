@@ -134,10 +134,10 @@
             break;
           case '数据采集-数据采集':
             this.$router.push('/edit');
-            this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+            this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件类型');
             this.$store.commit('EDIT_SET_RIGHT_PANEL', 'local');
-            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
             dataDB(this, 'local', 'cda', { fileType: 'model' }, 'editModels', null, null)
+            dataDB(this, 'local', 'cda', { fileType: 'cda' }, 'editTypes', null, null)
             break;
           case '数据分析-数据分析':
             this.$router.push('/stat');

@@ -293,7 +293,7 @@ export function getLocalFiles(obj, x) {
     obj.$store.commit('EDIT_SET_RIGHT_TYPE', null);
   }
   obj.$store.commit('EDIT_SET_NAV_TYPE', '本地');
-  obj.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件');
+  obj.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件类型');
   obj.$store.commit('EDIT_SET_DOC_TYPES', ['自定义文档', '病案首页（卫统四CSV）', '入院申请', '首次病程', '病程记录', '病案首页', '门诊病案', '健康体检']);
   obj.$store.commit('EDIT_SET_HELP_TYPES', ['输入框提示', '病案参考', '病案历史', '在线交流', '病案质控', '专家提示', 'DRG分析', 'HIS接口'])
   obj.$store.commit('EDIT_SET_CHAT_TYPE', false);

@@ -137,7 +137,7 @@
           this.$store.commit('EDIT_SERVER_FILES', []);
           // this.$store.commit('EDIT_SET_RIGHT_PANEL', 'server');
         } else {
-          this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件');
+          this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件类型');
           this.$store.commit('SET_NOTICE', '读取远程文件');
           dataDB(this, 'server', 'cda', { fileType: 'cda' }, 'editTypes', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
           // getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
@@ -149,7 +149,7 @@
           this.$store.commit('EDIT_SET_RIGHT_TYPE', null);
         }
         this.$store.commit('EDIT_SET_NAV_TYPE', '区块链');
-        this.$store.commit('EDIT_SET_RIGHT_PANELS', '区块链文件');
+        this.$store.commit('EDIT_SET_RIGHT_PANELS', '区块链文件类型');
         this.$store.commit('SET_NOTICE', '读取区块链文件');
         if (x === '文档') {
           this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
