@@ -242,12 +242,10 @@ export function rightBarHelp(obj, n) {
         }
       }
     } else if (n === '病案历史' && obj.$store.state.Edit.rightPanel === 'server') {
+      console.log('111')
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);
       obj.$store.commit('EDIT_SET_HELP_TYPE', n);
       getCaseHistory(obj, [obj.$store.state.System.server, obj.$store.state.System.port], obj.$store.state.Edit.doc, obj.$store.state.System.user.username)
-    } else if (n === '病案历史' && obj.$store.state.Edit.rightPanel !== 'server') {
-      obj.$store.commit('SET_NOTICE', '登录后可查询病案历史！');
-      obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
     } else if (n === '病案质控' && obj.$store.state.Edit.rightPanel === 'server') {
       obj.$store.commit('EDIT_SET_RIGHT_PANELS', n);
       obj.$store.commit('EDIT_SET_HELP_TYPE', n);
