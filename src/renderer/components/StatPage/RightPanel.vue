@@ -108,12 +108,20 @@
             <a class="oi oi-sort-descending" href="#" v-else style="color:#7bb8d1" v-on:click="onClickSort(data, 'desc')" v-bind:id="'stat-table-desc'+xindex"></a>
           </th>
         </tr>
-        <tr v-for="(data, indexs) in xs" v-bind:key='indexs' class="stat-right-table-tr" v-bind:class="{'table-danger':flag.find((n)=>n===indexs)}" v-if="indexs > 0">
-          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index), 'table-success':flagTd.find((n)=>n===index)}"  class="stat-right-table-td" v-on:click="onClick(data, indexs)" v-if="index < 1">{{data[index]}}</td>
-          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger':flagTd.find((n)=>n===index)}" class="stat-right-table-td" v-on:dblclick="change(indexs, index, data[index])"  v-if="index >= 1 && index < 11">{{data[index]}}</td>
-          <!-- v-on:click="onClickTd(data, index)" -->
+        <tr v-for="(data, indexs) in xs" v-bind:key='indexs' class="stat-right-table-tr"  v-if="indexs > 0">
+          <td v-for="(field, index) in data" v-bind:class="{'table-danger': flag.includes(indexs)}" v-bind:key='index' class="stat-right-table-td" v-on:click="onClick(data, indexs)" v-if="index < 1">
+            {{data[index]}}
+          </td>
+
+          <td v-for="(field, index) in data"  v-bind:key='index'  class="stat-right-table-td" v-on:dblclick="change(indexs, index, data[index])"  v-if="index >= 1 && index < 11">
+            {{data[index]}}--{{changIndexDataIndex === indexs && changIndexTrIndex === index}}
+             <!-- v-bind:class="{{'table-danger': flagTd.includes(index) || flag.includes(indexs)}}" -->
+          </td>
         </tr>
       </table>
+      <!-- generateUrl -->
+      <!-- 'table-success': changIndexDataIndex === indexs && changIndexTrIndex === index, 'table-danger': flagTd.includes(index) || flag.includes(indexs) -->
+
     </div>
     <nav aria-label="Page navigation example" v-if="this.$store.state.Stat.tableType === 'server' || this.$store.state.Stat.tableType === 'block'">
       <ul class="pagination">
@@ -292,7 +300,17 @@
         get() {
           return this.$store.state.Stat.serverSort
         }
-      }
+      },
+      changIndexDataIndex: {
+        get() {
+          return this.$store.state.Stat.changIndex[0]
+        }
+      },
+      changIndexTrIndex: {
+        get() {
+          return this.$store.state.Stat.changIndex[1]
+        }
+      },
     },
     mounted: function () {
       if (this.$store.state.Stat.chartData.length > 0) {
