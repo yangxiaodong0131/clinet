@@ -3,8 +3,7 @@
     <div class="card">
       <table v-if="!this.$store.state.Edit.rightFolds.includes('病案历史')">
         <tr>
-          <!-- <th colspan="15" class="table-info"> {{title}}（共有{{fileLength}}条记录） -->
-          <th colspan="15" class="table-info" style="paddingLeft: 10px"> {{title}}
+          <th colspan="15" class="table-info" style="paddingLeft: 10px"> {{title}}（共有{{fileLength}}条记录）
             <a href="#" v-on:click="close('病案历史')" style="float: right">✖</a>
             <a href="#" v-on:click="fold('病案历史')" style="float: right; marginRight: 3px">↗</a>
           </th>
@@ -17,8 +16,7 @@
       </table>
       <table v-if="this.$store.state.Edit.rightFolds.includes('病案历史')">
       <tr>
-        <!-- <th colspan="10" class="table-info"> {{title}}（共有{{fileLength}}条记录） -->
-        <th colspan="15" class="table-info"> {{title}}
+        <th colspan="10" class="table-info" style="paddingLeft: 10px"> {{title}}（共有{{fileLength}}条记录）
           <a href="#" v-on:click="close(title)" style="float: right">✖</a>
           <a href="#" v-on:click="fold('病案历史')" style="float: right; marginRight: 5px">↙</a>
         </th>
