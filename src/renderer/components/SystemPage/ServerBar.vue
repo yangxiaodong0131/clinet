@@ -3,7 +3,6 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active" v-on:click='getServers()' id="server-remote-list">
@@ -12,24 +11,12 @@
         <li class="nav-item active" v-on:click='getUsers()' id="server-user-setup">
           <a class="nav-link text-light" href="#"> 用户设置 <span class="sr-only">(current)</span></a>
         </li>
-        <!-- <li class="nav-item active" v-on:click='test()' id="server-user-setup">
-          <a class="nav-link text-light" href="#"> statCdaTest <span class="sr-only">(current)</span></a>
-        </li> -->
         <li class="nav-item active" v-on:click="orgInfos('机构信息')" id="orgInfos1">
           <a class="nav-link text-light" href="#"> 机构信息 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click="orgInfos('科室信息')" id="orgInfos2">
           <a class="nav-link text-light" href="#"> 科室信息 <span class="sr-only">(current)</span></a>
         </li>
-        <!-- <li class="nav-item dropdown" v-on:click='getOrgs()' id="server-org-setup">
-          <a class="nav-link text-light dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> 机构设置 <span class="sr-only">(current)</span></a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#" id="orgInfos1" v-on:click="orgInfos('机构信息')">机构信息</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" id="orgInfos2" v-on:click="orgInfos('科室信息')">科室信息</a>
-            <div class="dropdown-divider"></div>
-          </div>
-        </li> -->
         <li class="nav-item active" v-if="toolbar === 'createDepartments' && orgPage === 'getDepartment' && orgName ==='updateDep'">
           <a class="nav-link text-light" href="#" v-on:click="updateDep()"> 科室修改 <span class="sr-only">(current)</span></a>
         </li>
@@ -39,9 +26,6 @@
         <li class="nav-item active" v-if="this.$store.state.System.userPower === 1 && toolbar === 'getPersons' && orgPage === 'getPerson'" v-on:click="updatePerson()">
           <a class="nav-link text-light" href="#"> 人员修改 <span class="sr-only">(current)</span></a>
         </li>
-        <!-- <li class="nav-item active" id="sever-help-section" v-on:click='upHelp()'>
-          <a class="nav-link text-light" href="#"> 增加帮助功能 <span class="sr-only">(current)</span></a>
-        </li> -->
       </ul>
     </div>
   </nav>
@@ -50,8 +34,6 @@
 <script>
   import { sGetProvince, sUpHelp } from '../../utils/Server';
   import { sGetUsers, sUpdateUser, sGetOrg, sCreateOrg, sUpdateOrg, sGetDepart, sCreateDepart, sUpdateDepart } from '../../utils/ServerUser';
-  // import { open } from '../../utils/BlockAccount'
-  // import loadFile from '../../utils/LoadFile';
   import statCda from '../../utils/StatCda';
   import dataDB from '../../utils/dataDB';
   export default {
