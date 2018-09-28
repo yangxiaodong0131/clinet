@@ -113,15 +113,11 @@
             {{data[index]}}
           </td>
 
-          <td v-for="(field, index) in data"  v-bind:key='index'  class="stat-right-table-td" v-on:dblclick="change(indexs, index, data[index])"  v-if="index >= 1 && index < 11">
+          <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger': flagTd.includes(index) || flag.includes(indexs), 'table-success': changIndexDataIndex === indexs && changIndexTrIndex === index}" class="stat-right-table-td" v-on:dblclick="change(indexs, index, data[index])"  v-if="index >= 1 && index < 11">
             {{data[index]}}--{{changIndexDataIndex === indexs && changIndexTrIndex === index}}
-             <!-- v-bind:class="{{'table-danger': flagTd.includes(index) || flag.includes(indexs)}}" -->
           </td>
         </tr>
       </table>
-      <!-- generateUrl -->
-      <!-- 'table-success': changIndexDataIndex === indexs && changIndexTrIndex === index, 'table-danger': flagTd.includes(index) || flag.includes(indexs) -->
-
     </div>
     <nav aria-label="Page navigation example" v-if="this.$store.state.Stat.tableType === 'server' || this.$store.state.Stat.tableType === 'block'">
       <ul class="pagination">
@@ -480,6 +476,7 @@
       },
       change: function (dataIndex, trIndex, value) {
         if (this.$store.state.Stat.tableType === 'local') {
+          console.log(this.$store.state.Stat.selectedCol);
           this.$store.commit('STAT_SET_CHANGE_INDEX', [dataIndex, trIndex]);
           this.$store.commit('STAT_SET_CHANGE_VAL', value)
           this.$store.commit('STAT_SET_CHANGE', { val: value, dataIndex: dataIndex, trIndex: trIndex })
