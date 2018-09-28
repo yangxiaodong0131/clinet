@@ -247,13 +247,23 @@ function findOne(obj, col, data, type) {
 
 function update(obj, col, data, newData) {
   obj.db[col].update(data, { $set: newData }, (err, res) => {
-    console.log(res)
+    obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+    if (res > 0) {
+      obj.$store.commit('SET_NOTICE', '保存成功！');
+    } else {
+      obj.$store.commit('SET_NOTICE', '保存失败，请重新编辑保存！');
+    }
   })
 }
 
 function remove(obj, col, data, newData) {
   obj.db[col].remove(data, (err, res) => {
-    console.log(res)
+    obj.$store.commit('EDIT_SET_HINT_TYPE', 'notice');
+    if (res > 0) {
+      obj.$store.commit('SET_NOTICE', '删除成功！');
+    } else {
+      obj.$store.commit('SET_NOTICE', '删除失败，请重新编辑删除！');
+    }
     find(obj, 'cda', { fileType: 'cda' }, 'editTypes', null, null, newData)
     find(obj, 'cda', { docType: data.docType }, 'editFiles', null, null, newData)
   })
@@ -371,7 +381,10 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             getEditTypes(obj, serverConfig, newData.type, newData.username)
             break
           case 'editFile':
-            getEdit(obj, serverConfig, newData.fileName)
+            getEdit(obj, serverConfig, newData.fileName, type)
+            break
+          case 'consultFile':
+            getEdit(obj, serverConfig, newData.fileName, 'server', '', type)
             break
           case 'createCda':
             saveEdit(obj, serverConfig, newData.fileName, newData.content, newData.username, newData.doctype, newData.mouldtype)

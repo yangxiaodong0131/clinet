@@ -2,17 +2,26 @@
   <div id="edit-leftpaneldoc-doc" style="marginBottom: 5px">
     <div class="card">
       <table v-if="!this.$store.state.Edit.rightFolds.includes('病案历史')">
+        <tr>
+          <th colspan="15" class="table-info" style="paddingLeft: 10px"> {{title}}（共有{{fileLength}}条记录）
+            <a href="#" v-on:click="close('病案历史')" style="float: right">✖</a>
+            <a href="#" v-on:click="fold('病案历史')" style="float: right; marginRight: 3px">↗</a>
+          </th>
+        </tr>
+        <tr v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index,}">
+          <!-- <td> {{index + 1}} </td> -->
+          <td v-for="(item, index) in data" v-bind:key='index'>{{item}}</td>
+          <td><a href="#" v-on:click="loadDoc(index, data)">参考</a></td>
+        </tr>
+      </table>
+      <table v-if="this.$store.state.Edit.rightFolds.includes('病案历史')">
       <tr>
-        <th colspan="15" class="table-info"> {{title}}（共有{{fileLength}}条记录）
-          <a href="#" v-on:click="close('编辑病案')" style="float: right">✖</a>
-          <a href="#" v-on:click="fold('编辑病案')" style="float: right; marginRight: 3px">↗</a>
+        <th colspan="10" class="table-info" style="paddingLeft: 10px"> {{title}}（共有{{fileLength}}条记录）
+          <a href="#" v-on:click="close(title)" style="float: right">✖</a>
+          <a href="#" v-on:click="fold('病案历史')" style="float: right; marginRight: 5px">↙</a>
         </th>
       </tr>
-      <tr v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-warning':flag === index,}">
-        <!-- <td> {{index + 1}} </td> -->
-        <td v-for="(item, index) in data" v-bind:key='index'>{{item}}</td>
-        <td><a href="#" v-on:click="loadDoc(index, data)">参考</a></td>
-      </tr>
+      <tr  style="textAlign: center"><a href="#" v-on:click="fold('病案历史')">...</a></tr>
     </table>
     </div>
   </div>
@@ -76,6 +85,9 @@
       },
       close(data) {
         this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);
+      },
+      fold(data) {
+        this.$store.commit('EDIT_SET_RIGHT_FOLDS', data);
       }
     },
   };

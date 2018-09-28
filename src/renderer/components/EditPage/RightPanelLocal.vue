@@ -4,7 +4,7 @@
       <table id="edit-rightpanellocal-table" v-show="chatType === false" v-if="!this.$store.state.Edit.rightFolds.includes(title)">
         <tr>
           <th colspan="10" class="table-info" id="edit-rightpanellocal-title"> {{title}}
-            <a href="#" v-on:click="close" style="float: right">✖</a>
+            <a href="#" v-on:click="close('本地文件类型')" style="float: right">✖</a>
             <a v-if="xs" href="#" v-on:click="fold(title)" style="float: right; marginRight: 3px">&nbsp;↗</a>
             <span style="float: right">当前页：{{this.$store.state.Edit.filesPage}} / 共{{this.$store.state.Edit.filesNum}}页</span>
             <a href="#" v-on:click="page(1)" style="float: right">&nbsp;后页→</a>
@@ -20,7 +20,7 @@
       <table v-if="this.$store.state.Edit.rightFolds.includes(title)">
       <tr>
         <th colspan="10" class="table-info" id="edit-rightpanellocal-title"> {{title}}
-          <a href="#" v-on:click="close(title)" style="float: right">✖</a>
+          <a href="#" v-on:click="close('本地文件类型')" style="float: right">✖</a>
           <a href="#" v-on:click="fold(title)" style="float: right; marginRight: 5px">↙</a>
         </th>
       </tr>
@@ -72,16 +72,16 @@
       },
       title: {
         get() {
-          let x = '用户本地的文件列表'
+          let x = '用户本地的文件类型'
           this.panelName = '本地文件'
           if (this.$store.state.Edit.rightPanel === 'server') {
-            x = '远程文件的用户列表'
+            x = '用户远程的文件类型'
             this.panelName = '远程文件'
             if (!this.$store.state.System.user.login) {
-              x = '远程文件的用户列表（用户未登陆服务器，请先登陆！）'
+              x = '远程文件的列表（用户未登陆服务器，请先登陆！）'
             }
           } else if (this.$store.state.Edit.rightPanel === 'block') {
-            x = '区块链文件的用户列表'
+            x = '用户区块链的文件类型'
           }
           return x
         }
@@ -115,6 +115,7 @@
     },
     methods: {
       loadFile: function (data, index) {
+        this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件列表');
         const navType = this.$store.state.Edit.navType
         this.$store.commit('EDIT_SET_FILES_INDEX', index)
         this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
@@ -157,6 +158,8 @@
         }
       },
       close(data) {
+        console.log(data)
+        console.log(this.$store.state.Edit.rightPanels)
         this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);
       },
       blockShare(data) {

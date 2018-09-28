@@ -67,9 +67,11 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
   })
 }
 // this, [url, port, filename, serverType]
-export function getEdit(obj, data, filename, serverType = 'server', type = '') {
+export function getEdit(obj, data, filename, serverType = 'server', type = '', show = '') {
+  console.log(show)
   // 去除文件名中的.csv
   const file = filename.split('-')
+  console.log(file)
   let url = ''
   // const docSummary = []
   if (type === 'upload') {
@@ -100,16 +102,21 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '') {
       //   docSummary.push(arr)
       // }
       // obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
-      obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
-      obj.$store.commit('EDIT_LOAD_DOC', res.data.cda.content)
-      obj.$store.commit('SET_NOTICE', res.data.info);
-    } else {
-      obj.$store.commit('EDIT_LOAD_FILE', [])
+      if (show === 'consultFile') {
+        obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda.content);
+      } else {
+        obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
+        obj.$store.commit('EDIT_LOAD_DOC', res.data.cda.content)
+        obj.$store.commit('SET_NOTICE', res.data.info);
+      }
     }
+    // else {
+    //   obj.$store.commit('EDIT_LOAD_FILE', [])
+    // }
   }).catch((err) => {
     console.log(err);
     obj.$store.commit('SET_NOTICE', '连接服务器错误')
-    obj.$store.commit('EDIT_LOAD_FILE', [])
+    // obj.$store.commit('EDIT_LOAD_FILE', [])
   })
 }
 
