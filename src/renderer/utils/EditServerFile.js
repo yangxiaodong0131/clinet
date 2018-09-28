@@ -34,12 +34,12 @@ export function getEditTypes(obj, data, type, username, serverType = 'server') {
   })
 }
 export function getEditFiles(obj, data, type, username, serverType = 'server') {
-  let url = ''
-  if (type === 'user') {
-    url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
-  } else {
-    url = `http://${data[0]}:${data[1]}/edit/cda_file?username=${username}&server_type=${serverType}`
-  }
+  const url = `http://${data[0]}:${data[1]}/edit/cda_file?type=${type}username=${username}&server_type=${serverType}`
+  // if (type === 'user') {
+  //   url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
+  // } else {
+  //   url = `http://${data[0]}:${data[1]}/edit/cda_file?username=${username}&server_type=${serverType}`
+  // }
   axios({
     method: 'get',
     url: url,
