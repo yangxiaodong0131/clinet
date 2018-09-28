@@ -11,10 +11,10 @@
         <li class="nav-item active" v-on:click='getUsers()' id="server-user-setup">
           <a class="nav-link text-light" href="#"> 用户设置 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="orgInfos('机构信息')" id="orgInfos1">
+        <li class="nav-item active" v-if="this.$store.state.System.user.login" v-on:click="orgInfos('机构信息')" id="orgInfos1">
           <a class="nav-link text-light" href="#"> 机构信息 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="orgInfos('科室信息')" id="orgInfos2">
+        <li class="nav-item active" v-if="this.$store.state.System.user.login" v-on:click="orgInfos('科室信息')" id="orgInfos2">
           <a class="nav-link text-light" href="#"> 科室信息 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-if="toolbar === 'createDepartments' && orgPage === 'getDepartment' && orgName ==='updateDep'">
