@@ -131,7 +131,6 @@
         const currentdate = getDate()
         this.$store.commit('EDIT_UPDATE_DOC_HEADER', ['下载时间', currentdate]);
         this.$store.commit('EDIT_SET_DOC_STATE');
-        console.log(data)
         dataDB(this, 'server', 'cda', { fileName: data[0] }, 'editFile', { fileName: data[0] })
       },
       loadDoc: function (index, name, type) {
@@ -154,11 +153,11 @@
             dataDB(this, 'local', 'cda', { fileName: name[0] }, selType, null)
           }
         } else {
-          dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, selType, { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
+          dataDB(this, navType, 'cda', { fileType: 'cda', fileName: name[0] }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0], type1: 'content' })
+          // dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, selType, { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
         }
       },
       close(data) {
-        console.log(data)
         this.$store.commit('EDIT_DELETE_RIGHT_PANELS', data);
       },
       fold(data) {

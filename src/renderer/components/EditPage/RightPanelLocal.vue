@@ -117,15 +117,34 @@
       loadFile: function (data, index) {
         this.$store.commit('EDIT_SET_RIGHT_PANELS', '本地文件列表');
         const navType = this.$store.state.Edit.navType
+        const dataType = this.$store.state.Edit.dataType
         this.$store.commit('EDIT_SET_FILES_INDEX', index)
         this.$store.commit('EDIT_SET_RIGHT_TYPE', 'table');
         if (this.$store.state.Edit.rightPanel === 'server' || this.$store.state.Edit.rightPanel === 'block') {
-          if (this.$store.state.Edit.serverType === 'file') {
-            dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: data })
-          } else if (this.$store.state.Edit.serverType === 'user') {
-            this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
-            dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
+          let type1 = 'file'
+          switch (dataType) {
+            case '用户':
+              type1 = 'user'
+              break;
+            case '客户':
+              type1 = 'customer'
+              break;
+            case '文档':
+              type1 = 'file'
+              break;
+            case '模板':
+              type1 = 'model'
+              break;
+            default:
+              break;
           }
+          dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: data, type1 })
+          // if (this.$store.state.Edit.serverType === 'file') {
+          //   dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: data })
+          // } else if (this.$store.state.Edit.serverType === 'user') {
+          //   this.$store.commit('EDIT_SET_SERVER_TYPE', 'file');
+          //   dataDB(this, navType, 'cda', { fileType: 'cda', fileName: data }, 'editFiles', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
+          // }
         } else {
           const dataType = this.$store.state.Edit.dataType
           switch (dataType) {
