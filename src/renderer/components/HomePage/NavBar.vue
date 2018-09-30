@@ -49,7 +49,7 @@
             <div class="dropdown-divider"></div>
           </div>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown"  v-if="this.$store.state.System.user.login">
           <a class="nav-link dropdown-toggle" href="#" id="navbar-block" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             区块链服务
           </a>
@@ -57,10 +57,7 @@
             <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-服务器节点设置')" id="navbar-block-server">区块链服务介绍</a>
             <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-账户设置')" id="navbar-block-account">账户设置</a>
             <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-区块查询')" id="navbar-block-block">区块查询</a>
-            <!-- <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-共享查询')" id="navbar-block-block">共享查询</a>-->
             <div class="dropdown-divider"></div>
-            <!-- <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-DRG分组服务')" id="navbar-block-compdrg">DRG分组服务</a>
-            <a class="dropdown-item" href="#" v-on:click="onClick('区块链服务-DRG分析计算')" id="navbar-block-statdrg">DRG分析计算</a> -->
           </div>
         </li>
         <li class="nav-item">

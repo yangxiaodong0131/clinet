@@ -3,7 +3,7 @@
 // 包括cda、library、stat、system、user等等数据表
 import { getLibraryFiles, getLibrary, downloadLibrary, getLibrarySerach, saveLibraryPage } from './LibraryServerFile'
 import { getStatFiles, getStat, downloadStat } from './StatServerFile'
-import { getEditFiles, getEdit, saveEdit, getEditTypes } from './EditServerFile'
+import { getEditFiles, getEdit, saveEdit } from './EditServerFile'
 import pageSearch from './PageSearch';
 function count(obj, col, data, type, limit) {
   obj.db[col].count(data, (err, res) => {
@@ -376,12 +376,9 @@ export default function (obj, serverType, col, data, type, newData, skip = null,
             break;
           case 'editFiles':
             getEditFiles(obj, serverConfig, newData.type, newData.username)
-            break
-          case 'editTypes':
-            getEditTypes(obj, serverConfig, newData.type, newData.username)
-            break
+            break;
           case 'editFile':
-            getEdit(obj, serverConfig, newData.fileName, type)
+            getEdit(obj, serverConfig, newData.fileName, newData.type1)
             break
           case 'consultFile':
             getEdit(obj, serverConfig, newData.fileName, 'server', '', type)

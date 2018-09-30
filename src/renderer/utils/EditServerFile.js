@@ -1,45 +1,12 @@
 const axios = require('axios');
 const qs = require('qs');
-export function getEditTypes(obj, data, type, username, serverType = 'server') {
-  let url = ''
-  if (type === 'user') {
-    url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
-  } else {
-    url = `http://${data[0]}:${data[1]}/edit/cda_file?username=${username}&server_type=${serverType}`
-  }
-  axios({
-    method: 'get',
-    url: url,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    responseType: 'json'
-  }).then((res) => {
-    if (res.status === 200) {
-      // obj.$store.commit('EDIT_SERVER_FILES', res.data)
-      const keys = Object.keys(res.data)
-      const data = keys.map((v, i) => [keys[i], res.data[v].length])
-      obj.$store.commit('EDIT_LOAD_FILES', data)
-      // const num = Math.ceil(res.data.cda.length / 20)
-      // obj.$store.commit('EDIT_SET_FILES_NUM', num)
-      // obj.$store.commit('EDIT_SET_FILES_OFFSET', 20)
-      // obj.$store.commit('EDIT_CLEAR_FILES_PAGE')
-      // obj.$store.commit('EDIT_SET_CURRENT_SERVER_FILES', res.data.cda.slice(0, 20))
-      // obj.$store.commit('SET_NOTICE', res.data.info);
-    } else {
-      obj.$store.commit('EDIT_SERVER_FILES', [])
-    }
-  }).catch((err) => {
-    console.log(err);
-    obj.$store.commit('SET_NOTICE', '连接服务器错误')
-    obj.$store.commit('EDIT_SERVER_FILES', [])
-  })
-}
 export function getEditFiles(obj, data, type, username, serverType = 'server') {
-  let url = ''
-  if (type === 'user') {
-    url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
-  } else {
-    url = `http://${data[0]}:${data[1]}/edit/cda_file?username=${username}&server_type=${serverType}`
-  }
+  const url = `http://${data[0]}:${data[1]}/edit/cda_file?type=${type}&username=${username}&server_type=${serverType}`
+  // if (type === 'user') {
+  //   url = `http://${data[0]}:${data[1]}/edit/cda_user?server_type=${serverType}`
+  // } else {
+  //   url = `http://${data[0]}:${data[1]}/edit/cda_file?username=${username}&server_type=${serverType}`
+  // }
   axios({
     method: 'get',
     url: url,
@@ -47,7 +14,7 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      obj.$store.commit('EDIT_LOAD_FILE', res.data.cda.map(x => [x]))
+      obj.$store.commit('EDIT_LOAD_FILES', res.data.result[0].map(x => [x.value, x.count]))
       // const keys = Object.keys(res.data)
       // const data = keys.map((v, i) => [keys[i], res.data[v].length])
       // obj.$store.commit('EDIT_LOAD_FILE', data)
@@ -67,19 +34,18 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
   })
 }
 // this, [url, port, filename, serverType]
-export function getEdit(obj, data, filename, serverType = 'server', type = '', show = '') {
-  console.log(show)
+export function getEdit(obj, data, filename, type, serverType = 'server') {
   // 去除文件名中的.csv
   const file = filename.split('-')
-  console.log(file)
-  let url = ''
+  const username = obj.$store.state.Edit.files[obj.$store.state.Edit.filesIndex][0]
+  // const url = ''
   // const docSummary = []
-  if (type === 'upload') {
-    url = '&type=create'
-  }
+  // if (type === 'upload') {
+  //   url = '&type=create'
+  // }
   axios({
     method: 'get',
-    url: `http://${data[0]}:${data[1]}/edit/cda?filename=${file[1]}&username=${file[0]}${url}&server_type=${serverType}`,
+    url: `http://${data[0]}:${data[1]}/edit/cda?filename=${file[0]}&server_type=${serverType}&type=${type}&username=${username}`,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     responseType: 'json'
   }).then((res) => {
@@ -102,13 +68,18 @@ export function getEdit(obj, data, filename, serverType = 'server', type = '', s
       //   docSummary.push(arr)
       // }
       // obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
-      if (show === 'consultFile') {
-        obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda.content);
-      } else {
-        obj.$store.commit('EDIT_SERVER_ID', res.data.cda.id)
+      // if (show === 'consultFile') {
+      //   obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda.content);
+      // } else {
+      // obj.$store.commit('EDIT_SERVER_ID', res.data.cda)
+      if (type === 'content') {
         obj.$store.commit('EDIT_LOAD_DOC', res.data.cda.content)
         obj.$store.commit('SET_NOTICE', res.data.info);
+      } else {
+        obj.$store.commit('EDIT_LOAD_FILE', res.data.cda.map(x => [x]))
+        obj.$store.commit('SET_NOTICE', res.data.info);
       }
+      // }
     }
     // else {
     //   obj.$store.commit('EDIT_LOAD_FILE', [])

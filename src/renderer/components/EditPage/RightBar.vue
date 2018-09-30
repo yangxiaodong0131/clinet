@@ -119,6 +119,7 @@
       },
       serverData: function (x) {
         const navType = this.$store.state.Edit.navType
+        const dataType = this.$store.state.Edit.dataType
         if (navType !== '远程') {
           this.$store.commit('EDIT_SET_RIGHT_TYPE', null);
         }
@@ -139,7 +140,24 @@
         } else {
           this.$store.commit('EDIT_SET_RIGHT_PANELS', '远程文件类型');
           this.$store.commit('SET_NOTICE', '读取远程文件');
-          dataDB(this, 'server', 'cda', { fileType: 'cda' }, 'editTypes', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username })
+          let type = 'file'
+          switch (dataType) {
+            case '用户':
+              type = 'user'
+              break;
+            case '客户':
+              type = 'customer'
+              break;
+            case '文档':
+              type = 'file'
+              break;
+            case '模板':
+              type = 'model'
+              break;
+            default:
+              break;
+          }
+          dataDB(this, 'server', 'cda', { fileType: 'cda' }, 'editFiles', { type, username: this.$store.state.System.user.username })
           // getEditFiles(this, [this.$store.state.System.server, this.$store.state.System.port], this.$store.state.Edit.serverType, this.$store.state.System.user.username, 'server')
         }
       },
