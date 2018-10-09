@@ -11,7 +11,7 @@ export default function appInit() {
   let pathHome = ''
   let pathData = ''
   let pathSystem = ''
-  let pathLoaded = ''
+  // let pathLoaded = ''
   // let pathCompare = ''
   // let pathUser = ''
   // let pathLibrary = ''
@@ -20,7 +20,7 @@ export default function appInit() {
     pathHome = process.env.USERPROFILE
     pathData = '\\clinet-data'
     pathSystem = '\\system'
-    pathLoaded = '\\loaded'
+    // pathLoaded = '\\loaded'
     // pathCompare = '\\compare'
     // pathUser = '\\user'
     // pathLibrary = '\\library'
@@ -29,7 +29,7 @@ export default function appInit() {
     pathHome = process.env.HOME
     pathData = '/clinet-data'
     pathSystem = '/system'
-    pathLoaded = '/loaded'
+    // pathLoaded = '/loaded'
     // pathCompare = '/compare'
     // pathUser = '/user'
     // pathLibrary = '/library'
@@ -40,8 +40,8 @@ export default function appInit() {
   if (!fs.existsSync(hitbdata)) { fs.mkdirSync(hitbdata) }
   const hitbdataSystem = path.join(hitbdata, pathSystem);
   if (!fs.existsSync(hitbdataSystem)) { fs.mkdirSync(hitbdataSystem) }
-  const hitbdataLoaded = path.join(hitbdata, pathLoaded);
-  if (!fs.existsSync(hitbdataLoaded)) { fs.mkdirSync(hitbdataLoaded) }
+  // const hitbdataLoaded = path.join(hitbdata, pathLoaded);
+  // if (!fs.existsSync(hitbdataLoaded)) { fs.mkdirSync(hitbdataLoaded) }
   // const hitbdataCompare = path.join(hitbdata, pathCompare);
   // if (!fs.existsSync(hitbdataCompare)) { fs.mkdirSync(hitbdataCompare) }
   // const hitbdataUser = path.join(hitbdata, pathUser);
@@ -55,8 +55,8 @@ export default function appInit() {
   global.hitbdata = {};
   global.hitbdata.path = {
     home: hitbdata,
-    system: hitbdataSystem,
-    loaded: hitbdataLoaded
+    system: hitbdataSystem
+    // loaded: hitbdataLoaded
     // compare: hitbdataCompare,
     // user: hitbdataUser,
     // library: hitbdataLibrary,
@@ -193,7 +193,6 @@ export default function appInit() {
         global.hitbdata.cdh = t;
       })
       db.cdh.findOne({ fileType: 'header' }, (err, res) => {
-        console.log(res)
         global.hitbdata.cdhHeader = res.value;
       })
     }

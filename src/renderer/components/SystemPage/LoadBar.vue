@@ -13,14 +13,14 @@
           <a class="nav-link text-light" href="#"> 选择数据表 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click='compareTable()' id="server-load-contrast">
-          <a class="nav-link text-light" href="#"> 对照数据 <span class="sr-only">(current)</span></a>
+          <a class="nav-link text-light" href="#"> 开始对照 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click='checkTable()' id="server-load-checkdata">
           <a class="nav-link text-light" href="#"> 校验数据 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click='editTable()' id="server-load-editdata">
+        <!-- <li class="nav-item active" v-on:click='editTable()' id="server-load-editdata">
           <a class="nav-link text-light" href="#"> 编辑数据 <span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
         <!-- <li class="nav-item active" v-on:click='loadTable' id="server-load-import">
           <a class="nav-link text-light" href="#"> 导入数据 <span class="sr-only">(current)</span></a>
         </li> -->
@@ -30,7 +30,7 @@
         <li class="nav-item active" v-on:click='upLoadTableData()' id="server-load-uploaddata">
           <a class="nav-link text-light" href="#"> 上传服务器数据 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="checkPage('up')" id="server-load-uppage">
+        <!-- <li class="nav-item active" v-on:click="checkPage('up')" id="server-load-uppage">
           <a class="nav-link text-light" href="#"> 前页 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click="checkPage('down')" id="server-load-downpage">
@@ -41,7 +41,7 @@
         </li>
         <li class="nav-item active" v-on:click="checkPage('right')" id="server-load-rightpage">
           <a class="nav-link text-light" href="#"> 右页 <span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
       </ul>
       <!-- <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="server-load-search">
@@ -74,11 +74,13 @@
       },
       getTables: function () {
         const tables = Object.keys(global.hitbdata.table)
+        console.log(this.$store.state.System.tableKeys);
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'tables');
         this.$store.commit('SYSTEM_GET_TABLES', tables);
       },
       compareTable: function () {
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'compareTable');
+        this.$store.commit('SYSTEM_SET_COMPUTE_TABLE')
       },
       checkTable: function () {
         if (this.$store.state.System.table.length === 0) {

@@ -82,7 +82,9 @@ const state = {
   serverStat: { wt4: [], index: [], dimension: [] },
   serverTable: '',
   servers: [],
-  serverIndex: 0
+  serverIndex: 0,
+  tableKeys: [],
+  computeTable: []
 };
 
 const mutations = {
@@ -130,10 +132,27 @@ const mutations = {
     state.files = fs.readdirSync(global.hitbdata.path.home).filter(x => x.endsWith('.csv'))
   },
   SYSTEM_LOAD_FILE(state, file) {
+    if (file.length > 0) {
+      state.tableKeys = file[0].split(',')
+    }
     state.file = file;
   },
   SYSTEM_GET_TABLES(state, tables) {
     state.tables = tables;
+  },
+  SYSTEM_GET_TABLE_KEYS(state, keys) {
+    state.tableKeys = keys;
+  },
+  SYSTEM_SET_COMPUTE_TABLE(state, opt = null) {
+    if (opt) {
+      state.computeTable = opt
+    } else {
+      state.computeTable = state.table.map((x) => {
+        const y = x
+        y[x.length] = ''
+        return y
+      })
+    }
   },
   SYSTEM_GET_TABLE(state, table) {
     state.table = table;
@@ -423,6 +442,8 @@ const actions = {
     commit('SYSTEM_GET_FILES');
     commit('SYSTEM_LOAD_FILE');
     commit('SYSTEM_GET_TABLES');
+    commit('SYSTEM_GET_TABLE_KEYS');
+    commit('SYSTEM_SET_COMPUTE_TABLE');
     commit('SYSTEM_GET_TABLE');
     commit('SYSTEM_GET_FIELD');
     commit('SYSTEM_SET_TABLE');
