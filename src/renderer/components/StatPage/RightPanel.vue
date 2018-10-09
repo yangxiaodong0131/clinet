@@ -114,7 +114,7 @@
           </td>
 
           <td v-for="(field, index) in data"  v-bind:key='index' v-bind:class="{'table-danger': flagTd.includes(index) || flag.includes(indexs), 'table-success': changIndexDataIndex === indexs && changIndexTrIndex === index}" class="stat-right-table-td" v-on:dblclick="change(indexs, index, data[index])"  v-if="index >= 1 && index < 11">
-            {{data[index]}}--{{changIndexDataIndex === indexs && changIndexTrIndex === index}}
+            {{data[index]}}
           </td>
         </tr>
       </table>
