@@ -153,7 +153,7 @@
             dataDB(this, 'local', 'cda', { fileName: name[0] }, selType, null)
           }
         } else {
-          dataDB(this, navType, 'cda', { fileType: 'cda', fileName: name[0] }, 'editFile', { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0], type1: 'content' })
+          dataDB(this, navType, 'cda', { fileType: 'cda', fileName: name[0] }, selType, { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0], type1: 'content' })
           // dataDB(this, 'server', 'cda', { fileType: 'cda', fileName: name[0] }, selType, { type: this.$store.state.Edit.serverType, username: this.$store.state.System.user.username, fileName: name[0] })
         }
       },

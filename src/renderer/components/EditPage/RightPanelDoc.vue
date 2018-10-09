@@ -83,6 +83,19 @@
               </ol>
             </td></tr>
           </table>
+          <!-- 其他 sections -->
+          <table v-else>
+            <tr class="table-warning" v-bind:class="{'table-danger':flag == key.split(',')[0]}" v-on:click="changeIndex(key, '', true)"><td>{{key.split(',')[1]}}</td></tr>
+            <tr><td>
+              <ol class="breadcrumb" >
+                <li class="breadcrumb-item" v-for="(item, index) in section" v-bind:key='index' v-bind:class="{'table-danger':flag == item[0]}" v-on:click="changeIndex(item, key)">
+                  <b>{{ item[1] }}</b>
+                  ：{{ item[2] }} {{ item[3] }} {{ item[4] }} {{ item[5] }} {{ item[6] }} {{ item[7] }} {{ item[8] }}
+                </li>
+                <hr>
+              </ol>
+            </td></tr>
+          </table>
         </div>
       </div>
     </div>

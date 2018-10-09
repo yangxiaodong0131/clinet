@@ -34,15 +34,10 @@ export function getEditFiles(obj, data, type, username, serverType = 'server') {
   })
 }
 // this, [url, port, filename, serverType]
-export function getEdit(obj, data, filename, type, serverType = 'server') {
+export function getEdit(obj, data, filename, type, serverType = 'server', showType = 'editFile') {
   // 去除文件名中的.csv
   const file = filename.split('-')
   const username = obj.$store.state.Edit.files[obj.$store.state.Edit.filesIndex][0]
-  // const url = ''
-  // const docSummary = []
-  // if (type === 'upload') {
-  //   url = '&type=create'
-  // }
   axios({
     method: 'get',
     url: `http://${data[0]}:${data[1]}/edit/cda?filename=${file[0]}&server_type=${serverType}&type=${type}&username=${username}`,
@@ -50,40 +45,19 @@ export function getEdit(obj, data, filename, type, serverType = 'server') {
     responseType: 'json'
   }).then((res) => {
     if (res.status === 200) {
-      // res.data.cda.header.split(';').forEach((x, index) => {
-      //   if (x.includes('创建时间')) {
-      //     docSummary.push([index, x])
-      //   }
-      // })
-      // const arr = []
-      // if (docSummary.length === 0) {
-      //   const value = res.data.cda.content.split(',')
-      //   const arr = []
-      //   value.map((x, index) => {
-      //     if (index < 10) {
-      //       arr.push(x)
-      //     }
-      //     return arr
-      //   })
-      //   docSummary.push(arr)
-      // }
-      // obj.$store.commit('EDIT_SET_DOC_SUMMARY', docSummary)
-      // if (show === 'consultFile') {
-      //   obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda.content);
-      // } else {
-      // obj.$store.commit('EDIT_SERVER_ID', res.data.cda)
       if (type === 'content') {
-        obj.$store.commit('EDIT_LOAD_DOC', res.data.cda.content)
-        obj.$store.commit('SET_NOTICE', res.data.info);
+        if (showType === 'consultFile') {
+          obj.$store.commit('EDIT_LOAD_DOC_SHOW', res.data.cda.content)
+          obj.$store.commit('SET_NOTICE', res.data.info);
+        } else {
+          obj.$store.commit('EDIT_LOAD_DOC', res.data.cda.content)
+          obj.$store.commit('SET_NOTICE', res.data.info);
+        }
       } else {
         obj.$store.commit('EDIT_LOAD_FILE', res.data.cda.map(x => [x]))
         obj.$store.commit('SET_NOTICE', res.data.info);
       }
-      // }
     }
-    // else {
-    //   obj.$store.commit('EDIT_LOAD_FILE', [])
-    // }
   }).catch((err) => {
     console.log(err);
     obj.$store.commit('SET_NOTICE', '连接服务器错误')
