@@ -5,7 +5,7 @@
         <td v-for="(field, index) in data" v-bind:key='index' v-bind:class="{'table-danger': String(field) == 'NaN'}" class="server-load-rightpanel-td">{{data[index]}}</td>
       </tr>
     </table>
-    <table v-if="this.$store.state.System.toolbar === 'compareTable'">
+    <table v-else-if="this.$store.state.System.toolbar === 'compareTable'">
       <tr>
         <td>表名</td><td>字段中文名称</td><td>字段英文名称</td><td>字段类型</td><td>是否必填</td><td>对照文件的字段</td>
       </tr>

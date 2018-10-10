@@ -30,13 +30,13 @@
         <li class="nav-item active" v-on:click='upLoadTableData()' id="server-load-uploaddata">
           <a class="nav-link text-light" href="#"> 上传服务器数据 <span class="sr-only">(current)</span></a>
         </li>
-        <!-- <li class="nav-item active" v-on:click="checkPage('up')" id="server-load-uppage">
+        <li class="nav-item active" v-on:click="checkPage('up')" id="server-load-uppage" v-if="this.$store.state.System.toolbar === 'checkTable'">
           <a class="nav-link text-light" href="#"> 前页 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="checkPage('down')" id="server-load-downpage">
+        <li class="nav-item active" v-on:click="checkPage('down')" id="server-load-downpage"  v-if="this.$store.state.System.toolbar === 'checkTable'">
           <a class="nav-link text-light" href="#"> 后页 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="checkPage('left')" id="server-load-leftpage">
+        <!-- <li class="nav-item active" v-on:click="checkPage('left')" id="server-load-leftpage">
           <a class="nav-link text-light" href="#"> 左页 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click="checkPage('right')" id="server-load-rightpage">
@@ -80,7 +80,8 @@
       compareTable: function () {
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'compareTable');
         this.$store.commit('SYSTEM_SET_COMPUTE_TABLE_KEYS', [])
-        this.$store.commit('SYSTEM_SET_COMPUTE_TABLE')
+        const data = this.$store.state.System.table
+        this.$store.commit('SYSTEM_SET_COMPUTE_TABLE', data)
       },
       checkTable: function () {
         if (this.$store.state.System.table.length === 0) {
@@ -91,6 +92,8 @@
           const header = first.split(',')
           const files = []
           const headers = [...header, ...y.map(n => n[2])]
+          console.log(header);
+          console.log(y);
           rest.forEach((n) => {
             let body = n.split(',')
             y.forEach((n1) => {

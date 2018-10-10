@@ -144,16 +144,17 @@ const mutations = {
   SYSTEM_GET_TABLE_KEYS(state, keys) {
     state.tableKeys = keys;
   },
-  SYSTEM_SET_COMPUTE_TABLE(state, opt = null) {
-    if (opt) {
-      state.computeTable = opt
-    } else {
-      state.computeTable = state.table.map((x) => {
-        const y = x
+  SYSTEM_SET_COMPUTE_TABLE(state, opt) {
+    state.computeTable = opt
+    state.computeTable = state.computeTable.map((x) => {
+      const y = x
+      if (x.length < 6) {
         y[x.length] = ''
-        return y
-      })
-    }
+      } else {
+        y[5] = ''
+      }
+      return y
+    })
   },
   SYSTEM_SET_COMPUTE_TABLE_KEYS(state, opt) {
     if (state.computeTableKeys.includes(opt)) {
