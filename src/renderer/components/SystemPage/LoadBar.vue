@@ -169,24 +169,21 @@
       },
       upLoadTableData: function () {
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'upLoadTableData');
-        let server = []
-        if (this.$store.state.System.server === '') {
-          const key = Object.keys(global.hitbdata.server)
-          server = global.hitbdata.server[key][0];
+        if (obj.$store.state.System.user.login) {
+          const serverConfig = [obj.$store.state.System.server, obj.$store.state.System.port]
+          let fileName = ''
+          let f = []
+          if (this.serverTable.endsWith('.csv')) {
+            f = this.$store.state.System.file
+            fileName = this.serverTable
+          } else {
+            f = this.$store.state.System.checkData
+            fileName = `${this.serverTable}.csv`
+          }
+          sUploadDoc(this, serverConfig, fileName, f)
         } else {
-          server = [this.$store.state.System.server, this.$store.state.System.port]
+          this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
         }
-        let f = []
-        let fileName = ''
-        // const filename =
-        if (this.serverTable.endsWith('.csv')) {
-          f = this.$store.state.System.file
-          fileName = this.serverTable
-        } else {
-          f = this.$store.state.System.checkDataAll
-          fileName = `${this.serverTable}.csv`
-        }
-        sUploadDoc(this, [server[0], server[1]], fileName, f)
       }
     },
   };
