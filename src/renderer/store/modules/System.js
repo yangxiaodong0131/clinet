@@ -86,6 +86,7 @@ const state = {
   tableKeys: [],
   computeTable: [],
   computeTableKeys: [],
+  checkRule: {}
 };
 
 const mutations = {
@@ -155,6 +156,7 @@ const mutations = {
       }
       return y
     })
+    state.computeTableKeys = []
   },
   SYSTEM_SET_COMPUTE_TABLE_KEYS(state, opt) {
     if (state.computeTableKeys.includes(opt)) {
@@ -390,14 +392,17 @@ const mutations = {
   },
   // 更新校验后数据
   SYSTEM_GET_CHECKDATA(state, value) {
-    let table = []
-    if (value[0].length > 10) {
-      table = value.map(n => n.slice(0, 10)).slice(0, 21)
-    } else {
-      table = value
-    }
-    state.checkDataAll = value
-    state.checkData = table
+    // let table = []
+    // if (value[0].length > 10) {
+    //   table = value.map(n => n.slice(0, 10)).slice(0, 21)
+    // } else {
+    //   table = value
+    // }
+    // state.checkDataAll = value
+    state.checkData = value
+  },
+  SYSTEM_GET_CHECK_RULE(state, value) {
+    state.checkRule = value
   },
   // 左右字段翻页
   SYSTEM_GET_CHECKDATA_PAGE(state, value) {
@@ -460,6 +465,7 @@ const actions = {
     commit('SYSTEM_SET_SERVER');
     commit('SYSTEM_GET_WT4TABLE_PAGE');
     commit('SYSTEM_SET_SERVER_STATUS');
+    commit('SYSTEM_GET_CHECK_RULE');
     // 用户设置模块
     commit('SYSTEM_SET_SERVERS');
     commit('SYSTEM_SET_SERVER_INDEX');

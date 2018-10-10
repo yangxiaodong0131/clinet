@@ -92,8 +92,8 @@
           const header = first.split(',')
           const headers = [...header, ...y.map(n => n[2])]
           const objTable = []
-          const rest1 = [rest[0]]
-          rest1.forEach((n) => {
+          const checkRule = { error: { cn: '是否存在错误' } }
+          rest.forEach((n) => {
             n = n.split(',')
             const obj = {}
             headers.forEach((x, i) => {
@@ -103,6 +103,7 @@
             const newObj = {}
             let error = false
             this.$store.state.System.computeTable.forEach((r) => {
+              checkRule[r[2]] = { cn: r[1], type: r[3] }
               if (r[5] !== '') {
                 const value = obj[r[5]]
                 const must = r[4]
@@ -132,6 +133,8 @@
             newObj.error = error
             objTable.push(newObj)
           })
+          this.$store.commit('SET_NOTICE', '数据校验完成');
+          this.$store.commit('SYSTEM_GET_CHECK_RULE', checkRule)
           this.$store.commit('SYSTEM_GET_CHECKDATA', objTable)
           this.$store.commit('SYSTEM_SET_TOOLBAR', 'checkTable');
         }

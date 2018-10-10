@@ -1,9 +1,16 @@
 <template>
   <div  style="height:950px; overflow-y:auto;">
     <table v-if="this.$store.state.System.toolbar === 'checkTable'" v-bind:style="{ height: height + 'px', overflow: 'auto' }">
-      <tr v-for="(data, index) in file" v-bind:key='index' v-on:click="onClick(data, index)" v-bind:class="{'table-danger':flag == index}" class="server-load-rightpanel-tr">
-        <td v-for="(field, index) in data" v-bind:key='index' v-bind:class="{'table-danger': String(field) == 'NaN'}" class="server-load-rightpanel-td">{{data[index]}}</td>
+      <tr class="server-load-rightpanel-tr">
+        <td v-for="key in Object.keys(file[0])" class="server-load-rightpanel-td">{{rules[key].cn}}</td>
       </tr>
+      <tr v-for="data in file" class="server-load-rightpanel-tr">
+        <td v-for="value in Object.values(data)" class="server-load-rightpanel-td">{{value}}</td>
+      </tr>
+      <!-- <tr v-for="(data, index) in file" v-bind:key='index' v-bind:class="{'table-danger':flag == index}" class="server-load-rightpanel-tr">
+        <tr><td>{{data.error}}</td></tr>
+        <td v-for="(field, index) in data" v-bind:key='index' v-bind:class="{'table-danger': String(field) == 'NaN'}" class="server-load-rightpanel-td">{{data[index]}}</td>
+      </tr> -->
     </table>
     <table v-else-if="this.$store.state.System.toolbar === 'compareTable'">
       <tr>
@@ -80,6 +87,11 @@
         get() {
           const keys = this.$store.state.System.tableKeys
           return keys
+        }
+      },
+      rules: {
+        get() {
+          return this.$store.state.System.checkRule
         }
       },
       defindKeys: {
