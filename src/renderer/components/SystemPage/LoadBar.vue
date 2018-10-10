@@ -169,8 +169,8 @@
       },
       upLoadTableData: function () {
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'upLoadTableData');
-        if (obj.$store.state.System.user.login) {
-          const serverConfig = [obj.$store.state.System.server, obj.$store.state.System.port]
+        if (this.$store.state.System.user.login) {
+          const serverConfig = [this.$store.state.System.server, this.$store.state.System.port]
           let fileName = ''
           let f = []
           if (this.serverTable.endsWith('.csv')) {
