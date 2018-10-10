@@ -90,36 +90,49 @@
           const y = this.$store.state.System.table.filter(x => x[x.length - 1] !== '')
           const [first, ...rest] = this.$store.state.System.file
           const header = first.split(',')
-          const files = []
           const headers = [...header, ...y.map(n => n[2])]
-          console.log(header);
-          console.log(y);
-          rest.forEach((n) => {
-            let body = n.split(',')
-            y.forEach((n1) => {
-              const type = typeof (body[header.indexOf(n1[5])])
-              if (n1[3] !== type) {
-                if (n1[3] === 'string') {
-                  const a = String(body[header.indexOf(n1[5])])
-                  body = [...body, a]
-                } else if (n1[3] === 'integer') {
-                  const a = Number(body[header.indexOf(n1[5])])
-                  body = [...body, a]
-                } else if (n1[3] === 'boolean') {
-                  const a = Boolean(body[header.indexOf(n1[5])])
-                  body = [...body, a]
-                } else {
-                  console.log('数据类型校验错误')
+          const objTable = []
+          const rest1 = [rest[0]]
+          rest1.forEach((n) => {
+            n = n.split(',')
+            const obj = {}
+            headers.forEach((x, i) => {
+              obj[x] = n[i]
+            })
+            // objTable.push(obj)
+            const newObj = {}
+            let error = false
+            this.$store.state.System.computeTable.forEach((r) => {
+              if (r[5] !== '') {
+                const value = obj[r[5]]
+                const must = r[4]
+                const type = r[3]
+                let newValue = ''
+                if (value !== '') {
+                  if (type === 'string') {
+                    newValue = String(value)
+                  } else if (type === 'integer') {
+                    newValue = Number(value)
+                  } else if (type === 'float') {
+                    newValue = Number(value)
+                  } else if (type === 'boolean') {
+                    newValue = Boolean(value)
+                  }
+                  if (isNaN(newValue) && type !== 'string') {
+                    newValue = '数据类型校验错误'
+                    error = true
+                  }
+                } else if (must && value === '') {
+                  newValue = '必填字段'
+                  error = true
                 }
-              } else {
-                body = [...body, body[header.indexOf(n1[5])]]
-                this.$store.commit('SET_NOTICE', '数据校验成功');
+                newObj[r[2]] = newValue
               }
-            });
-            files.push(body);
+            })
+            newObj.error = error
+            objTable.push(newObj)
           })
-          const file = [headers, ...files]
-          this.$store.commit('SYSTEM_GET_CHECKDATA', file)
+          this.$store.commit('SYSTEM_GET_CHECKDATA', objTable)
           this.$store.commit('SYSTEM_SET_TOOLBAR', 'checkTable');
         }
       },
