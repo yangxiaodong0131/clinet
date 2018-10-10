@@ -84,7 +84,8 @@ const state = {
   servers: [],
   serverIndex: 0,
   tableKeys: [],
-  computeTable: []
+  computeTable: [],
+  computeTableKeys: [],
 };
 
 const mutations = {
@@ -152,6 +153,13 @@ const mutations = {
         y[x.length] = ''
         return y
       })
+    }
+  },
+  SYSTEM_SET_COMPUTE_TABLE_KEYS(state, opt) {
+    if (state.computeTableKeys.includes(opt)) {
+      state.computeTableKeys = state.computeTableKeys.filter(x => x === opt)
+    } else {
+      state.computeTableKeys.push(opt)
     }
   },
   SYSTEM_GET_TABLE(state, table) {
@@ -444,6 +452,7 @@ const actions = {
     commit('SYSTEM_GET_TABLES');
     commit('SYSTEM_GET_TABLE_KEYS');
     commit('SYSTEM_SET_COMPUTE_TABLE');
+    commit('SYSTEM_SET_COMPUTE_TABLE_KEYS');
     commit('SYSTEM_GET_TABLE');
     commit('SYSTEM_GET_FIELD');
     commit('SYSTEM_SET_TABLE');

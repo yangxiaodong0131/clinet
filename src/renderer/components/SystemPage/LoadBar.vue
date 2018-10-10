@@ -13,7 +13,7 @@
           <a class="nav-link text-light" href="#"> 选择数据表 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click='compareTable()' id="server-load-contrast">
-          <a class="nav-link text-light" href="#"> 开始对照 <span class="sr-only">(current)</span></a>
+          <a class="nav-link text-light" href="#"> 对照 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click='checkTable()' id="server-load-checkdata">
           <a class="nav-link text-light" href="#"> 校验数据 <span class="sr-only">(current)</span></a>
@@ -74,12 +74,12 @@
       },
       getTables: function () {
         const tables = Object.keys(global.hitbdata.table)
-        console.log(this.$store.state.System.tableKeys);
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'tables');
         this.$store.commit('SYSTEM_GET_TABLES', tables);
       },
       compareTable: function () {
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'compareTable');
+        this.$store.commit('SYSTEM_SET_COMPUTE_TABLE_KEYS', [])
         this.$store.commit('SYSTEM_SET_COMPUTE_TABLE')
       },
       checkTable: function () {

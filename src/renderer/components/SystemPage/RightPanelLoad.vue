@@ -10,7 +10,7 @@
         <td>表名</td><td>字段中文名称</td><td>字段英文名称</td><td>字段类型</td><td>是否必填</td><td>对照文件的字段</td>
       </tr>
       <tr v-for="(data, index) in file" v-bind:key='index' class="server-load-rightpanel-tr">
-        <td v-for="(field, index2) in data" v-bind:key='index2' v-if="index2 < 10"  v-bind:class="{'table-danger':flag == index && index2 == data.length - 1}" class="server-load-rightpanel-td"  v-on:click="onClick(data, index)" title="请在左侧选择对应的字段">{{data[index2]}}</td>
+        <td v-for="(field, index2) in data" v-bind:key='index2' v-if="index2 < 10"  v-bind:class="{'table-danger':flag == index && index2 == data.length - 1}" class="server-load-rightpanel-td"  v-on:click="onClick(data, index)" title="单击后左侧选择对应的字段,双击清空已选">{{data[index2]}}</td>
       </tr>
     </table>
     <table v-else>

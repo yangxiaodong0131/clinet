@@ -170,11 +170,12 @@
             if (this.$store.state.System.computeTable.length !== 0) {
               if (this.$store.state.System.fieldIndex === null) {
                 this.$store.commit('SET_NOTICE', '请选择要对照的列');
+              } else if (this.$store.state.System.computeTableKeys.includes(data)) {
+                this.$store.commit('SET_NOTICE', '字段已经对照过,请先删除');
               } else {
+                this.$store.commit('SYSTEM_SET_COMPUTE_TABLE_KEYS', data)
                 this.$store.commit('SYSTEM_SET_TABLE', data);
               }
-            // } else {
-            //   this.$store.commit('SET_NOTICE', '请选择数据表');
             }
             break;
           case 'getLocalData':
