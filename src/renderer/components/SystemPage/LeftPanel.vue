@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:700px; overflow-y:auto;">
     <table>
       <tr>
         <th class="table-danger">{{x}}</th>
