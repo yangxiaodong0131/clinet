@@ -82,7 +82,11 @@ const state = {
   serverStat: { wt4: [], index: [], dimension: [] },
   serverTable: '',
   servers: [],
-  serverIndex: 0
+  serverIndex: 0,
+  tableKeys: [],
+  computeTable: [],
+  computeTableKeys: [],
+  checkRule: {}
 };
 
 const mutations = {
@@ -130,10 +134,36 @@ const mutations = {
     state.files = fs.readdirSync(global.hitbdata.path.home).filter(x => x.endsWith('.csv'))
   },
   SYSTEM_LOAD_FILE(state, file) {
+    if (file.length > 0) {
+      state.tableKeys = file[0].split(',')
+    }
     state.file = file;
   },
   SYSTEM_GET_TABLES(state, tables) {
     state.tables = tables;
+  },
+  SYSTEM_GET_TABLE_KEYS(state, keys) {
+    state.tableKeys = keys;
+  },
+  SYSTEM_SET_COMPUTE_TABLE(state, opt) {
+    state.computeTable = opt
+    state.computeTable = state.computeTable.map((x) => {
+      const y = x
+      if (x.length < 6) {
+        y[x.length] = ''
+      } else {
+        y[5] = ''
+      }
+      return y
+    })
+    state.computeTableKeys = []
+  },
+  SYSTEM_SET_COMPUTE_TABLE_KEYS(state, opt) {
+    if (state.computeTableKeys.includes(opt)) {
+      state.computeTableKeys = state.computeTableKeys.filter(x => x === opt)
+    } else {
+      state.computeTableKeys.push(opt)
+    }
   },
   SYSTEM_GET_TABLE(state, table) {
     state.table = table;
@@ -362,14 +392,17 @@ const mutations = {
   },
   // 更新校验后数据
   SYSTEM_GET_CHECKDATA(state, value) {
-    let table = []
-    if (value[0].length > 10) {
-      table = value.map(n => n.slice(0, 10)).slice(0, 21)
-    } else {
-      table = value
-    }
-    state.checkDataAll = value
-    state.checkData = table
+    // let table = []
+    // if (value[0].length > 10) {
+    //   table = value.map(n => n.slice(0, 10)).slice(0, 21)
+    // } else {
+    //   table = value
+    // }
+    // state.checkDataAll = value
+    state.checkData = value
+  },
+  SYSTEM_GET_CHECK_RULE(state, value) {
+    state.checkRule = value
   },
   // 左右字段翻页
   SYSTEM_GET_CHECKDATA_PAGE(state, value) {
@@ -423,12 +456,16 @@ const actions = {
     commit('SYSTEM_GET_FILES');
     commit('SYSTEM_LOAD_FILE');
     commit('SYSTEM_GET_TABLES');
+    commit('SYSTEM_GET_TABLE_KEYS');
+    commit('SYSTEM_SET_COMPUTE_TABLE');
+    commit('SYSTEM_SET_COMPUTE_TABLE_KEYS');
     commit('SYSTEM_GET_TABLE');
     commit('SYSTEM_GET_FIELD');
     commit('SYSTEM_SET_TABLE');
     commit('SYSTEM_SET_SERVER');
     commit('SYSTEM_GET_WT4TABLE_PAGE');
     commit('SYSTEM_SET_SERVER_STATUS');
+    commit('SYSTEM_GET_CHECK_RULE');
     // 用户设置模块
     commit('SYSTEM_SET_SERVERS');
     commit('SYSTEM_SET_SERVER_INDEX');

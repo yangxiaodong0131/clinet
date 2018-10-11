@@ -13,14 +13,14 @@
           <a class="nav-link text-light" href="#"> 选择数据表 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click='compareTable()' id="server-load-contrast">
-          <a class="nav-link text-light" href="#"> 对照数据 <span class="sr-only">(current)</span></a>
+          <a class="nav-link text-light" href="#"> 对照 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click='checkTable()' id="server-load-checkdata">
           <a class="nav-link text-light" href="#"> 校验数据 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click='editTable()' id="server-load-editdata">
+        <!-- <li class="nav-item active" v-on:click='editTable()' id="server-load-editdata">
           <a class="nav-link text-light" href="#"> 编辑数据 <span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
         <!-- <li class="nav-item active" v-on:click='loadTable' id="server-load-import">
           <a class="nav-link text-light" href="#"> 导入数据 <span class="sr-only">(current)</span></a>
         </li> -->
@@ -30,18 +30,18 @@
         <li class="nav-item active" v-on:click='upLoadTableData()' id="server-load-uploaddata">
           <a class="nav-link text-light" href="#"> 上传服务器数据 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="checkPage('up')" id="server-load-uppage">
+        <li class="nav-item active" v-on:click="checkPage('up')" id="server-load-uppage" v-if="this.$store.state.System.toolbar === 'checkTable'">
           <a class="nav-link text-light" href="#"> 前页 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="checkPage('down')" id="server-load-downpage">
+        <li class="nav-item active" v-on:click="checkPage('down')" id="server-load-downpage"  v-if="this.$store.state.System.toolbar === 'checkTable'">
           <a class="nav-link text-light" href="#"> 后页 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active" v-on:click="checkPage('left')" id="server-load-leftpage">
+        <!-- <li class="nav-item active" v-on:click="checkPage('left')" id="server-load-leftpage">
           <a class="nav-link text-light" href="#"> 左页 <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active" v-on:click="checkPage('right')" id="server-load-rightpage">
           <a class="nav-link text-light" href="#"> 右页 <span class="sr-only">(current)</span></a>
-        </li>
+        </li> -->
       </ul>
       <!-- <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="server-load-search">
@@ -79,6 +79,9 @@
       },
       compareTable: function () {
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'compareTable');
+        this.$store.commit('SYSTEM_SET_COMPUTE_TABLE_KEYS', [])
+        const data = this.$store.state.System.table
+        this.$store.commit('SYSTEM_SET_COMPUTE_TABLE', data)
       },
       checkTable: function () {
         if (this.$store.state.System.table.length === 0) {
@@ -87,34 +90,52 @@
           const y = this.$store.state.System.table.filter(x => x[x.length - 1] !== '')
           const [first, ...rest] = this.$store.state.System.file
           const header = first.split(',')
-          const files = []
           const headers = [...header, ...y.map(n => n[2])]
+          const objTable = []
+          const checkRule = { error: { cn: '是否存在错误' } }
           rest.forEach((n) => {
-            let body = n.split(',')
-            y.forEach((n1) => {
-              const type = typeof (body[header.indexOf(n1[5])])
-              if (n1[3] !== type) {
-                if (n1[3] === 'string') {
-                  const a = String(body[header.indexOf(n1[5])])
-                  body = [...body, a]
-                } else if (n1[3] === 'integer') {
-                  const a = Number(body[header.indexOf(n1[5])])
-                  body = [...body, a]
-                } else if (n1[3] === 'boolean') {
-                  const a = Boolean(body[header.indexOf(n1[5])])
-                  body = [...body, a]
-                } else {
-                  console.log('数据类型校验错误')
+            n = n.split(',')
+            const obj = {}
+            headers.forEach((x, i) => {
+              obj[x] = n[i]
+            })
+            // objTable.push(obj)
+            const newObj = {}
+            let error = false
+            this.$store.state.System.computeTable.forEach((r) => {
+              checkRule[r[2]] = { cn: r[1], type: r[3] }
+              if (r[5] !== '') {
+                const value = obj[r[5]]
+                const must = r[4]
+                const type = r[3]
+                let newValue = ''
+                if (value !== '') {
+                  if (type === 'string') {
+                    newValue = String(value)
+                  } else if (type === 'integer') {
+                    newValue = Number(value)
+                  } else if (type === 'float') {
+                    newValue = Number(value)
+                  } else if (type === 'boolean') {
+                    newValue = Boolean(value)
+                  }
+                  if (isNaN(newValue) && type !== 'string') {
+                    newValue = '数据类型校验错误'
+                    error = true
+                  }
+                } else if (must && value === '') {
+                  newValue = '必填字段'
+                  error = true
                 }
-              } else {
-                body = [...body, body[header.indexOf(n1[5])]]
-                this.$store.commit('SET_NOTICE', '数据校验成功');
+                newObj[r[2]] = newValue
               }
-            });
-            files.push(body);
+            })
+            newObj.error = error
+            objTable.push(newObj)
           })
-          const file = [headers, ...files]
-          this.$store.commit('SYSTEM_GET_CHECKDATA', file)
+          this.$store.commit('SET_NOTICE', '数据校验完成');
+          this.$store.commit('SYSTEM_GET_CHECK_RULE', checkRule)
+          this.$store.commit('SYSTEM_GET_CHECKDATA', objTable)
           this.$store.commit('SYSTEM_SET_TOOLBAR', 'checkTable');
         }
       },
@@ -148,24 +169,21 @@
       },
       upLoadTableData: function () {
         this.$store.commit('SYSTEM_SET_TOOLBAR', 'upLoadTableData');
-        let server = []
-        if (this.$store.state.System.server === '') {
-          const key = Object.keys(global.hitbdata.server)
-          server = global.hitbdata.server[key][0];
+        if (this.$store.state.System.user.login) {
+          const serverConfig = [this.$store.state.System.server, this.$store.state.System.port]
+          let fileName = ''
+          let f = []
+          if (this.serverTable.endsWith('.csv')) {
+            f = this.$store.state.System.file
+            fileName = this.serverTable
+          } else {
+            f = this.$store.state.System.checkData
+            fileName = `${this.serverTable}.csv`
+          }
+          sUploadDoc(this, serverConfig, fileName, f)
         } else {
-          server = [this.$store.state.System.server, this.$store.state.System.port]
+          this.$store.commit('SET_NOTICE', '未登录用户,请在系统服务-用户设置内登录');
         }
-        let f = []
-        let fileName = ''
-        // const filename =
-        if (this.serverTable.endsWith('.csv')) {
-          f = this.$store.state.System.file
-          fileName = this.serverTable
-        } else {
-          f = this.$store.state.System.checkDataAll
-          fileName = `${this.serverTable}.csv`
-        }
-        sUploadDoc(this, [server[0], server[1]], fileName, f)
       }
     },
   };

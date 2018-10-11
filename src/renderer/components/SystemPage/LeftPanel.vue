@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:700px; overflow-y:auto;">
     <table>
       <tr>
         <th class="table-danger">{{x}}</th>
@@ -108,11 +108,12 @@
               xs = this.$store.state.System.tables
               break;
             case 'compareTable':
-              if (this.$store.state.System.file && this.$store.state.System.file[0]) {
-                xs = this.$store.state.System.file[0].split(',')
-              } else {
-                this.$store.commit('SET_NOTICE', '请先选择CSV文件，然后再做对照！');
-              }
+              // if (this.$store.state.System.file && this.$store.state.System.file[0]) {
+              //   xs = this.$store.state.System.file[0].split(',')
+              // } else {
+              //   this.$store.commit('SET_NOTICE', '请先选择CSV文件，然后再做对照！');
+              // }
+              xs = this.$store.state.System.tableKeys
               break;
             case 'getLocalData':
               xs = this.$store.state.System.wt4Files
@@ -166,14 +167,15 @@
             this.$store.commit('SET_NOTICE', '数据表读取成功！');
             break;
           case 'compareTable':
-            if (this.$store.state.System.tables.length !== 0) {
+            if (this.$store.state.System.computeTable.length !== 0) {
               if (this.$store.state.System.fieldIndex === null) {
                 this.$store.commit('SET_NOTICE', '请选择要对照的列');
+              } else if (this.$store.state.System.computeTableKeys.includes(data)) {
+                this.$store.commit('SET_NOTICE', '字段已经对照过,请先删除');
               } else {
+                this.$store.commit('SYSTEM_SET_COMPUTE_TABLE_KEYS', data)
                 this.$store.commit('SYSTEM_SET_TABLE', data);
               }
-            } else {
-              this.$store.commit('SET_NOTICE', '请选择数据表');
             }
             break;
           case 'getLocalData':
